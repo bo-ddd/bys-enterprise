@@ -1,0 +1,486 @@
+<template>
+    <div class="wrap-login">
+        <!-- 头部logo -->
+        <header>
+            <img class="logo" src="@/assets/images/logo.png" alt="">
+        </header>
+        <!-- --------- -->
+
+        <!-- 主要内容 -->
+        <div class="warp-main just-center mt-72">
+            <!-- 左侧登录注册 -->
+            <main v-show="isOpen">
+                <!-- 标题 -->
+                <div class="header ">
+                    <p class="title just-center fs-18 mt-40">2023届毕业生招聘</p>
+                    <span class="detail just-center fs-14 mt-8 c-575757">线上线下同步开展</span>
+                </div>
+                <div class="main mt-30">
+                    <!-- tabs 登录 -->
+                    <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+                        <!-- 密码登录 -->
+                        <el-tab-pane label="密码登录" name="first">
+                            <el-form ref="ruleFormPassRef" label-position="right" :model="ruleFormPass"
+                                :rules="rulesPass" label-width="120px" class="demo-ruleForm" :size="formPassSize">
+                                <el-form-item class="mt-18 item-input" label="" label-width="105px" prop="phone">
+                                    <el-input class="input" v-model="ruleFormPass.phone" placeholder="请输入注册手机号" />
+                                </el-form-item>
+                                <el-form-item class="mt-22 item-input" label="" label-width="105px" prop="password">
+                                    <el-input class="input" v-model="ruleFormPass.password" placeholder="请输入密码"
+                                        type="password" autocomplete="off" />
+                                </el-form-item>
+                                <el-form-item class="" label="" label-width="105px">
+                                    <p class="fs-14 c-575757 forget-pass flex">忘记密码</p>
+                                </el-form-item>
+                                <el-form-item class="m-0">
+                                    <el-button class=" btn fs-16 " color="#356ffa" type="primary"
+                                        @click="submitFormPass(ruleFormPassRef)">立即登录
+                                    </el-button>
+                                </el-form-item>
+                                <el-form-item class="mt-5">
+                                    <el-button class=" btn btn-register fs-14" color="#356ffa" type="text"
+                                        @click="isOpen = false">立即注册&nbsp;<img class="icon-right"
+                                            src="@/assets/images/icon-right.png" alt="">
+                                    </el-button>
+                                </el-form-item>
+                            </el-form>
+                        </el-tab-pane>
+                        <!--验证码登录 -->
+                        <el-tab-pane label="验证码登录" name="second">
+                            <el-form ref="ruleFormValidateRef" label-position="right" :model="ruleFormValidate"
+                                :rules="rulesValidate" label-width="120px" class="demo-ruleForm"
+                                :size="formValidateSize">
+                                <el-form-item class="mt-18 item-input" label="" label-width="105px" prop="phone">
+                                    <!-- 手机号 -->
+                                    <el-input class="input" v-model="ruleFormValidate.phone" placeholder="请输入手机号" />
+                                </el-form-item>
+                                <el-form-item class="mt-22 item-input validate" label="" label-width="105px"
+                                    prop="password">
+                                    <!-- 验证码 -->
+                                    <div class="just-between validate-flex">
+                                        <el-input class="input" v-model="ruleFormValidate.validate"
+                                            placeholder="请输入短信验证码" type="" autocomplete="off" />
+                                        <el-button disabled color="#ececec" class="btn-validate">获取验证码</el-button>
+                                    </div>
+                                </el-form-item>
+                                <el-form-item class="m-0">
+                                    <el-button class=" btn fs-16 mt-15 " color="#356ffa" type="primary"
+                                        @click="submitFormValidate(ruleFormValidateRef)">立即登录
+                                    </el-button>
+                                </el-form-item>
+                                <el-form-item class="mt-5">
+                                    <span class="detail fs-12 c-8d9ea7 mt-10">未注册的用户，登录成功后将自动注册为本招聘平台的企业用户。</span>
+                                </el-form-item>
+                            </el-form>
+                        </el-tab-pane>
+                    </el-tabs>
+                </div>
+            </main>
+            <main v-show="!isOpen">
+                <div class="header just-center mt-40 mb-40">
+                    <h3 class="fs-18">新用户注册</h3>
+                </div>
+                <div class="main ">
+                    <el-form ref="ruleFormRegisterRef" label-position="right" :model="ruleFormRegister"
+                        :rules="rulesRegister" label-width="120px" class="demo-ruleForm" :size="formRegisterSize">
+                        <el-form-item class="mt-18 item-input" label="" label-width="105px" prop="phone">
+                            <!-- 手机号 -->
+                            <el-input class="input" v-model="ruleFormRegister.phone" placeholder="请输入手机号" />
+                        </el-form-item>
+                        <el-form-item class="mt-22 item-input validate" label="" label-width="105px" prop="validate">
+                            <!-- 验证码 -->
+                            <div class="just-between validate-flex">
+                                <el-input class="input" v-model="ruleFormRegister.validate" placeholder="请输入短信验证码"
+                                    autocomplete="off" />
+                                <el-button disabled color="#ececec" class="btn-validate">获取验证码</el-button>
+                            </div>
+                        </el-form-item>
+                        <el-form-item class="mt-18 item-input" label="" label-width="105px" prop="password">
+                            <!-- 设置密码 -->
+                            <el-input class="input" type="password" v-model="ruleFormRegister.password"
+                                placeholder="请设置6-16位密码" />
+                        </el-form-item>
+                        <el-form-item class="m-0">
+                            <el-button class=" btn fs-16 mt-15 " color="#356ffa" type="primary"
+                                @click="submitFormRegister(ruleFormRegisterRef)">注册
+                            </el-button>
+                        </el-form-item>
+                        <el-form-item class="mt-5">
+                            <p class="existing-account fs-14 c-8d9ea7 mt-10">已有账号，<span class="to-login"
+                                    @click="isOpen = true">去登录</span></p>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </main>
+            <!-- 右侧背景图 -->
+            <img class="schools" src="@/assets/images/schools_login.png" alt="">
+        </div>
+        <!-- ------------- -->
+        <!-- 页脚------ -->
+        <footer class="">
+            <ul class="just-center mt-30 fs-14">
+                <li class="just-center " v-for="item in footer" :key="item.id">
+                    <p>{{ item.title }}</p>
+                    <span class="fs-16">{{ item.quantity }}</span>
+                </li>
+            </ul>
+        </footer>
+        <!-- ------------------ -->
+    </div>
+</template>
+
+<script setup lang="ts">
+
+import { reactive, ref } from 'vue'
+import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
+
+// 页脚
+const footer = [
+    {
+        id: 1,
+        title: '合作高校',
+        quantity: '1000+',
+    },
+    {
+        id: 2,
+        title: '覆盖学校',
+        quantity: '100万+',
+    },
+    {
+        id: 3,
+        title: '网络招聘会',
+        quantity: '2万+',
+    },
+    {
+        id: 4,
+        title: '线下招聘会',
+        quantity: '100+',
+    },
+]
+
+// 登录注册
+let isOpen = ref(true);//默认显示登录，点击切换注册
+
+// tabs--------------------
+const activeName = ref('first');
+const handleClick = (tab: TabsPaneContext, event: Event) => {
+    console.log(tab, event)
+}
+// ----------------------
+
+// from表单----------------
+// 密码登录
+const formPassSize = ref('default')
+const ruleFormPassRef = ref<FormInstance>()
+const ruleFormPass = reactive({
+    phone: '',
+    password: '',
+})
+
+const rulesPass = reactive<FormRules>({
+    phone: [
+        { required: true, message: '请输入手机号', trigger: 'blur' },
+        { min: 11, max: 11, message: '请输入正确的手机号', trigger: 'blur' },
+    ],
+    password: [
+        { required: true, message: '请输入密码', trigger: 'blur' },
+        { min: 6, max: 20, message: '6-20位之间', trigger: 'blur' },
+    ],
+})
+
+const submitFormPass = async (formEl: FormInstance | undefined) => {
+    if (!formEl) return
+    await formEl.validate((valid, fields) => {
+        if (valid) {
+            console.log('submit!')
+        } else {
+            console.log('error submit!', fields)
+        }
+    })
+}
+//验证码登录
+const formValidateSize = ref('default')
+const ruleFormValidateRef = ref<FormInstance>()
+const ruleFormValidate = reactive({
+    phone: '',
+    validate: '',
+})
+
+const rulesValidate = reactive<FormRules>({
+    phone: [
+        { required: true, message: '请输入手机号', trigger: 'blur' },
+        { min: 11, max: 11, message: '请输入11位正确的手机号', trigger: 'blur' },
+    ],
+    validate: [
+        { required: true, message: '请输入验证码', trigger: 'blur' },
+        { min: 6, max: 6, message: '请输入6位验证码', trigger: 'blur' },
+    ],
+})
+
+const submitFormValidate = async (formEl: FormInstance | undefined) => {
+    if (!formEl) return
+    await formEl.validate((valid, fields) => {
+        if (valid) {
+            console.log('submit!')
+        } else {
+            console.log('error submit!', fields)
+        }
+    })
+}
+
+//注冊
+const formRegisterSize = ref('default')
+const ruleFormRegisterRef = ref<FormInstance>()
+const ruleFormRegister = reactive({
+    phone: '',
+    validate: '',
+    password: '',
+})
+
+const rulesRegister = reactive<FormRules>({
+    phone: [
+        { required: true, message: '请输入手机号', trigger: 'blur' },
+        { min: 11, max: 11, message: '请输入11位正确的手机号', trigger: 'blur' },
+    ],
+    validate: [
+        { required: true, message: '请输入验证码', trigger: 'blur' },
+        { min: 6, max: 6, message: '请输入6位验证码', trigger: 'blur' },
+    ],
+    password: [
+        { required: true, message: '请输入密码', trigger: 'blur' },
+        { min: 6, max: 20, message: '6-20位之间', trigger: 'blur' },
+    ],
+})
+
+const submitFormRegister = async (formEl: FormInstance | undefined) => {
+    if (!formEl) return
+    await formEl.validate((valid, fields) => {
+        if (valid) {
+            console.log('submit!')
+        } else {
+            console.log('error submit!', fields)
+        }
+    })
+}
+// -------------------------
+</script>
+
+<style lang="scss" scoped>
+// 需要在main.css里的样式
+.mt-72 {
+    margin-top: 72px;
+}
+
+.mt-8 {
+    margin-top: 8px;
+}
+
+.m-0 {
+    margin: 0;
+}
+
+.mt-5 {
+    margin-top: 5px;
+}
+
+.mt-18 {
+    margin-top: 18px;
+}
+
+.mt-22 {
+    margin-top: 22px;
+}
+
+.c-575757 {
+    color: #575757;
+}
+
+// 少量的只在此页用到的公共样式
+$margin-auto: 0 auto;
+$border-radius: 8px;
+$width100: 100%;
+
+// element 样式穿透
+:deep(.el-tabs__nav) {
+    --height: 40px;
+    height: var(--height);
+    line-height: var(--height);
+}
+
+:deep(.el-tabs__content) {
+
+    padding: 0 2px;
+}
+
+:deep(.is-active) {
+    --el-color-primary: #000000;
+    // --el-color-primary:#000000;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+:deep(.el-tabs__active-bar) {
+    height: 3px;
+    width: 56px !important;
+    left: 10%;
+}
+
+:deep(.el-tabs__item) {
+    font-size: 16px;
+    width: 160px;
+    text-align: center;
+    text-indent: -18px;
+}
+
+:deep(.el-form-item__content) {
+    margin: 0 !important;
+}
+
+:deep(.el-input__wrapper) {
+    padding: 0 !important;
+    border-radius: 5px;
+    background-color: #f6f7f9;
+    box-shadow: 0 0 0 0 !important;
+}
+
+:deep(.el-input__inner) {
+    height: 42px;
+    margin-left: 7px;
+}
+
+:deep(.el-form-item__error) {
+    padding: 6px;
+}
+
+.wrap-login {
+
+    height: 100vh;
+    background-image: url(@/assets/images/bg_login.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    /* 背景图不平铺 */
+    background-repeat: no-repeat;
+    /* 当内容高度大于图片高度时，背景图像的位置相对于viewport固定 */
+    background-attachment: fixed;
+    /* 让背景图基于容器大小伸缩 */
+    background-size: cover;
+    /* 设置背景颜色，背景图加载过程中会显示背景色 */
+    background-color: #464646;
+
+    // 头部
+    header {
+        font-size: 0;
+        width: 64%;
+        margin: $margin-auto;
+        padding-top: 16px;
+
+        // logo
+        .logo {
+            width: 142px;
+            height: 40px;
+        }
+    }
+
+    // 主要内容
+    .warp-main {
+        gap: 0 16px;
+
+        // 右边背景图
+        .schools {
+            width: 344px;
+            height: 470px;
+            border-radius: $border-radius;
+        }
+
+        // 左边登录注册
+        main {
+            width: 472px;
+            background-color: #ffffff;
+            border-radius: $border-radius;
+
+            .main {
+                padding: 0 76px;
+
+                .item-input {
+                    border-radius: 5px;
+                    background-color: #f6f7f9;
+                }
+
+                .forget-pass {
+                    width: $width100;
+                    line-height: 24px;
+                    margin-right: 2px;
+                    justify-content: right;
+                }
+
+                .btn {
+                    width: $width100;
+                    height: 42px;
+                }
+
+                .btn-register {
+                    color: #515a6e !important;
+
+                    .icon-right {
+                        width: 18px;
+                    }
+                }
+
+                .validate {
+                    background-color: #ffffff;
+
+                    .input {
+                        width: 198px;
+                    }
+
+                    .validate-flex {
+                        width: 100%;
+                    }
+
+                    .btn-validate {
+                        color: #b9b9b9 !important;
+                        height: 42px;
+                    }
+                }
+
+                .detail {
+                    line-height: 18px;
+                }
+
+                .to-login {
+                    color: #00157c;
+                }
+
+                .existing-account {
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+        }
+    }
+
+    // 页脚
+    footer {
+        ul {
+            
+            // gap: ;
+            li {
+                padding: 0 25px;
+                border-right: 1px solid #a4a4a4;
+                line-height: 16px;
+                
+                &:last-child {
+                    border: 0;
+                }
+                p {
+                    margin-right: 10px;
+                }
+
+                span {
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+}
+</style>

@@ -3,9 +3,7 @@
 </script>
 
 <template>
-  <div class="home">
-    this is . page
-  </div>
+  <RouterView />
 </template>
 
 <style lang="scss" scoped>

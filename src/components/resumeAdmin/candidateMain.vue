@@ -1,0 +1,124 @@
+<template>
+    <div class="candidate wrap">
+             <div class="candidate-header">
+                 <div class="candidate-header_top">
+                     <el-select class="m-2" placeholder="投递职位">
+                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                     </el-select>
+                     <el-select class="stage-input m-2" placeholder="阶段">
+                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                     </el-select>
+                     <el-cascader placeholder="学历" :options="options" />
+                     <el-input class="name-input" placeholder="姓名" />
+                     <el-checkbox label="只看邀约投递的简历" size="small" />
+                     <el-checkbox label="只看视频招聘会的简历" size="small" />
+                     <el-button type="primary">确定</el-button>
+                 </div>
+                 <div class="candidate-header_bottom">
+                     <el-checkbox :indeterminate="isIndeterminate" @change="handleCheckAllChange">全选</el-checkbox>
+                     <el-button class="screen-btn" type="info" plain>批量通过筛选</el-button>
+                     <el-button class="screen-btn" type="info" plain>批量不合适</el-button>
+                 </div>
+             </div>
+             <card.cardWrap class="mt-15" v-for="item in cities" :key="item">
+                 <template #header>
+                     <card.cardHeader :time="'2022-10-15 12:23:46'">
+                         <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+                             <el-checkbox :label="item">投递职位 | Java开发工程师</el-checkbox>
+                         </el-checkbox-group>
+                     </card.cardHeader>
+                 </template>
+                 <template #main>
+                     <card.cardItem :userinfo="userInfo"></card.cardItem>
+                 </template>
+             </card.cardWrap>
+             <div class="pagination">
+                 <el-pagination :page-size="20" :pager-count="11" layout="prev, pager, next" :total="1000" />
+             </div>
+             <footerBar></footerBar>
+         </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import card from "@/components/card/index";
+import footerBar from "@/components/footer/footerBar.vue";
+let userInfo = {
+    name: "金艺林",
+    sex: "女",
+    education: "江苏大学京江学院-软件工程-本科"
+}
+const options = [
+    {
+        value: '',
+        label: '全部职位',
+    },
+    {
+        value: 'guide',
+        label: 'java',
+    },
+]
+
+const checkAll = ref(false)
+const isIndeterminate = ref(false)
+const checkedCities = ref(['',]) //选中的数组  里面有几个就选中几个
+const cities = ref(['Shanghai', 'Beijing', 'Guangzhou', 'Shenzhen']);
+const handleCheckAllChange = (val: boolean) => {
+    checkedCities.value = val ? cities.value : []
+    isIndeterminate.value = false
+}
+const handleCheckedCitiesChange = (value: string[]) => {
+    const checkedCount = value.length
+    checkAll.value = checkedCount === cities.value.length
+    isIndeterminate.value = checkedCount > 0 && checkedCount < cities.value.length;
+}
+</script>
+
+<style lang="scss" scoped>
+    .candidate {
+        .pagination {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            margin-top: 25px;
+        }
+        .candidate-header {
+            border-radius: 6px;
+            .candidate-header_bottom {
+                display: flex;
+                align-items: center;
+                gap: 0 10px;
+
+                .screen-btn {
+                    margin-left: 10px;
+                    width: 100px;
+                }
+            }
+            .candidate-header_top {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 80px;
+            }
+            .stage-input {
+                width: 140px;
+            }
+            .name-input {
+                width: 120px;
+            }
+        }
+    }
+:deep(.candidate-header_bottom > .el-button) {
+    border: none;
+    color: #808695;
+    background: white;
+}
+
+:deep(.el-checkbox) {
+    margin-right: 0px;
+}
+
+:deep(.el-checkbox.el-checkbox--small) {
+    height: 33px;
+}
+</style>

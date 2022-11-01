@@ -96,7 +96,7 @@
                 </div>
             </div>
 
-            <!-- <div class="intention mt-16">
+            <div class="intention mt-16">
                 <div class="just-between">
                     <div class="top">
                         <h3>意向学校 <span>16</span>/50</h3>
@@ -114,12 +114,16 @@
                 </div>
             </div>
 
-            <div class="banner mt-16">
+            <div class="vip mt-16">
                 <h3>企业VIP会员</h3>
-                <div class="banner-img">
-                    <img src="@/assets/images/banner-TH.png" alt="">
+                <div class="notvip-wrap">
+                    <div class="left">
+                        <h4>企业版VIP会员</h4>
+                        
+                    </div>
+                    <div class="right"></div>
                 </div>
-            </div> -->
+            </div>
         </div>
 
         <footer-bar></footer-bar>
@@ -316,7 +320,7 @@ import footerBar from '@/components/footer/footerBar.vue'
     }
 }
 
-/* .intention {
+.intention {
     width: 100%;
     background-color: #fff;
     box-sizing: border-box;
@@ -340,19 +344,15 @@ import footerBar from '@/components/footer/footerBar.vue'
     max-width: 12px;
 }
 
-.banner {
+.vip {
     padding: 24px 32px;
     box-sizing: border-box;
     background-color: #fff;
 }
 
-.banner h3 {
+.vip h3 {
     font-size: 16px;
     color: #17233d;
     margin-bottom: 17px;
 }
-
-.banner .banner-img img {
-    max-width: 1136px;
-} */
 </style>

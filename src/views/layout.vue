@@ -6,22 +6,22 @@ let list = reactive([
   {
     id: 1,
     title: '首页',
-    url: '',
+    url: '/home',
   },
   {
     id: 2,
     title: '职位管理',
-    url: '',
+    url: '/position',
   },
   {
     id: 3,
     title: '简历管理',
-    url: '',
+    url: '/resume',
   },
   {
     id: 4,
     title: '寻找人才',
-    url: '',
+    url: '/findPersonnel',
   },
   {
     id: 5,
@@ -71,7 +71,6 @@ const handleSelect = (key: string, keyPath: string[]) => {
         </el-dropdown>
       </div>
     </div>
-
   </header>
   <RouterView />
 </template>
@@ -81,24 +80,16 @@ const handleSelect = (key: string, keyPath: string[]) => {
 .c-dadada {
   color: #dadada;
 }
-
-// element
-// :deep(.el-dropdown-link) {
-//   background-color: #2a2d34;
-// }
 :deep(.el-menu) {
   background-color: #2a2d34;
 }
 :deep(.el-menu-item) {
-  // background-color: #2a2d34;
   width: 120px;
   box-sizing: border-box;
 }
-
 :deep(.el-menu--horizontal) {
   border: 0;
 }
-
 :deep(.el-menu--horizontal>.el-menu-item.is-active) {
   border-bottom: 2px solid #2a2d34;
   background: #21242c !important;

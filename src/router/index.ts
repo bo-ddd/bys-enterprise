@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Layout from '../views/layout.vue'
+import Layout from '@/views/layout.vue'
 import Login from '@/views/login/login.vue'
 
 const router = createRouter({
@@ -16,6 +16,11 @@ const router = createRouter({
           component: () => import('@/views/positionAdmin/Position.vue')
         },
 
+        {
+          path: '/positionInfo',
+          name: 'PositionInfo',
+          component: () => import('@/views/positionAdmin/PositionInfo.vue')
+        },
         {
           path: '/memberCenter',
           name: 'MemberCenter',

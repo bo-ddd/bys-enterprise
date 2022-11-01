@@ -9,7 +9,12 @@
         </div>
 
         <div class="inappropriate" v-show="activeName == 'third'">
-            <div class="candidate-item">
+            
+        <card.cardWrap>
+            <template #header> <card.cardHeader :time="'2022-10-15 12:23:46'">123</card.cardHeader></template>
+            <template #main><card.cardItem :userinfo="userInfo"></card.cardItem></template>
+        </card.cardWrap>
+            <!-- <div class="candidate-item">
                 <div class="candidate-item_top fs-14 c-909090">
                     <div>
                       <span>投递职位 | Java开发工程师</span>
@@ -37,7 +42,7 @@
                         <el-button type="primary">通过筛选</el-button>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <div class="interview wrap" v-show="activeName == 'second'">
@@ -63,7 +68,7 @@
                         <template #default="scope">
                             <div style="display:flex;align-items: center">
                                 <el-link type="primary">面试信息</el-link>
-                                {{scope}}
+                                <!-- {{scope}} -->
                                 <!-- <span style="margin-left: 10px">{{ scope.row.date }}</span> -->
                             </div>
                         </template>
@@ -138,6 +143,15 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import card from "@/components/card/index";
+
+let userInfo = {
+    name:"金艺林",
+    sex:"女",
+    education:"江苏大学京江学院-软件工程-本科"
+}
+
+
 let activeName = ref("first");
 const options = [
     {
@@ -248,7 +262,7 @@ const handleCheckedCitiesChange = (value: string[]) => {
     background: #f6f7f9;
 
     .inappropriate{
-        padding: 20px;
+        padding:30px 150px;
         .candidate-item {
             background: white;
             padding: 15px;

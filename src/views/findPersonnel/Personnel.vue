@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, reactive , type Ref } from "vue";
+import FooterBar from "@/components/footer/footerBar.vue"
 interface Check {
     id: number,
     label: string | number,
@@ -203,8 +204,10 @@ let majorArr = reactive<Check[]>([]);
 
         <!-- 我邀请的页面 -->
         <div class="invitation-library-wrap" v-show="checkItem==1">
-
         </div>
+
+        <!-- 底部 -->
+        <FooterBar></FooterBar>
     </div>
 </template>
 
@@ -258,8 +261,7 @@ let majorArr = reactive<Check[]>([]);
         &>.data-wrap{
             padding: 24px 0;
             &>.data-item{
-                padding: 32px 0;
-                margin-left: 32px;
+                padding: 32px 0 32px;
                 display: flex;
                 border-bottom: 1px solid #eef0f2;
                 &>.cbleft2{
@@ -313,6 +315,7 @@ let majorArr = reactive<Check[]>([]);
             &>.page-content{
                 display: flex;
                 justify-content: center;
+                padding-bottom: 64px;
                 ::v-deep .number {
                     background: #fff;
                     border: 1px solid #ccc;
@@ -344,6 +347,9 @@ let majorArr = reactive<Check[]>([]);
     .mt-16{
         margin-top: 16px;
     }
+    .mt-17{
+        margin-top: 17px;
+    }
     .ml-48{
         margin-left: 48px;
     }
@@ -372,6 +378,9 @@ let majorArr = reactive<Check[]>([]);
     }
     .mt-48{
         margin-top: 48px;
+    }
+    .fw-700{
+        font-weight: 700;
     }
 }
 </style>

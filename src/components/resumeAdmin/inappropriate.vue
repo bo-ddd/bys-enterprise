@@ -12,7 +12,6 @@
                         </template>
                     </card.cardItem>
                 </template>
-
             </card.cardWrap>
 
         </div>

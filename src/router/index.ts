@@ -1,14 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Layout from '@/views/layout.vue'
 import Login from '@/views/login/login.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
+      path: '/layout',
       name: 'layout',
-      component: Layout,
+      component: ()=> import('@/views/layout.vue'),
       children:[
         {
           path: '/position',
@@ -48,7 +47,7 @@ const router = createRouter({
     },
     
     {
-      path: '/login',
+      path: '/',
       name: 'Login',
       component: Login
     }

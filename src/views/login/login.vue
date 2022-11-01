@@ -9,7 +9,7 @@
         <!-- 主要内容 -->
         <div class="warp-main just-center mt-72">
             <!-- 左侧登录注册 -->
-            <main v-show="isOpen">
+            <main v-show="isOpen == 1">
                 <!-- 标题 -->
                 <div class="header ">
                     <p class="title just-center fs-18 mt-40">2023届毕业生招聘</p>
@@ -17,7 +17,7 @@
                 </div>
                 <div class="main mt-30">
                     <!-- tabs 登录 -->
-                    <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+                    <el-tabs v-model="activeName" class="demo-tabs" >
                         <!-- 密码登录 -->
                         <el-tab-pane label="密码登录" name="first">
                             <el-form ref="ruleFormPassRef" label-position="right" :model="ruleFormPass"
@@ -30,16 +30,16 @@
                                         type="password" autocomplete="off" />
                                 </el-form-item>
                                 <el-form-item class="" label="" label-width="105px">
-                                    <p class="fs-14 c-575757 forget-pass flex">忘记密码</p>
+                                    <p class="fs-14 c-575757 forget-pass flex" @click="isOpen = 3">忘记密码</p>
                                 </el-form-item>
                                 <el-form-item class="m-0">
-                                    <el-button class=" btn fs-16 " color="#356ffa" type="primary"
+                                    <el-button class=" btn fs-16 " color="#2d8cf0" type="primary"
                                         @click="submitFormPass(ruleFormPassRef)">立即登录
                                     </el-button>
                                 </el-form-item>
                                 <el-form-item class="mt-5">
                                     <el-button class=" btn btn-register fs-14" color="#356ffa" type="text"
-                                        @click="isOpen = false">立即注册&nbsp;<img class="icon-right"
+                                        @click="isOpen = 2">立即注册&nbsp;<img class="icon-right"
                                             src="@/assets/images/icon-right.png" alt="">
                                     </el-button>
                                 </el-form-item>
@@ -55,12 +55,20 @@
                                     <el-input class="input" v-model="ruleFormValidate.phone" placeholder="请输入手机号" />
                                 </el-form-item>
                                 <el-form-item class="mt-22 item-input validate" label="" label-width="105px"
-                                    prop="password">
+                                    prop="validate">
                                     <!-- 验证码 -->
                                     <div class="just-between validate-flex">
                                         <el-input class="input" v-model="ruleFormValidate.validate"
                                             placeholder="请输入短信验证码" type="" autocomplete="off" />
-                                        <el-button disabled color="#ececec" class="btn-validate">获取验证码</el-button>
+                                        <el-button v-show="ruleFormValidate.isCountDown" style="width:102px"
+                                            :disabled="ruleFormValidate.phone.length == 11 ? false : true"
+                                            :color="ruleFormValidate.phone.length == 11 ? '#356ffa' : '#ececec'"
+                                            :class="'btn-validate ' + (ruleFormValidate.phone.length == 11 ? 'c-ffffff' : 'c-b9b9b9')"
+                                            @click="getvalidate($event,ruleFormValidate)">
+                                            获取验证码</el-button>
+                                        <el-button v-show="!ruleFormValidate.isCountDown" style="width:102px" disabled color='#ececec'
+                                            class="btn-validate c-b9b9b9">
+                                            {{ `${ruleFormValidate.countDown}秒后重试` }}</el-button>
                                     </div>
                                 </el-form-item>
                                 <el-form-item class="m-0">
@@ -76,7 +84,7 @@
                     </el-tabs>
                 </div>
             </main>
-            <main v-show="!isOpen">
+            <main v-show="isOpen == 2">
                 <div class="header just-center mt-40 mb-40">
                     <h3 class="fs-18">新用户注册</h3>
                 </div>
@@ -92,7 +100,15 @@
                             <div class="just-between validate-flex">
                                 <el-input class="input" v-model="ruleFormRegister.validate" placeholder="请输入短信验证码"
                                     autocomplete="off" />
-                                <el-button disabled color="#ececec" class="btn-validate">获取验证码</el-button>
+                                <el-button v-show="ruleFormRegister.isCountDown" style="width:102px"
+                                    :disabled="ruleFormRegister.phone.length == 11 ? false : true"
+                                    :color="ruleFormRegister.phone.length == 11 ? '#356ffa' : '#ececec'"
+                                    :class="'btn-validate ' + (ruleFormRegister.phone.length == 11 ? 'c-ffffff' : 'c-b9b9b9')"
+                                    @click="getvalidate($event,ruleFormRegister)">
+                                    获取验证码</el-button>
+                                <el-button v-show="!ruleFormRegister.isCountDown" style="width:102px" disabled color='#ececec'
+                                    class="btn-validate c-b9b9b9">
+                                    {{ `${ruleFormRegister.countDown}秒后重试` }}</el-button>
                             </div>
                         </el-form-item>
                         <el-form-item class="mt-18 item-input" label="" label-width="105px" prop="password">
@@ -101,13 +117,80 @@
                                 placeholder="请设置6-16位密码" />
                         </el-form-item>
                         <el-form-item class="m-0">
-                            <el-button class=" btn fs-16 mt-15 " color="#356ffa" type="primary"
+                            <el-button class=" btn fs-16 mt-15 " color="#2d8cf0" type="primary"
                                 @click="submitFormRegister(ruleFormRegisterRef)">注册
                             </el-button>
                         </el-form-item>
                         <el-form-item class="mt-5">
                             <p class="existing-account fs-14 c-8d9ea7 mt-10">已有账号，<span class="to-login"
-                                    @click="isOpen = true">去登录</span></p>
+                                    @click="isOpen = 1">去登录</span></p>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </main>
+            <main v-show="isOpen == 3">
+                <div class="header just-center mt-40 mb-40">
+                    <h3 class="fs-18">忘记密码</h3>
+                </div>
+                <div class="main ">
+                    <el-steps :active="active" finish-status="success" align-center>
+                        <el-step title="验证手机号" />
+                        <el-step title="重置密码" />
+                    </el-steps>
+                    <!-- 第一步 -->
+                    <el-form ref="ruleFormForgotPwRef" v-show="isNext" label-position="right" :model="ruleFormForgotPw"
+                        :rules="rulesForgotPw" label-width="120px" class="demo-ruleForm" :size="formForgotPwSize">
+                        <el-form-item class="mt-18 item-input" label="" label-width="105px" prop="phone">
+                            <!-- 手机号 -->
+                            <el-input class="input" v-model="ruleFormForgotPw.phone" placeholder="请输入注册手机号" />
+                        </el-form-item>
+                        <el-form-item class="mt-22 item-input validate" label="" label-width="105px" prop="validate">
+                            <!-- 验证码 -->
+                            <div class="just-between validate-flex">
+                                <el-input class="input" v-model="ruleFormForgotPw.validate" placeholder="请输入短信验证码"
+                                    autocomplete="off" />
+                                <el-button v-show="ruleFormForgotPw.isCountDown" style="width:102px"
+                                    :disabled="ruleFormForgotPw.phone.length == 11 ? false : true"
+                                    :color="ruleFormForgotPw.phone.length == 11 ? '#356ffa' : '#ececec'"
+                                    :class="'btn-validate ' + (ruleFormForgotPw.phone.length == 11 ? 'c-ffffff' : 'c-b9b9b9')"
+                                    @click="getvalidate($event,ruleFormForgotPw)">
+                                    获取验证码</el-button>
+                                <el-button v-show="!ruleFormForgotPw.isCountDown" style="width:102px" disabled color='#ececec'
+                                    class="btn-validate c-b9b9b9">
+                                    {{ `${ruleFormForgotPw.countDown}秒后重试` }}</el-button>
+                            </div>
+                        </el-form-item>
+                        <el-form-item class="m-0">
+                            <el-button class=" btn fs-16 mt-15 " color="#2d8cf0" type="primary"
+                                @click="submitFormForgotPw(ruleFormForgotPwRef)">找回密码
+                            </el-button>
+                        </el-form-item>
+                        <el-form-item class="mt-5">
+                            <p class="existing-account fs-14 c-8d9ea7 mt-10"><span class="to-login"
+                                    @click="isOpen = 1">返回登录</span></p>
+                        </el-form-item>
+                    </el-form>
+                    <!-- 第二步 -->
+                    <el-form ref="ruleFormResetPwRef" v-show="!isNext" label-position="right" :model="ruleFormResetPw"
+                        :rules="rulesResetPw" label-width="120px" class="demo-ruleForm" :size="formResetPwSize">
+                        <el-form-item class="mt-18 item-input" label="" label-width="105px" prop="password">
+                            <!-- 重置密码 -->
+                            <el-input class="input" v-model="ruleFormResetPw.password" placeholder="请输入6-16位新密码"
+                                type="password" />
+                        </el-form-item>
+                        <el-form-item class="mt-22 item-input " label="" label-width="105px" prop="checkPass">
+                            <!-- 再次输入密码 -->
+                            <el-input class="input" v-model="ruleFormResetPw.checkPass" placeholder="请再次输入密码"
+                                type="password" autocomplete="off" />
+                        </el-form-item>
+                        <el-form-item class="m-0">
+                            <el-button class=" btn fs-16 mt-15 " color="#2d8cf0" type="primary"
+                                @click="submitFormResetPw(ruleFormResetPwRef)">确认
+                            </el-button>
+                        </el-form-item>
+                        <el-form-item class="mt-5">
+                            <p class="existing-account fs-14 c-8d9ea7 mt-10"><span class="to-login"
+                                    @click="isOpen = 1">返回登录</span></p>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -134,6 +217,22 @@
 import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 
+// 获取验证码
+
+let getvalidate = (e: any,rule:any) => {
+    let count = rule.countDown;
+    rule.isCountDown = false
+    e.target.disabled = true
+    let interval = setInterval(() => {
+        rule.countDown--;
+        if (rule.countDown == 0) {
+            clearInterval(interval)
+            rule.countDown= count;
+            rule.isCountDown= true;
+        }
+    }, 1000);
+}
+
 // 页脚
 const footer = [
     {
@@ -158,17 +257,34 @@ const footer = [
     },
 ]
 
-// 登录注册
-let isOpen = ref(true);//默认显示登录，点击切换注册
-
+// 登录注册忘记密码
+let isOpen = ref(1);//1是登录，2是注册，3是忘记密码
+// 步骤条
+const active = ref(0);
+let isNext = ref(true);
+const next = () => {
+    if (active.value++ > 2) active.value = 0;
+    isNext.value = false
+}
 // tabs--------------------
 const activeName = ref('first');
-const handleClick = (tab: TabsPaneContext, event: Event) => {
-    console.log(tab, event)
-}
 // ----------------------
 
 // from表单----------------
+let regPhone = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
+let validatePhone = (rule: any, value: any, callback: any) => {
+    if (value === '') {
+        callback(new Error('请输入正确的手机号'))
+    } else {
+        if (regPhone.test(value)) {
+            callback()
+        } else if (!regPhone.test(value)) {
+            callback(new Error('请输入正确的手机号'))
+        }
+    }
+}
+
+
 // 密码登录
 const formPassSize = ref('default')
 const ruleFormPassRef = ref<FormInstance>()
@@ -180,7 +296,7 @@ const ruleFormPass = reactive({
 const rulesPass = reactive<FormRules>({
     phone: [
         { required: true, message: '请输入手机号', trigger: 'blur' },
-        { min: 11, max: 11, message: '请输入正确的手机号', trigger: 'blur' },
+        { validator: validatePhone, }
     ],
     password: [
         { required: true, message: '请输入密码', trigger: 'blur' },
@@ -204,12 +320,14 @@ const ruleFormValidateRef = ref<FormInstance>()
 const ruleFormValidate = reactive({
     phone: '',
     validate: '',
+    countDown:60,
+    isCountDown:true
 })
 
 const rulesValidate = reactive<FormRules>({
     phone: [
         { required: true, message: '请输入手机号', trigger: 'blur' },
-        { min: 11, max: 11, message: '请输入11位正确的手机号', trigger: 'blur' },
+        { validator: validatePhone, }
     ],
     validate: [
         { required: true, message: '请输入验证码', trigger: 'blur' },
@@ -235,12 +353,14 @@ const ruleFormRegister = reactive({
     phone: '',
     validate: '',
     password: '',
+    countDown:60,
+    isCountDown:true
 })
 
 const rulesRegister = reactive<FormRules>({
     phone: [
         { required: true, message: '请输入手机号', trigger: 'blur' },
-        { min: 11, max: 11, message: '请输入11位正确的手机号', trigger: 'blur' },
+        { validator: validatePhone, }
     ],
     validate: [
         { required: true, message: '请输入验证码', trigger: 'blur' },
@@ -262,6 +382,82 @@ const submitFormRegister = async (formEl: FormInstance | undefined) => {
         }
     })
 }
+//忘记密码
+const formForgotPwSize = ref('default')
+const ruleFormForgotPwRef = ref<FormInstance>()
+const ruleFormForgotPw = reactive({
+    phone: '',
+    validate: '',
+    countDown:60,
+    isCountDown:true
+})
+
+const rulesForgotPw = reactive<FormRules>({
+    phone: [
+        { required: true, message: '请输入手机号', trigger: 'blur' },
+        { validator: validatePhone, }
+    ],
+    validate: [
+        { required: true, message: '请输入验证码', trigger: 'blur' },
+        { min: 6, max: 6, message: '请输入6位验证码', trigger: 'blur' },
+    ],
+})
+
+const submitFormForgotPw = async (formEl: FormInstance | undefined) => {
+    if (!formEl) return
+    await formEl.validate((valid, fields) => {
+        if (valid) {
+            console.log('submit!')
+            next();
+        } else {
+            console.log('error submit!', fields)
+        }
+    })
+}
+//重置密码
+const formResetPwSize = ref('default')
+const ruleFormResetPwRef = ref<FormInstance>()
+const ruleFormResetPw = reactive({
+    password: '',
+    checkPass: '',
+})
+const validatePass = (rule: any, value: any, callback: any) => {
+    if (value === '') {
+        callback(new Error('请输入新的密码'))
+    } else {
+        if (ruleFormResetPw.checkPass !== '') {
+            if (!ruleFormResetPwRef.value) return
+            ruleFormResetPwRef.value.validateField('checkPass', () => null)
+        }
+        callback()
+    }
+}
+const validatePass2 = (rule: any, value: any, callback: any) => {
+    if (value === '') {
+        callback(new Error('请再次输入密码'))
+    } else if (value !== ruleFormResetPw.password) {
+        callback(new Error("两次输入的密码不一致"))
+    } else {
+        callback()
+    }
+}
+const rulesResetPw = reactive<FormRules>({
+    password: [{ validator: validatePass, trigger: 'blur' }],
+    checkPass: [{ validator: validatePass2, trigger: 'blur' }],
+})
+
+const submitFormResetPw = async (formEl: FormInstance | undefined) => {
+    if (!formEl) return
+    await formEl.validate((valid, fields) => {
+        if (valid) {
+            console.log('submit!')
+            next();
+        } else {
+            console.log('error submit!', fields)
+        }
+    })
+}
+
 // -------------------------
 </script>
 
@@ -293,6 +489,14 @@ const submitFormRegister = async (formEl: FormInstance | undefined) => {
 
 .c-575757 {
     color: #575757;
+}
+
+.c-ffffff {
+    color: #ffffff !important;
+}
+
+.c-b9b9b9 {
+    color: #b9b9b9 !important;
 }
 
 // 少量的只在此页用到的公共样式
@@ -351,6 +555,44 @@ $width100: 100%;
 :deep(.el-form-item__error) {
     padding: 6px;
 }
+
+:deep(.el-step__line) {
+    width: 200% !important;
+    left: 0 !important;
+    height: 0 !important;
+    background-color: rgb(232, 232, 232);
+    border: 1px dashed rgb(255, 255, 255);
+}
+
+:deep(.el-step__title) {
+    font-weight: 500 !important;
+    font-size: 14px;
+}
+
+:deep(.el-step__icon-inner) {
+    font-weight: 500 !important;
+    font-size: 14px;
+}
+
+:deep(.el-step__head.is-process>.el-step__icon.is-text) {
+    background-color: #2d8cf0;
+}
+
+:deep(.el-step__icon) {
+    background-color: #ababab;
+}
+
+:deep(.el-step__icon.is-text) {
+    --size: 22px;
+    color: #ffffff;
+    border: 0;
+    width: var(--size);
+    height: var(--size);
+    //    line-height: var(--size) !important;
+    //    text-align: center;
+}
+
+
 
 .wrap-login {
 
@@ -438,7 +680,7 @@ $width100: 100%;
                     }
 
                     .btn-validate {
-                        color: #b9b9b9 !important;
+
                         height: 42px;
                     }
                 }
@@ -462,16 +704,17 @@ $width100: 100%;
     // 页脚
     footer {
         ul {
-            
+
             // gap: ;
             li {
                 padding: 0 25px;
                 border-right: 1px solid #a4a4a4;
                 line-height: 16px;
-                
+
                 &:last-child {
                     border: 0;
                 }
+
                 p {
                     margin-right: 10px;
                 }

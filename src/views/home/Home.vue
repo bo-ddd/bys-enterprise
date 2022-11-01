@@ -6,7 +6,7 @@
                     <div class="left major just-between-2">
                         <div class="flex">
                             <div class="img mr-16">
-                                <img class="icon-head-portrait" src="@/assets/images/icon-right.png" alt="">
+                                <img class="icon-head-portrait" src="@/assets/images/icon-head_portrait.png" alt="">
                             </div>
                             <div class="test">
                                 <h1>中科百谷</h1>
@@ -15,7 +15,9 @@
                             </div>
                         </div>
                         <div class="major-right just-center">
-                            <img class="icon mr-11" src="@/assets/images/icon-right.png" alt="">
+                            <div class="icon mr-11">
+                                <img class="icon" src="@/assets/images/icon-edit.png" alt="">
+                            </div>
                             <div class="test">编辑企业信息</div>
                         </div>
                     </div>
@@ -34,7 +36,10 @@
                                 <h3>2</h3>
                                 <div class="test">在招职位</div>
                             </div>
-                            <div class="right mr-14">></div>
+                            <div class="right mr-14">
+                                <img class="icon-home_right_arrow" src="@/assets/images/icon-home_right_arrow.png"
+                                    alt="">
+                            </div>
                         </div>
                         <div class="just-between">
                             <div class="bottom">
@@ -42,7 +47,7 @@
                                 <div class="test">七日内刷新过职位</div>
                             </div>
                             <div class="icon-img">
-                                <img class="icon-img" src="@/assets/images/logo.png" alt="">
+                                <img class="icon-img" src="@/assets/images/icon-home_banner1.png" alt="">
                             </div>
                         </div>
                     </div>
@@ -52,7 +57,10 @@
                                 <h3>0</h3>
                                 <div class="test">新简历</div>
                             </div>
-                            <div class="right mr-14">></div>
+                            <div class="right mr-14">
+                                <img class="icon-home_right_arrow" src="@/assets/images/icon-home_right_arrow.png"
+                                    alt="">
+                            </div>
                         </div>
                         <div class="just-between">
                             <div class="bottom">
@@ -60,7 +68,7 @@
                                 <div class="test">未查看简历</div>
                             </div>
                             <div class="icon-img">
-                                <img class="icon-img" src="@/assets/images/logo.png" alt="">
+                                <img class="icon-img" src="@/assets/images/icon-home_banner2.png" alt="">
                             </div>
                         </div>
                     </div>
@@ -70,7 +78,10 @@
                                 <h3>147</h3>
                                 <div class="test">在职招聘会</div>
                             </div>
-                            <div class="right mr-14">></div>
+                            <div class="right mr-14">
+                                <img class="icon-home_right_arrow" src="@/assets/images/icon-home_right_arrow.png"
+                                    alt="">
+                            </div>
                         </div>
                         <div class="just-between">
                             <div class="bottom">
@@ -78,7 +89,7 @@
                                 <div class="test">我报名的</div>
                             </div>
                             <div class="icon-img">
-                                <img class="icon-img" src="@/assets/images/logo.png" alt="">
+                                <img class="icon-img" src="@/assets/images/icon-home_banner3.png" alt="">
                             </div>
                         </div>
                     </div>
@@ -205,18 +216,19 @@ import footerBar from '@/components/footer/footerBar.vue'
                 padding-right: 32px;
 
                 &>.icon {
-                    display: inline-block;
                     width: 14px;
                     height: 14px;
 
                     &>img {
                         max-width: 14px;
                         max-height: 14px;
+                        vertical-align: middle;
                     }
                 }
 
                 &>.test {
-                    font-size: 13px;
+                    display: inline-block;
+                    font-size: 14px;
                 }
             }
         }
@@ -274,6 +286,16 @@ import footerBar from '@/components/footer/footerBar.vue'
 
                 &>.test {
                     margin: 3px 0;
+                }
+            }
+
+            .right {
+                width: 10px;
+                height: 18px;
+
+                &>.icon-home_right_arrow {
+                    max-width: 10px;
+                    max-height: 18px;
                 }
             }
 

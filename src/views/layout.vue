@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import { useRoute,useRouter } from 'vue-router';
 import type { TabsPaneContext } from 'element-plus'
 const activeName = ref('1');
+let route = useRoute();
+let router = useRouter();
 let list = reactive([
   {
     id: 1,
@@ -30,10 +33,16 @@ let list = reactive([
   },
 ])
 
-const activeIndex = ref('1');
+const activeIndex = ref(1);
 
-const handleSelect = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
+const handleSelect = (key: any) => {
+  activeName.value=key.url;
+  activeIndex.value = key.id;
+  if(route.name != key.url){
+    router.push({
+      path:key.url
+    })
+  }
 }
 
 </script>
@@ -47,9 +56,8 @@ const handleSelect = (key: string, keyPath: string[]) => {
           <span class="fs-12 c-dadada">校园招聘平台</span>
         </div>
         <!-- 菜单 -->
-        <el-menu :ellipsis="false" :default-active="activeIndex" class="el-menu-demo" mode="horizontal"
-          @select="handleSelect">
-          <el-menu-item v-for="item in list" :key="item.id" :index="item.id">{{ item.title }}</el-menu-item>
+        <el-menu :ellipsis="false" :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
+          <el-menu-item v-for="item in list" :key="item.id" :index="item.id" @click="handleSelect(item)">{{ item.title }}</el-menu-item>
         </el-menu>
       </div>
       <div class="user align-center">

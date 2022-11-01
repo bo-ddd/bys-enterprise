@@ -92,6 +92,14 @@
               </div>
             </div>
           </div>
+          <div class="just-center">
+            <el-pagination
+              :background="true"
+              pager-count="4"
+              layout="prev, pager, next"
+              :total="1000"
+            />
+          </div>
         </div>
       </div>
       <div class="tab2" v-show="currentIndex==1">
@@ -109,16 +117,16 @@
 <script lang="ts" setup>
 import FooterBar from "@/components/footer/footerBar.vue";
 import { ref } from "vue";
-import {useRouter} from 'vue-router'
-const router=useRouter();
+import { useRouter } from "vue-router";
+const router = useRouter();
 const tabFlag = ref(true);
 const currentIndex = ref(0);
 const tab = function (num: number) {
   currentIndex.value = num;
 };
-const to=function(path:string){
-  router.push(path)
-}
+const to = function (path: string) {
+  router.push(path);
+};
 </script>
 <style lang="scss" scoped>
 .position-page {
@@ -218,7 +226,7 @@ const to=function(path:string){
       }
 
       .refresh-info {
-        gap:0 12px;
+        gap: 0 12px;
         .autorefresh-btn {
           padding: 7px 15px;
           border: 1px solid #356ffa;

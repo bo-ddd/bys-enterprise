@@ -85,7 +85,7 @@
         />
       </el-select>
       <span class="ml-28 mr-15">招聘人数</span>
-      <el-input class="w-310 unit-input" v-model="input" placeholder="请如实填写,本数据会用于高校的就业报告编撰">
+      <el-input class="w-340 unit-input" v-model="input" placeholder="请如实填写,本数据会用于高校的就业报告编撰">
         <template #append>人</template>
       </el-input>
     </div>
@@ -319,6 +319,9 @@ const input = ref("");
 }
 .w-310 {
   width: 310px;
+}
+.w-320 {
+  width: 320px;
 }
 .w-340 {
   width: 340px;

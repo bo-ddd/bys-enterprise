@@ -29,7 +29,12 @@
                      </card.cardHeader>
                  </template>
                  <template #main>
-                     <card.cardItem :userinfo="userInfo"></card.cardItem>
+                     <card.cardItem :userinfo="userInfo">
+                        <template #btn>
+                            <el-button>不合适</el-button>
+                            <el-button type="primary">通过筛选</el-button>
+                        </template>
+                    </card.cardItem>
                  </template>
              </card.cardWrap>
              <div class="pagination">

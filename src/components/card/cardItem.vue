@@ -16,8 +16,7 @@
             <span>未查看</span>
         </div>
         <div>
-            <el-button type="danger" plain>不合适</el-button>
-            <el-button type="primary">通过筛选</el-button>
+            <slot name="btn"></slot>
         </div>
     </div>
 </template>

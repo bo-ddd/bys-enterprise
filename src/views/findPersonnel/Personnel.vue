@@ -13,10 +13,14 @@ let checkPosition: Ref<null | number | undefined> = ref();//职位
 let checkCity: Ref<null | number | undefined> = ref();//城市
 let lowestSalary: Ref<null | number | undefined> = ref();//最低薪资
 let highestSalary: Ref<null | number | undefined> = ref();//最高薪资
+let showGuid = ref(false);
 let circleUrl = ref('https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png');       
 let checkItem = ref(0);//默认展示哪个页面
 let handleItemChange = (index: number) => {
     checkItem.value = index;
+}
+let handleGuideChange = (bool:boolean)=>{
+    showGuid.value = bool;
 }
 //性别
 let sexArr = reactive<Check[]>([
@@ -91,6 +95,22 @@ let majorArr = reactive<Check[]>([]);
                 </div>
             </div>
         </div>
+
+        <!-- 这个是疑问咨询的图片 -->
+        <div :class="['consulting-service','absolute-wrap',showGuid?'close-animate' : 'show-animate' ]">
+            <div class="top">
+                <img src="@/assets/images/company_fanjia_3.png" class="or-code">
+                <p class="tip fs-12">如有任何疑问请咨询</p>
+            </div>
+            <img src="@/assets/images/icon-close.png" @click="handleGuideChange(true)">
+        </div>
+
+        <!-- 这个是点击弹出咨询的容器 -->
+        <div class="seek-advice absolute-wrap box-shadow" v-show="showGuid" @click="handleGuideChange(false)">
+            <img src="@/assets/images/icon-kefu.png">
+        </div>
+
+        <!-- 人才数据的页面 -->
         <div class="talent-pool-wrap" v-show="checkItem==0">
 
             <!-- 模糊查询的列表 -->
@@ -188,8 +208,8 @@ let majorArr = reactive<Check[]>([]);
                     
                     <!-- 活跃时间 -->
                     <div class="cbleft5">
-                        <p class="titlest fs-12">2022-10-17活跃</p>
-                        <div class="delivery-btn c-ffffff fs-12 mt-30">邀请投递</div>
+                        <p class="titlest fs-12 cl-ccc">2022-10-17活跃</p>
+                        <el-button type="primary" class="mt-50">邀请投递</el-button>
                     </div>
                 </div>
             </div>
@@ -204,6 +224,13 @@ let majorArr = reactive<Check[]>([]);
 
         <!-- 我邀请的页面 -->
         <div class="invitation-library-wrap" v-show="checkItem==1">
+            <div class="container wrap">
+                <div class="nolist">
+                    <img src="@/assets/images/myinvited_nolist.4b83c481.png">
+                    <p class="fs-16 top">暂无学生投递</p>
+                    <p class="fs-16">快去人才库中邀请自己心仪的学生吧</p>
+                </div>
+            </div>
         </div>
 
         <!-- 底部 -->
@@ -213,6 +240,7 @@ let majorArr = reactive<Check[]>([]);
 
 <style lang="scss" scoped>
 .personnel {
+    position: relative;
     &>.operation-wrap {
         background: #fff;
         &>.operation-container {
@@ -239,16 +267,62 @@ let majorArr = reactive<Check[]>([]);
                     background: #356ffa;
                 }
             }
+            &>.operation-item:hover{
+                cursor: pointer;
+            }
         }
     }
+
+    // 这个是咨询
+    &>.consulting-service{
+        position: relative;
+        text-align: center;
+        &>.top{
+            padding: 12px 12px 0;
+            box-shadow:  2px 3px 0 rgb(215 214 214 / 50%);
+            &>.or-code{
+                width: 88px;
+            }
+            &>.tip{
+                width: 72px;
+                margin: 0 auto;
+                padding-top: 5px;
+                padding-bottom: 12px;
+                line-height: 16px;
+                text-align: center;
+            }
+        }
+        &>img:hover{
+            cursor: pointer;
+        }
+    }
+
+    //这个是弹出咨询
+    &>.seek-advice{
+        padding: 10px 10px 6px;
+        &>img{
+            width: 38px;
+        }
+    }
+
+    &>.seek-advice:hover{
+        cursor: pointer;
+    }
+
+   .absolute-wrap{
+        position: absolute;
+        right: 20px;
+        top: 90px;
+    }
+
     &>.talent-pool-wrap {
         &>.filter-wrap {
             padding: 32px 0;
             border-bottom: 1px solid #eef0f2;
-            ::v-deep .check-sex {
+            :deep(.check-sex) {
                 width: 110px;
             }
-            ::v-deep .check-salary {
+            :deep(.check-salary) {
                 width: 150px;
             }
             &>.filter-wrap-btm {
@@ -302,12 +376,6 @@ let majorArr = reactive<Check[]>([]);
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    &>.delivery-btn{
-                        display: inline-block;
-                        background: #356ffa;
-                        padding: 8px 16px;
-                        border-radius: 5px;
-                    }
                 }
             }
         }
@@ -316,18 +384,79 @@ let majorArr = reactive<Check[]>([]);
                 display: flex;
                 justify-content: center;
                 padding-bottom: 64px;
-                ::v-deep .number {
-                    background: #fff;
-                    border: 1px solid #ccc;
+                // :deep(.number) {
+                //     background: #fff;
+                //     border: 1px solid #ccc;
+                //     color: #515a6e;
+                // }
+                // :deep(.btn-quicknext){
+                //     background: #fff;
+                //     color: #515a6e;
+                // }
+                // :deep(.is-active){
+                //     border-color: #356ffa;
+                //     color: #356ffa;
+                // }
+            }
+        }
+    }
+    &>.invitation-library-wrap{
+        background-color: #f6f7f9;
+        min-height: calc(100vh - 150px);
+        &>.container{
+            height: calc(100vh - 260px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            &>.nolist{
+                text-align: center;
+                &>img{
+                    width: 243px;
+                }
+                &>p{
                     color: #515a6e;
                 }
-                ::v-deep .btn-quicknext{
-                    background: #fff;
-                    color: #515a6e;
+                &>.top{
+                    margin: 12px 0 16px;
                 }
             }
         }
     }
+
+    //这个是展开动画
+    .show-animate{
+        animation-name: showAnimate;//动画名称
+        animation-duration: 2s;//动画持续时间
+        animation-timing-function:ease;//动画播放速度
+        animation-fill-mode:forwards;//动画完毕后停留在那里
+    }
+    .close-animate{
+        animation-name: closeAnimate;//动画名称
+        animation-duration: 2s;//动画持续时间
+        animation-timing-function:ease;//动画播放速度
+        animation-fill-mode:forwards;//动画完毕后停留在那里
+    }
+    @keyframes showAnimate {
+        from{
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to{
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    @keyframes closeAnimate {
+        from{
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to{
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    // 这个是关闭动画
     .box-shadow {
         box-shadow: 0 2px 6px 0 #edeff3;
     }
@@ -381,6 +510,9 @@ let majorArr = reactive<Check[]>([]);
     }
     .fw-700{
         font-weight: 700;
+    }
+    .mt-50{
+        margin-top: 50px;
     }
 }
 </style>

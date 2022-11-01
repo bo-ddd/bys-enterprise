@@ -10,7 +10,7 @@
           <span>在招中</span>
           <span class="fs-12 num">3</span>
         </div>
-          <div class="bottom-line"></div>
+        <div class="bottom-line"></div>
       </div>
       <div
         class="head-nav flex-ja-center cur-po"
@@ -21,7 +21,7 @@
           <span>已下线</span>
           <span class="fs-12 num">3</span>
         </div>
-          <div class="bottom-line"></div>
+        <div class="bottom-line"></div>
       </div>
     </div>
     <div class="position-content">
@@ -36,7 +36,7 @@
               <div class="fs-12 mt-10">若当日点数用尽，次日凌晨会自动补充新点数</div>
             </div>
             <div>
-              <div class="release-btn align-center cur-po">
+              <div class="release-btn align-center cur-po" @click="to('/positionInfo')">
                 <span class="fs-30">+</span>
                 <span>发布职位</span>
               </div>
@@ -69,8 +69,11 @@
                   <div class="mt-15 fs-14">新简历</div>
                 </div>
               </div>
-              <div class="refresh-info">
+              <div class="refresh-info align-center">
                 <div class="autorefresh-btn cur-po">
+                  <span class="plr-5">自动刷新</span>
+                </div>
+                <div class="refresh-btn cur-po">
                   <span class="plr-5">刷新</span>
                 </div>
               </div>
@@ -89,6 +92,14 @@
               </div>
             </div>
           </div>
+          <div class="just-center">
+            <el-pagination
+              :background="true"
+              pager-count="4"
+              layout="prev, pager, next"
+              :total="1000"
+            />
+          </div>
         </div>
       </div>
       <div class="tab2" v-show="currentIndex==1">
@@ -101,21 +112,20 @@
       </div>
     </div>
   </div>
+  <FooterBar></FooterBar>
 </template>
-<script lang="ts">
+<script lang="ts" setup>
+import FooterBar from "@/components/footer/footerBar.vue";
 import { ref } from "vue";
-export default {
-  data() {
-    return {};
-  },
-  setup() {
-    const tabFlag = ref(true);
-    const currentIndex = ref(0);
-    const tab = function (num: number) {
-      currentIndex.value = num;
-    };
-    return { tabFlag, tab, currentIndex };
-  },
+import { useRouter } from "vue-router";
+const router = useRouter();
+const tabFlag = ref(true);
+const currentIndex = ref(0);
+const tab = function (num: number) {
+  currentIndex.value = num;
+};
+const to = function (path: string) {
+  router.push(path);
 };
 </script>
 <style lang="scss" scoped>
@@ -216,23 +226,24 @@ export default {
       }
 
       .refresh-info {
-        .refresh-btn {
-          padding: 2px 16px;
+        gap: 0 12px;
+        .autorefresh-btn {
+          padding: 7px 15px;
           border: 1px solid #356ffa;
           color: #356ffa;
           border-radius: 4px;
         }
-        .autorefresh-btn {
-          padding: 8px 16px;
-          background-color: #356ffa;
+        .refresh-btn {
+          padding: 7px 15px;
           color: white;
+          border: 1px solid #356ffa;
           border-radius: 4px;
+          background-color: #356ffa;
         }
       }
     }
     .edit-job {
       color: #515a6e;
-
       padding: 18px 25px;
 
       .bor {

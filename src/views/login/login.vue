@@ -215,7 +215,9 @@
 <script setup lang="ts">
 
 import { reactive, ref } from 'vue'
+import {  useRouter } from 'vue-router'
 import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
+const router = useRouter();
 
 // 获取验证码
 
@@ -308,7 +310,7 @@ const submitFormPass = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     await formEl.validate((valid, fields) => {
         if (valid) {
-            console.log('submit!')
+            router.push({path:'/home'})
         } else {
             console.log('error submit!', fields)
         }

@@ -1,17 +1,21 @@
 <template>
     <div>
         <div class="inappropriate">
-                <card.cardWrap class="mt-15">
-                    <template #header>
-                        <card.cardHeader :time="'2022-10-15 12:23:46'">投递职位&nbsp;|&nbsp;Java开发工程师</card.cardHeader>
-                    </template>
-                    <template #main>
-                        <card.cardItem :userinfo="userInfo"></card.cardItem>
-                    </template>
-                </card.cardWrap>
-                
-            </div>
-            <footerBar></footerBar>
+            <card.cardWrap class="mt-15">
+                <template #header>
+                    <card.cardHeader :time="'2022-10-15 12:23:46'">投递职位&nbsp;|&nbsp;Java开发工程师</card.cardHeader>
+                </template>
+                <template #main>
+                    <card.cardItem :userinfo="userInfo">
+                        <template #btn>
+                            <el-button type="primary">回复位候选人</el-button>
+                        </template>
+                    </card.cardItem>
+                </template>
+            </card.cardWrap>
+
+        </div>
+        <footerBar></footerBar>
     </div>
 </template>
 
@@ -27,8 +31,8 @@ let userInfo = {
 </script>
 
 <style lang="scss" scoped>
-  .inappropriate {
-            padding: 30px 150px;
-            min-height: calc(100vh - 200px);
-        }
+.inappropriate {
+    padding: 30px 150px;
+    min-height: calc(100vh - 200px);
+}
 </style>

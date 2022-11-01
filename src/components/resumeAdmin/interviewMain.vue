@@ -34,10 +34,6 @@
                                 </div>
                             </template>
                         </el-popover>
-
-                        <!-- <div style="display:flex;align-items: center">
-                        <el-link type="primary" @click="getRow(scope.row.data)">面试信息</el-link>
-                    </div> -->
                     </template>
                 </el-table-column>
             </el-table>
@@ -69,7 +65,7 @@ const tableData = [
     },
     {
         date: '2016-05-03',
-        name: 'Tom',
+        name: '魏浩爽',
         address: 'No. 189, Grove St, Los Angeles',
         post: "面试职位",
         time: "2022-10-11 21:07:01"

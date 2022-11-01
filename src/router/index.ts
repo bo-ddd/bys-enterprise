@@ -17,6 +17,11 @@ const router = createRouter({
         },
 
         {
+          path: '/positionInfo',
+          name: 'PositionInfo',
+          component: () => import('@/views/positionAdmin/PositionInfo.vue')
+        },
+        {
           path: '/memberCenter',
           name: 'MemberCenter',
           component: () => import('@/views/memberCenter/MemberCenter.vue')

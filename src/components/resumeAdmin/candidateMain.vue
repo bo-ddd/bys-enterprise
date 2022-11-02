@@ -51,13 +51,22 @@ import { ref } from 'vue'
 import card from "@/components/card/index";
 import footerBar from "@/components/footer/footerBar.vue"
 import { useEnterpriseStore } from "@/stores/enterprise"
-let user = useEnterpriseStore();
+let enterprise = useEnterpriseStore();
 let getEducation = async ()=>{
-     let res = await user.getEducation({});
+     let res = await enterprise.getEducation({});
      educationList = res.data;
  }
  
+ let getResume =  async ()=>{
+     let res = await enterprise.getResume({
+        companyId:1000,
+        pageIndex:1,
+        pageSize:10
+    });
+     console.log(res);
+ }
  getEducation();
+ getResume();
 let userInfo = {
     name: "金艺林",
     sex: "女",

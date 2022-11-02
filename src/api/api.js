@@ -32,11 +32,9 @@ export default {
         return axios.post('/company/login', params, postConfig)
     },
 
-    /**
-     * 获取企业详细信息
-     */
-    getCompanyCommon:(params) =>{
-        return axios.post('/company/getCompanyCommon',params,postConfig)
+
+    getEducation:(params)=>{
+        return axios.post('/drop/getEducation',params,postConfig)
     },
 
     /**
@@ -94,4 +92,64 @@ export default {
     getSchoolList: (params) => {
         return axios.post('/drop/getSchool', params, postConfig);
     }
+    },
+
+    /**
+     * 获取专业下拉框
+     */
+    getMajorList:(params)=>{
+        return axios.post('/drop/getProfessional',params,postConfig);
+    },
+
+    /**
+     * 获取期望薪资
+     */
+    getWishMoney:(params)=>{
+        return axios.post('/drop/getWishMoney',params,postConfig);
+    },
+
+    /** 
+     * 获取性别列表
+     * */ 
+    getSexList:(params={})=>{
+        return axios.post('/drop/getSex',params,postConfig);
+    },
+
+    /**
+     * 获取企业职位列表
+     */
+    getPositionList:(params)=>{
+        return axios.post('/drop/getPositionDrop',params,postConfig);
+    },
+
+    /**
+     * 获取人才列表
+     */
+    getTalentList:(params)=>{
+        return axios.post('/company/getTalent',params,postConfig);
+    },
+    getResume:(params)=>{
+        return axios.post('/company/getResume',params,postConfig);
+    },
+
+    /**
+     * 获取实习月数和天数下拉框
+     */
+    getMonthDay:(params)=>{
+        return axios.post('/drop/drop/getMonthDay',params,postConfig);
+    },
+
+    /**
+     * 获取职位类别下拉框
+     */
+    getCompanyIndustry:(params)=>{
+        return axios.post('/drop/getCompanyIndustry',params,postConfig);
+    },
+        
+    /**
+     * 获取企业职位列表
+     */
+     getPositionData:(params)=>{
+        return axios.post('/company/getPosition',params,postConfig);
+    },
 }

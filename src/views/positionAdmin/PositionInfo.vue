@@ -91,7 +91,7 @@
             size="large"
           >
             <el-option
-              v-for="item in MoneyLeftArr"
+              v-for="item in moneyLeftArr"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -102,7 +102,7 @@
         <el-form-item prop="salaryEnd">
           <el-select v-model="ruleForm.salaryEnd" class="m-2 w-176" placeholder="最高薪资" size="large">
             <el-option
-              v-for="item in MoneyRightArr"
+              v-for="item in moneyRightArr"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -227,13 +227,16 @@ const ruleForm = reactive({
 const educationArr = ref([]);
 const industryArr = ref([]);
 const ProfessionalArr = ref([]);
-const MoneyLeftArr = ref([]);
-const MoneyRightArr = ref([]);
+const moneyLeftArr = ref([]);
+const moneyRightArr = ref([]);
+const dayArr=ref([]);
+const monthArr=ref([])
 const getEducation = async function () {
-  const res = await use.getEducation();
-  const res2 = await use.getCompanyIndustry();
-  const res3 = await use.getProfessional();
-  const res4 = await use.getWishMoney();
+  const res = await use.getEducation();//学历
+  const res2 = await use.getCompanyIndustry();//行业
+  const res3 = await use.getProfessional();//专业
+  const res4 = await use.getWishMoney();//薪资
+  const res5 = await use.getMonthDay();//月和天
   console.log(res);
   if (res.code == 200) {
     educationArr.value = res.data;
@@ -259,8 +262,11 @@ const getEducation = async function () {
     ProfessionalArr.value = res3.data;
   }
   if (res4.code == 200) {
-    MoneyLeftArr.value = res4.data.wishMoenyLeftList;
-    MoneyRightArr.value = res4.data.wishMoenyRightList;
+    moneyLeftArr.value = res4.data.wishMoenyLeftList;
+    moneyRightArr.value = res4.data.wishMoenyRightList;
+  }
+  if(res5.code==200){
+
   }
 };
 getEducation();

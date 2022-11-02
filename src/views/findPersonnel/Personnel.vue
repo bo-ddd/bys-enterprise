@@ -7,14 +7,16 @@ interface Check {
     label: string | number,
     value: string | number,
 }
-console.log(usePersonStore);
-let checkSex: Ref<null | number | undefined> = ref();//性别
-let checkEducation: Ref<null | number | undefined> = ref();//学历
-let checkMajor: Ref<null | number | undefined> = ref();//专业
-let checkPosition: Ref<null | number | undefined> = ref();//职位
-let checkCity: Ref<null | number | undefined> = ref();//城市
-let lowestSalary: Ref<null | number | undefined> = ref();//最低薪资
-let highestSalary: Ref<null | number | undefined> = ref();//最高薪资
+let PersonStore = usePersonStore();//引入personStore这个状态管理
+let form = reactive({
+    checkSex:null,//性别
+    checkEducation:null,//学历
+    checkMajor:null,//专业
+    checkPosition:null,//职位
+    checkCity:null,//城市
+    lowestSalary:null,//最低薪资
+    highestSalary:null,//最高薪资
+});
 let showGuid = ref(false);
 let circleUrl = ref('https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png');       
 let checkItem = ref(0);//默认展示哪个页面
@@ -24,64 +26,77 @@ let handleItemChange = (index: number) => {
 let handleGuideChange = (bool:boolean)=>{
     showGuid.value = bool;
 }
-//性别
-let sexArr = reactive<Check[]>([
-    {
-        id: 1,
-        label: '女',
-        value: 0,
-    },
-    {
-        id: 2,
-        label: '男',
-        value: 1,
+
+//清空选择的方法
+let cancelCheck = ()=>{
+    console.log(form);
+    for (const key in form) {
+        form[key] = null;
     }
-]);
-//学历
-let educationArr = reactive<Check[]>([
-    {
-        id: 1,
-        label: '博士',
-        value: 0,
-    },
-    {
-        id: 2,
-        label: '硕士',
-        value: 1,
-    },
-    {
-        id: 3,
-        label: '本科',
-        value: 2,
-    },
-    {
-        id: 4,
-        label: '大专',
-        value: 3,
-    },
-    {
-        id: 5,
-        label: '高中',
-        value: 4,
-    },
-    {
-        id: 6,
-        label: '中专/技校',
-        value: 5,
-    },
-    {
-        id: 7,
-        label: '初中及以下',
-        value: 6,
-    },
-    {
-        id: 8,
-        label: '不限',
-        value: 7,
-    },
-]);
-//专业
-let majorArr = reactive<Check[]>([]);
+    console.log(form);
+}
+
+let educationArr = reactive<Check[]>([]);//学历的列表
+let majorArr = reactive<any[]>([]);//专业的列表
+let sexArr = reactive<any[]>([]);//性别的列表
+let positionArr = reactive<any[]>([]);//职位列表
+let wishMoneyLeftList = reactive<any[]>([]);//这个是期望薪资左边的列表
+let wishMoneyRightList = reactive<any[]>([]);//这个是期望薪资右边的列表
+let talentList = reactive<any[]>([]);//这个是人才列表
+//这个是学历的列表
+let getEducationList = async ()=>{
+    let res = await PersonStore.getEducation();
+    if(res.code !== 200) return;
+    let resData = (res.data).reverse();//获取学历数据
+    educationArr.push(...resData);
+}
+getEducationList();//调用获取学历列表
+
+//这个是获取专业列表的方法
+let getProfessionalList = async ()=>{
+    let res = await PersonStore.getMajorList();
+    if(res.code !== 200) return;
+    majorArr.push(...(res.data));
+}
+getProfessionalList();//调用获取专业列表
+
+//这个是获取性别列表的方法
+let getSexList =async () => {
+    let res = await PersonStore.getSexList();
+    if(res.code !== 200) return;
+    sexArr.push(...(res.data));
+}
+getSexList();
+
+//这个是获取职位列表的方法
+let getPositionList = async ()=>{
+    let res = await PersonStore.getPositionList({
+        userId:10000,
+    });
+    console.log(res);
+}
+getPositionList();
+
+//获取期望薪资的接口
+let getWishMoneyList = async ()=>{
+    let res = await PersonStore.getWishMoney();
+    wishMoneyLeftList.push(...(res.data).wishMoenyLeftList);
+    wishMoneyRightList.push(...(res.data).wishMoenyRightList);
+    console.log(wishMoneyLeftList);
+    console.log(wishMoneyRightList);
+    console.log(res);
+}
+getWishMoneyList();
+
+//获取到人才的列表
+let getTalentList = async ()=>{
+    let res =await PersonStore.getTalentList({
+        pageSize:10,
+        pageIndex:1,
+    });
+    console.log(res);
+}
+getTalentList();
 </script>
 <template>
     <div class="personnel">
@@ -118,35 +133,35 @@ let majorArr = reactive<Check[]>([]);
             <!-- 模糊查询的列表 -->
             <div class="wrap filter-wrap">
                 <div class="filter-wrap-top">
-                    <el-select v-model="checkSex" class="m-2 check-sex mr-30" placeholder="性别选择" size="large">
+                    <el-select v-model="form.checkSex" class="m-2 check-sex mr-30" placeholder="性别选择" size="large">
                         <el-option v-for="item in sexArr" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
-                    <el-select v-model="checkEducation" class="m-2 check-education mr-30" placeholder="最高学历选择" size="large">
+                    <el-select v-model="form.checkEducation" class="m-2 check-education mr-30" placeholder="最高学历选择" size="large">
                         <el-option v-for="item in educationArr" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
-                    <el-select v-model="checkMajor" class="m-2 check-education mr-30" placeholder="专业选择" size="large">
-                        <el-option v-for="item in educationArr" :key="item.value" :label="item.label" :value="item.value" />
+                    <el-select v-model="form.checkMajor" class="m-2 check-education mr-30" placeholder="专业选择" size="large">
+                        <el-option v-for="item in majorArr" :key="item.sortId" :label="item.professionalName" :value="item.sortId" />
                     </el-select>
-                    <el-select v-model="checkPosition" class="m-2 check-education mr-30" placeholder="意向职位选择" size="large">
+                    <el-select v-model="form.checkPosition" class="m-2 check-education mr-30" placeholder="意向职位选择" size="large">
                         <el-option v-for="item in educationArr" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                 </div>
                 <div class="filter-wrap-btm">
                     <div class="check">
-                        <el-select v-model="checkCity" class="m-2 check-education mr-30" placeholder="意向城市选择" size="large">
+                        <el-select v-model="form.checkCity" class="m-2 check-education mr-30" placeholder="意向城市选择" size="large">
                             <el-option v-for="item in educationArr" :key="item.value" :label="item.label" :value="item.value" />
                         </el-select>
-                        <el-select v-model="lowestSalary" class="m-2 check-salary mr-15" placeholder="期望薪资选择" size="large">
-                            <el-option v-for="item in educationArr" :key="item.value" :label="item.label" :value="item.value" />
+                        <el-select v-model="form.lowestSalary" class="m-2 check-salary mr-15" placeholder="期望薪资选择" size="large">
+                            <el-option v-for="item in wishMoneyLeftList" :key="item.value" :label="item.label" :value="item.value" />
                         </el-select>
                         <span class="fs-14">至</span>
-                        <el-select v-model="highestSalary" class="m-2 check-salary ml-15" placeholder="期望薪资选择" size="large">
-                            <el-option v-for="item in educationArr" :key="item.value" :label="item.label" :value="item.value" />
+                        <el-select v-model="form.highestSalary" class="m-2 check-salary ml-15" placeholder="期望薪资选择" size="large">
+                            <el-option v-for="item in wishMoneyRightList" :key="item.value" :label="item.label" :value="item.value" />
                         </el-select>
                     </div>
                     <div class="operation">
                         <el-button type="primary" plain>确定</el-button>
-                        <el-button type="info" plain>清空</el-button>
+                        <el-button type="info" plain @click="cancelCheck()">清空</el-button>
                     </div>
                 </div>
             </div>

@@ -32,11 +32,9 @@ export default {
         return axios.post('/company/login', params, postConfig)
     },
 
-    /**
-     * 获取企业详细信息
-     */
-    getCompanyCommon:(params) =>{
-        return axios.post('/company/getCompanyCommon',params,postConfig)
+
+    getEducation:(params)=>{
+        return axios.post('/drop/getEducation',params,postConfig)
     },
 
     /**
@@ -44,5 +42,40 @@ export default {
      */
     getEducationList:(params)=>{
         return axios.post('/drop/getEducation',params,postConfig);
+    },
+
+    /**
+     * 获取专业下拉框
+     */
+    getMajorList:(params)=>{
+        return axios.post('/drop/getProfessional',params,postConfig);
+    },
+
+    /**
+     * 获取期望薪资
+     */
+    getWishMoney:(params)=>{
+        return axios.post('/drop/getWishMoney',params,postConfig);
+    },
+
+    /** 
+     * 获取性别列表
+     * */ 
+    getSexList:(params)=>{
+        return axios.post('/drop/getSex',params,postConfig);
+    },
+
+    /**
+     * 获取企业职位列表
+     */
+    getPositionList:(params)=>{
+        return axios.post('/drop/getPositionDrop',params,postConfig);
+    },
+
+    /**
+     * 获取人才列表
+     */
+    getTalentList:(params)=>{
+        return axios.post('/company/getTalent',params,postConfig);
     }
 }

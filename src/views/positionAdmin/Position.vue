@@ -217,8 +217,8 @@ const to = function (path: string) {
         .resume-box {
           padding: 0 35px;
         }
-        .resume-box:hover{
-          .resume-num{
+        .resume-box:hover {
+          .resume-num {
             color: #356ffa;
           }
         }

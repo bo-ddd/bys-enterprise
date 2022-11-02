@@ -80,5 +80,12 @@ export default {
     },
     getResume:(params)=>{
         return axios.post('/company/getResume',params,postConfig);
-    }
+    },
+
+    /**
+     * 获取实习月数和天数下拉框
+     */
+    getMonthDay:(params)=>{
+        return axios.post('/drop/drop/getMonthDay',params,postConfig);
+    },
 }

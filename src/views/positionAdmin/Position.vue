@@ -95,9 +95,10 @@
           <div class="just-center">
             <el-pagination
               :background="true"
-              pager-count="4"
+              v-model:currentPage="pageNum"
+              v-model:page-size="pageSize"
               layout="prev, pager, next"
-              :total="1000"
+              :total="total"
             />
           </div>
         </div>
@@ -118,6 +119,25 @@
 import FooterBar from "@/components/footer/footerBar.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { usePositionStore, PositionParams } from "@/stores/position.js";
+let use = usePositionStore();
+const total = ref(0);
+const pageNum = ref(1)
+const pageSize = ref(10);
+let getPosition = async function (params:PositionParams) {
+  let res = await use.getPosition(params);
+  console.log(res);
+  let {data}=res
+  if (res.code == 200) {
+    total.value = res.data.length;
+  }
+};
+getPosition({
+  pageIndex: pageNum.value,
+  userId: 10000,
+  pageSize: pageSize.value,
+  positionStatus: 2,
+});
 const router = useRouter();
 const tabFlag = ref(true);
 const currentIndex = ref(0);

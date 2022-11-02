@@ -42,57 +42,57 @@ export default {
      */
     getEducationList:(params)=>{
         return axios.post('/drop/getEducation',params,postConfig);
-    }
+    },
 
     /**
      * 获取企业详细信息
      */
     getEnterpriseInfo: (params) => {
         return axios.post('/company/getCompanyCommon', params, postConfig);
-    }
+    },
     
     /**
      * 修改企业详细信息
      */
     setModifyEnterpriseInfo:(params)=>{
         return axios.post('/company/modifyCompanyCommon',params,postConfig);
-    }
+    },
 
     /**
      * 获取所属行业下拉框
      */
     getIndustryList: (params) => {
         return axios.post('/drop/getCompanyindustry', params, postConfig);
-    }
+    },
 
     /**
      * 获取企业性质下拉框
      */
     getEnterpriseNatureList: (params) => {
         return axios.post('/drop/getCompanyNature', params, postConfig);
-    }
+    },
     
     /**
      * 获取企业规模下拉框
      */
     getEnterpriseSizeList: (params) => {
         return axios.post('/drop/getCompanySize', params, postConfig);
-    }
+    },
     
     /**
      * 获取企业标签下拉框
      */
     getEnterpriseTagList: (params) => {
         return axios.post('/drop/getCompanyTag', params, postConfig);
-    }
+    },
     
     /**
      * 获取学校下拉框
      */
     getSchoolList: (params) => {
         return axios.post('/drop/getSchool', params, postConfig);
-    }
     },
+
 
     /**
      * 获取专业下拉框

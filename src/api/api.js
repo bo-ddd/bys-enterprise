@@ -44,5 +44,9 @@ export default {
      */
     getEducationList:(params)=>{
         return axios.post('/drop/getEducation',params,postConfig);
+    },
+
+    getResume:(params)=>{
+        return axios.post('/company/getResume',params,postConfig);
     }
 }

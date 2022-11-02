@@ -129,7 +129,7 @@
         </el-form-item>
         <span class="ml-28 mr-15">招聘人数</span>
 
-        <el-form-item prop="recruitersNum">
+        <el-form-item class prop="recruitersNum">
           <el-input
             class="w-350 unit-input"
             v-model="ruleForm.recruitersNum"
@@ -206,7 +206,7 @@ interface Res {
 const props = {
   expandTrigger: "hover",
 };
-const handleChange = function (value:any) {
+const handleChange = function (value: any) {
   console.log(value);
 };
 
@@ -214,15 +214,15 @@ const formSize = ref("default");
 const ruleFormRef = ref<FormInstance>();
 const ruleForm = reactive({
   positionName: "",
-  ifJust:'',
-  salaryStart:'',
-  salaryEnd:'',
+  ifJust: "",
+  salaryStart: "",
+  salaryEnd: "",
   positionType: [],
   education: "",
-  workPlace:'',
-  detailedLoc:'',
-  positionDes:'',
-  recruitersNum:''
+  workPlace: "",
+  detailedLoc: "",
+  positionDes: "",
+  recruitersNum: "",
 });
 const educationArr = ref([]);
 const industryArr = ref([]);
@@ -239,11 +239,11 @@ const getEducation = async function () {
     educationArr.value = res.data;
   }
   if (res2.code == 200) {
-    let a = res2.data.map((item:any) => {
+    let a = res2.data.map((item: any) => {
       return {
         value: item.sortId,
         label: item.industryTypeName,
-        children: item.industyDownList.map((i:any) => {
+        children: item.industyDownList.map((i: any) => {
           return {
             value: i.sortId,
             label: i.industryName,
@@ -437,8 +437,6 @@ const input = ref("");
     background-color: #f6f7f9;
   }
   .active {
-    // border: 2px solid #79aae4 !important;
-    // color: #79aae4 !important;
     color: #2d8cf0;
     border: 1px solid #2d8cf0;
     background-color: white;
@@ -456,13 +454,18 @@ const input = ref("");
     display: none;
   }
   .unit-input {
-    :deep(.el-input__wrapper) {
-      box-shadow: 0 1px 0 0 #dcdfe6 inset, 0 -1px 0 0 #dcdfe6 inset,
-        -4px 0 0 0 white inset, 0 0 0 1px #dcdfe6 inset;
-    }
+    // :deep(.el-input__wrapper) {
+    //   box-shadow:none;
+    // }
+    // :deep(.is-error .el-input__wrapper) {
+    //   box-shadow: 0 0 0 1px red inset;
+    // }
     :deep(.el-input-group__append, .el-input-group__prepend) {
+      box-shadow: none;
       padding: 0 10px;
       background-color: white;
+      border: 1px solid #dcdfe6;
+      border-left: none;
     }
   }
 }

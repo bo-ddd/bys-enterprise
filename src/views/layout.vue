@@ -113,7 +113,7 @@ const handleSelect = (key: any) => {
   color: #d4d4d4 !important;
 }
 
-:deep(.el-icon) {
+:deep(.el-dropdown-link .el-icon) {
   display: none;
 }
 

@@ -152,4 +152,11 @@ export default {
      getPositionData:(params)=>{
         return axios.post('/company/getPosition',params,postConfig);
     },
+        
+    /**
+     * 获取实习薪资下拉列表
+     */
+     getInternshipMoney:(params)=>{
+        return axios.post('/drop/getInternshipMoney',params,postConfig);
+    },
 }

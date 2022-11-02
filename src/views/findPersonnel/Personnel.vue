@@ -2,6 +2,7 @@
 import { ref, reactive , type Ref } from "vue";
 import FooterBar from "@/components/footer/footerBar.vue";
 import { usePersonStore } from "@/stores/person";
+import cityJson from "@/assets/json/city.json";
 interface Check {
     id: number,
     label: string | number,
@@ -17,7 +18,7 @@ let form = reactive({
     lowestSalary:null,//最低薪资
     highestSalary:null,//最高薪资
 });
-let showGuid = ref(false);
+let showGuid = ref(false);//展示导航
 let circleUrl = ref('https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png');       
 let checkItem = ref(0);//默认展示哪个页面
 let handleItemChange = (index: number) => {
@@ -148,9 +149,7 @@ getTalentList();
                 </div>
                 <div class="filter-wrap-btm">
                     <div class="check">
-                        <el-select v-model="form.checkCity" class="m-2 check-education mr-30" placeholder="意向城市选择" size="large">
-                            <el-option v-for="item in educationArr" :key="item.value" :label="item.label" :value="item.value" />
-                        </el-select>
+                        <el-cascader v-model="form.checkCity" class="mr-30 check-education m-2" placeholder="意向城市选择" :options="cityJson" :props="{'label':'name','value':'code'}" clearable />
                         <el-select v-model="form.lowestSalary" class="m-2 check-salary mr-15" placeholder="期望薪资选择" size="large">
                             <el-option v-for="item in wishMoneyLeftList" :key="item.value" :label="item.label" :value="item.value" />
                         </el-select>
@@ -325,11 +324,11 @@ getTalentList();
     &>.seek-advice:hover{
         cursor: pointer;
     }
-
    .absolute-wrap{
         position: absolute;
         right: 20px;
         top: 90px;
+        z-index: 2;
     }
 
     &>.talent-pool-wrap {
@@ -341,6 +340,9 @@ getTalentList();
             }
             :deep(.check-salary) {
                 width: 150px;
+            }
+            :deep(.el-input__inner){
+                height: 40px;
             }
             &>.filter-wrap-btm {
                 margin-top: 20px;

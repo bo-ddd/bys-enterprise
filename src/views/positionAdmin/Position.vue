@@ -125,7 +125,7 @@ let use = usePositionStore();
 const total = ref(0);
 const pageNum = ref(1)
 const pageSize = ref(10);
-let getPosition = async function (params) {
+let getPosition = async function (params:any) {
   let res = await use.getPosition(params);
   console.log(res);
   let {data}=res

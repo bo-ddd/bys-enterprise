@@ -38,4 +38,11 @@ export default {
     getCompanyCommon:(params) =>{
         return axios.post('/company/getCompanyCommon',params,postConfig)
     }
+
+    /**
+     * 
+     */
+    getEducationList:(params)=>{
+        return axios.post('/drop/getEducation',params,postConfig);
+    }
 }

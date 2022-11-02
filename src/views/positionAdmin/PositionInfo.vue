@@ -122,7 +122,7 @@
             size="large"
           >
             <el-option
-              v-for="item in options"
+              v-for="item in educationArr"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -199,16 +199,28 @@
 import FooterBar from "@/components/footer/footerBar.vue";
 import { reactive, ref } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
+import { usePersonStore } from "@/stores/person.js";
+let use = usePersonStore();
+interface Res{
+  code:number
+}
 const formSize = ref("default");
 const ruleFormRef = ref<FormInstance>();
 const ruleForm = reactive({
   name: "",
+  education:""
 });
+const educationArr=ref([]);
+const getEducation = async function () {
+  const res = await use.getEducation();
+  console.log(res);
+  if (res.code == 200) {
+    educationArr.value=res.data;
+  }
+};
+getEducation()
 const rules = reactive<FormRules>({
-  name: [
-    { required: true, message: "请填写职位名称", trigger: "blur" },
-    // { min: 3, max: 5, message: "Length should be 3 to 5", trigger: "blur" },
-  ],
+  name: [{ required: true, message: "请填写职位名称", trigger: "blur" }],
   positionType: [
     {
       required: true,
@@ -392,7 +404,6 @@ const input = ref("");
   }
   .unit-input {
     :deep(.el-input__wrapper) {
-      // box-shadow: 0 1px 0 0 red inset,0 -1px 0 0 red inset,-1px 0 0 0 red inset,0 0 0 -1px blue inset;dcdfe6
       box-shadow: 0 1px 0 0 #dcdfe6 inset, 0 -1px 0 0 #dcdfe6 inset,
         -4px 0 0 0 white inset, 0 0 0 1px #dcdfe6 inset;
     }

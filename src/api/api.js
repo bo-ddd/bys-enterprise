@@ -96,4 +96,10 @@ export default {
         return axios.post('/drop/getCompanyIndustry',params,postConfig);
     },
         
+    /**
+     * 获取企业职位列表
+     */
+     getPositionData:(params)=>{
+        return axios.post('/company/getPosition',params,postConfig);
+    },
 }

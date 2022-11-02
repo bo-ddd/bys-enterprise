@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import Api from "@/api/api.js";
 
-export interface PositionParams {
+export interface PositionParam {
     pageIndex: number,	//当前页
     userId: number, //用户id
     pageSize: number,//每页数量
@@ -13,12 +13,11 @@ interface Res{
 }
 export const usePositionStore = defineStore("position", () => {
 
-
-    function getPosition(params:PositionParams) {
-        return Api.getPosition(params) as Res;
+    function getPosition(params:PositionParam) {
+        return Api.getPositionList(params) as Res;
     }
     function getProfessional() {
-        return Api.getProfessional() as Res;
+        return Api.getMajorList() as Res;
     }
     function getMonthDay() {
         return Api.getMonthDay();

@@ -88,4 +88,12 @@ export default {
     getMonthDay:(params)=>{
         return axios.post('/drop/drop/getMonthDay',params,postConfig);
     },
+
+    /**
+     * 获取职位类别下拉框
+     */
+    getCompanyIndustry:(params)=>{
+        return axios.post('/drop/getCompanyIndustry',params,postConfig);
+    },
+        
 }

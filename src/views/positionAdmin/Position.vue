@@ -116,15 +116,16 @@
   <FooterBar></FooterBar>
 </template>
 <script lang="ts" setup>
+import { usePositionStore } from "@/stores/position";
 import FooterBar from "@/components/footer/footerBar.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { usePositionStore, PositionParams } from "@/stores/position.js";
+// import { usePositionStore,PositionParams } from "@/stores/position";
 let use = usePositionStore();
 const total = ref(0);
 const pageNum = ref(1)
 const pageSize = ref(10);
-let getPosition = async function (params:PositionParams) {
+let getPosition = async function (params) {
   let res = await use.getPosition(params);
   console.log(res);
   let {data}=res

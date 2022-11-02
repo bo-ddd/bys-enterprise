@@ -32,12 +32,19 @@ export default {
         return axios.post('/company/login', params, postConfig)
     },
 
+<<<<<<< HEAD
     /**
      * 获取企业详细信息
      */
     getCompanyCommon:(params) =>{
         return axios.post('/company/getCompanyCommon',params,postConfig)
     },
+=======
+
+    getEducation:(params)=>{
+        return axios.post('/drop/getEducation',params,postConfig)
+    }
+>>>>>>> e6e450247e6234789a1f8dee859a1313d6d9f122
 
     /**
      * 获取学历下拉框

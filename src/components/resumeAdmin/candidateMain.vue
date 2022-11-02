@@ -3,12 +3,12 @@
              <div class="candidate-header">
                  <div class="candidate-header_top">
                      <el-select class="m-2" placeholder="投递职位">
-                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                         <el-option v-for="item in allPositions" :key="item.value" :label="item.label" :value="item.value" />
                      </el-select>
-                     <el-select class="stage-input m-2" placeholder="阶段">
-                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+                     <el-select class="stage-input m-2" placeholder="应聘阶段">
+                         <el-option v-for="item in applicationStage.list" :key="item.value" :label="item.label" :value="item.value" />
                      </el-select>
-                     <el-cascader placeholder="学历" :options="options" />
+                     <el-cascader placeholder="学历" :options="allPositions" />
                      <el-input class="name-input" placeholder="姓名" />
                      <el-checkbox label="只看邀约投递的简历" size="small" />
                      <el-checkbox label="只看视频招聘会的简历" size="small" />
@@ -53,16 +53,49 @@ let userInfo = {
     sex: "女",
     education: "江苏大学京江学院-软件工程-本科"
 }
-const options = [
+const allPositions = [
     {
         value: '',
         label: '全部职位',
-    },
-    {
-        value: 'guide',
+    },{
+        value: '',
         label: 'java',
+    },{
+        value: '',
+        label: '软件测试工程师',
     },
 ]
+
+let applicationStage = {
+    status:1,
+    message:"success",
+    list:[
+         {
+            label:"全部",
+            value:""
+         },
+         {
+            label:"未查看",
+            value:""
+         },
+         {
+            label:"已查看",
+            value:""
+         },
+         {
+            label:"通过筛选",
+            value:""
+         },
+         {
+            label:"面试",
+            value:""
+         },
+         {
+            label:"拟录用",
+            value:""
+         }
+    ]
+}
 
 const checkAll = ref(false)
 const isIndeterminate = ref(false)
@@ -113,6 +146,11 @@ const handleCheckedCitiesChange = (value: string[]) => {
             }
         }
     }
+    
+:deep(.el-select-dropdown__item){
+       font-size: 12px !important;
+}
+
 :deep(.candidate-header_bottom > .el-button) {
     border: none;
     color: #808695;

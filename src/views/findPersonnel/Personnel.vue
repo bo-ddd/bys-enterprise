@@ -1,11 +1,13 @@
 <script lang="ts" setup>
 import { ref, reactive , type Ref } from "vue";
-import FooterBar from "@/components/footer/footerBar.vue"
+import FooterBar from "@/components/footer/footerBar.vue";
+import { usePersonStore } from "@/stores/person";
 interface Check {
     id: number,
     label: string | number,
     value: string | number,
 }
+console.log(usePersonStore);
 let checkSex: Ref<null | number | undefined> = ref();//性别
 let checkEducation: Ref<null | number | undefined> = ref();//学历
 let checkMajor: Ref<null | number | undefined> = ref();//专业
@@ -223,7 +225,7 @@ let majorArr = reactive<Check[]>([]);
         </div>
 
         <!-- 我邀请的页面 -->
-        <div class="invitation-library-wrap absolute-wrap" v-show="checkItem==1">
+        <div class="invitation-library-wrap" v-show="checkItem==1">
             <div class="container wrap">
                 <div class="nolist">
                     <img src="@/assets/images/myinvited_nolist.4b83c481.png">
@@ -266,6 +268,9 @@ let majorArr = reactive<Check[]>([]);
                     height: 3px;
                     background: #356ffa;
                 }
+            }
+            &>.operation-item:hover{
+                cursor: pointer;
             }
         }
     }
@@ -316,10 +321,10 @@ let majorArr = reactive<Check[]>([]);
         &>.filter-wrap {
             padding: 32px 0;
             border-bottom: 1px solid #eef0f2;
-            ::v-deep .check-sex {
+            :deep(.check-sex) {
                 width: 110px;
             }
-            ::v-deep .check-salary {
+            :deep(.check-salary) {
                 width: 150px;
             }
             &>.filter-wrap-btm {

@@ -15,10 +15,12 @@
                             </div>
                         </div>
                         <div class="major-right just-center">
-                            <div class="icon mr-11">
-                                <img class="icon" src="@/assets/images/icon-edit.png" alt="">
+                            <div class="hover" @click="nav('enterpriseRegistra')">
+                                <div class="icon mr-11">
+                                    <i class="iconfont icon-bianji"></i>
+                                </div>
+                                <div class="test">编辑企业信息</div>
                             </div>
-                            <div class="test">编辑企业信息</div>
                         </div>
                     </div>
                     <div class="right">
@@ -109,8 +111,8 @@
                         <el-button type="primary">选择意向学校</el-button>
                     </div>
                 </div>
-                <div class="mt-25">
-                    阿斯科利积分兑换i去胡覅缺阿斯科利积分兑换i去胡覅缺阿阿斯科利积分兑换i去胡覅缺阿斯科利积分兑换i去胡覅缺阿斯科利积分兑换i去胡覅缺阿斯科利积分兑换i去胡覅缺阿斯科利积分兑换i去胡覅缺阿斯科利积分兑换i去胡覅缺阿斯科利积分兑换i去胡覅缺阿斯科利积分兑换i去胡覅缺
+                <div class="mt-25 text">
+                    兰州理工大学技术工程学院、甘肃能源化工职业学院、西安科技大学高新学院、成都信息工程大学、华北电力大学、山西工商学院、山西传媒学院、太原学院、太原电力高等专科学校、山西职业技术学院、山西轻工职业技术学院、忻州师范学院、运城职业技术学院、长治职业技术学院、西安电子科技大学、渭南职业技术学院
                 </div>
             </div>
 
@@ -119,9 +121,40 @@
                 <div class="notvip-wrap">
                     <div class="left">
                         <h4>企业版VIP会员</h4>
-                        
+                        <ul>
+                            <li>
+                                <img src="@/assets/images/icon-home_vipbanner1.png" alt="">
+                                <span>在招职位数量解锁</span>
+                            </li>
+                            <li>
+                                <img src="@/assets/images/icon-home_vipbanner2.png" alt="">
+                                <span>更多职位刷新点数</span>
+                            </li>
+                            <li>
+                                <img src="@/assets/images/icon-home_vipbanner3.png" alt="">
+                                <span>更多邀请投递点数</span>
+                            </li>
+                        </ul>
+                        <div class="btn-wrap flex">
+                            <div class="position-card">
+                                <div class="content">
+                                    <h5>职位自动刷新卡</h5>
+                                    <img class="bg-v" src="@/assets/images/home-vip_V.png" alt="">
+                                </div>
+                            </div>
+                            <div class="position-card">
+                                <div class="content">
+                                    <h5>招聘会抵用券<span>(优先入会权益)</span></h5>
+                                    <img class="bg-v" src="@/assets/images/home-vip_V.png" alt="">
+                                </div>
+                                <img class="tip" src="@/assets/images/limited-time-gift.png" alt="">
+                            </div>
+                        </div>
                     </div>
-                    <div class="right"></div>
+                    <div class="right">
+                        <div class="more-btn">查看更多</div>
+                    </div>
+                    <img src="@/assets/images/home-banner_ads.png" alt="">
                 </div>
             </div>
         </div>
@@ -131,10 +164,19 @@
 </template>
 
 <script setup lang="ts">
-import footerBar from '@/components/footer/footerBar.vue'
+import footerBar from '@/components/footer/footerBar.vue';
+import { useRouter } from 'vue-router';
+let router = useRouter();
+let nav = (name: string) => {
+    router.push(name);
+}
 </script>
 
 <style lang="scss" scoped>
+img {
+    border-style: none;
+}
+
 .icon-head-portrait {
     max-height: 86px;
     max-width: 86px;
@@ -219,21 +261,25 @@ import footerBar from '@/components/footer/footerBar.vue'
                 align-content: flex-start;
                 padding-right: 32px;
 
-                &>.icon {
-                    width: 14px;
-                    height: 14px;
-
-                    &>img {
-                        max-width: 14px;
-                        max-height: 14px;
-                        vertical-align: middle;
-                    }
+                &>.hover {
+                    height: 15px;
+                    cursor: pointer;
                 }
 
-                &>.test {
+                .icon {
+                    font-size: 14px;
+                    display: inline-block;
+                }
+
+                .test {
                     display: inline-block;
                     font-size: 14px;
                 }
+
+                &>.hover:hover {
+                    color: #356ffb;
+                }
+
             }
         }
 
@@ -325,34 +371,163 @@ import footerBar from '@/components/footer/footerBar.vue'
     background-color: #fff;
     box-sizing: border-box;
     padding: 24px 32px 24px 30px;
+
+    &>.text {
+        color: #515a6e;
+    }
+
+    .top h3 {
+        font-size: 16px;
+
+        span {
+            color: #356ffa !important;
+        }
+    }
+
+    .just-between .top span {
+        display: inline-block;
+        color: #808695;
+    }
+
+    .top img {
+        max-width: 12px;
+    }
 }
 
-.intention .top h3 {
-    font-size: 16px;
-}
-
-.intention .top h3 span {
-    color: #356ffa !important;
-}
-
-.intention .just-between .top span {
-    display: inline-block;
-    color: #808695;
-}
-
-.intention .top img {
-    max-width: 12px;
-}
 
 .vip {
-    padding: 24px 32px;
+    padding: 24px 32px 32px 32px;
     box-sizing: border-box;
     background-color: #fff;
-}
 
-.vip h3 {
-    font-size: 16px;
-    color: #17233d;
-    margin-bottom: 17px;
+    &>h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #17233d;
+        line-height: 1;
+        margin-bottom: 16px;
+    }
+
+    &>.notvip-wrap {
+        position: relative;
+        display: flex;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        align-items: center;
+        padding: 48px 64px 48px 48px;
+        border-radius: 4px;
+        background-color: #1f2020;
+
+        &>.left {
+            box-sizing: border-box;
+
+            &>h4 {
+                font-size: 32px;
+                font-weight: 700;
+                color: #eecca7;
+            }
+
+            &>ul {
+                list-style: none;
+                display: flex;
+                margin: 32px 0 60px 0;
+
+                &>li {
+                    display: flex;
+                    -webkit-box-orient: vertical;
+                    -webkit-box-direction: normal;
+                    flex-direction: column;
+                    -webkit-box-align: center;
+                    align-items: center;
+                    margin-right: 48px;
+
+                    &>img {
+                        width: 64px;
+                        height: 64px;
+                        margin-bottom: 24px;
+                    }
+
+                    &>span {
+                        font-size: 16px;
+                        color: #ffe7cc;
+                    }
+                }
+            }
+
+            &>.btn-wrap {
+                &>.position-card {
+                    position: relative;
+                    background: linear-gradient(146deg, #ffe7cc, #e2ad7d);
+                    border-radius: 2px;
+                    padding: 4px;
+                    margin-right: 28px;
+
+                    &>.content {
+                        box-sizing: border-box;
+                        position: relative;
+                        z-index: 3;
+                        width: 300px;
+                        height: 56px;
+                        padding: 20px;
+                        border: 1px solid #f8ce9f;
+                        border-image: linear-gradient(90deg, #f8ce9f, #d98e4b) 10 10;
+                        line-height: 1;
+
+                        &>h5 {
+                            font-size: 18px;
+                            color: #573617;
+                            font-weight: 400;
+                        }
+
+                        &>img {
+                            position: absolute;
+                            width: 58px;
+                            height: 64px;
+                            top: 0;
+                            right: 0;
+                        }
+                    }
+
+                    &>.tip {
+                        position: absolute;
+                        z-index: 9;
+                        width: 68px;
+                        height: 25px;
+                        top: -24px;
+                        right: 0;
+                    }
+                }
+            }
+        }
+
+        &>.right {
+            display: flex;
+            z-index: 6;
+
+            &>.more-btn {
+                display: flex;
+                -webkit-box-pack: center;
+                justify-content: center;
+                -webkit-box-align: center;
+                align-items: center;
+                cursor: pointer;
+                width: 160px;
+                height: 56px;
+                background: linear-gradient(128deg, #fee8cd, #e2ae7e);
+                border-radius: 28px;
+                font-size: 22px;
+                color: #4c2c0e;
+            }
+        }
+
+        &>img {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 166px;
+            height: 214px;
+        }
+    }
 }
 </style>

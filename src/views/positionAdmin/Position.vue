@@ -60,11 +60,11 @@
                 </div>
               </div>
               <div class="resume-info flex-ja-center">
-                <div class="resume-box">
+                <div class="resume-box cur-po">
                   <div class="resume-num">0</div>
                   <div class="mt-15 fs-14">新简历</div>
                 </div>
-                <div class="resume-box">
+                <div class="resume-box cur-po">
                   <div class="resume-num">0</div>
                   <div class="mt-15 fs-14">新简历</div>
                 </div>
@@ -216,6 +216,11 @@ const to = function (path: string) {
         color: #515a6e;
         .resume-box {
           padding: 0 35px;
+        }
+        .resume-box:hover{
+          .resume-num{
+            color: #356ffa;
+          }
         }
         .resume-num {
           text-align: center;

@@ -60,7 +60,7 @@
         <!-- <el-form-item prop="name"> -->
         <el-select v-model="value" class="m-2 w-200-input" placeholder="实习月数" size="large">
           <el-option
-            v-for="item in options"
+            v-for="item in monthArr"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -72,7 +72,7 @@
         <!-- <el-form-item prop="name"> -->
         <el-select v-model="value" class="m-2 w-200-inputs" placeholder="每周天数" size="large">
           <el-option
-            v-for="item in options"
+            v-for="item in dayArr"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -229,14 +229,14 @@ const industryArr = ref([]);
 const ProfessionalArr = ref([]);
 const moneyLeftArr = ref([]);
 const moneyRightArr = ref([]);
-const dayArr=ref([]);
-const monthArr=ref([])
-const getEducation = async function () {
-  const res = await use.getEducation();//学历
-  const res2 = await use.getCompanyIndustry();//行业
-  const res3 = await use.getProfessional();//专业
-  const res4 = await use.getWishMoney();//薪资
-  const res5 = await use.getMonthDay();//月和天
+const dayArr = ref([]);
+const monthArr = ref([]);
+const getData = async function () {
+  const res = await use.getEducation(); //学历
+  const res2 = await use.getCompanyIndustry(); //行业
+  const res3 = await use.getProfessional(); //专业
+  const res4 = await use.getWishMoney(); //薪资
+  const res5 = await use.getMonthDay(); //月和天
   console.log(res);
   if (res.code == 200) {
     educationArr.value = res.data;
@@ -265,11 +265,12 @@ const getEducation = async function () {
     moneyLeftArr.value = res4.data.wishMoenyLeftList;
     moneyRightArr.value = res4.data.wishMoenyRightList;
   }
-  if(res5.code==200){
-
+  if (res5.code == 200) {
+    dayArr.value=res5.data.dayList;
+    monthArr.value=res5.data.monthList;
   }
 };
-getEducation();
+getData();
 const rules = reactive<FormRules>({
   positionName: [
     { required: true, message: "请填写职位名称", trigger: "blur" },

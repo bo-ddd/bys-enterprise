@@ -1,139 +1,301 @@
 <template>
   <div class="position-info position-wrap">
     <div class="title mb-40 mt-65">职位信息</div>
-    <div class="mb-40 align-center">
-      <span class="flex-noshrink">职业名称</span>
-      <el-input class="ml-10 mr-28 w-360 place-fs-14" v-model="input" placeholder="请填写职位名称" />
-      <span class="flex-noshrink">职业类别</span>
-      <el-select v-model="value" class="m-2 ml-10 mr-28 w-360" placeholder="请选择职业类别" size="large">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-    </div>
-    <div class="mb-40 align-center">
-      <span>工作性质</span>
+    <el-form
+      ref="ruleFormRef"
+      :model="ruleForm"
+      :rules="rules"
+      label-width="120px"
+      class="demo-ruleForm"
+      :size="formSize"
+    >
+      <div class="mb-40 align-center">
+        <span class="flex-noshrink mr-10">职业名称</span>
+        <el-form-item prop="name">
+          <el-input class="mr-28 place-fs-14" v-model="ruleForm.name" placeholder="请填写职位名称" />
+        </el-form-item>
+        <span class="flex-noshrink mr-10">职业类别</span>
+
+        <el-form-item prop="positionType">
+          <el-select
+            v-model="ruleForm.positionType"
+            class="m-2 mr-28 w-360"
+            placeholder="请选择职业类别"
+            size="large"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="mb-40 align-center">
+        <span>工作性质</span>
+        <div
+          @click="select(0)"
+          class="select-btn ml-10"
+          :class="{'active':activeNum==0||activeNum==-1}"
+        >全职</div>
+        <div @click="select(1)" class="select-btn ml-10" :class="{'active':activeNum==1}">实习</div>
+        <div
+          class="align-center ml-20"
+          :class="{'hidden':activeNum==0,'show':activeNum==1,'none-show':activeNum==-1}"
+        >
+          <span class="mr-10">转正机会</span>
+
+          <el-form-item prop="ifJust" class="void-input">
+            <input type="text" v-model="ruleForm.ifJust" />
+          </el-form-item>
+          <div @click="select2(0)" class="select-btn" :class="{'active':activeNum2==0}">可提供转正</div>
+          <div @click="select2(1)" class="select-btn ml-10" :class="{'active':activeNum2==1}">不提供转正</div>
+        </div>
+      </div>
       <div
-        @click="select(0)"
-        class="select-btn ml-10"
-        :class="{'active':activeNum==0||activeNum==-1}"
-      >全职</div>
-      <div @click="select(1)" class="select-btn ml-10" :class="{'active':activeNum==1}">实习</div>
-      <div
-        class="align-center ml-20"
+        class="mb-40 align-center"
         :class="{'hidden':activeNum==0,'show':activeNum==1,'none-show':activeNum==-1}"
       >
-        <span>转正机会</span>
-        <div @click="select2(0)" class="select-btn ml-10" :class="{'active':activeNum2==0}">可提供转正</div>
-        <div @click="select2(1)" class="select-btn ml-10" :class="{'active':activeNum2==1}">不提供转正</div>
+        <span class="mr-10">实习月数</span>
+
+        <!-- <el-form-item prop="name"> -->
+        <el-select v-model="value" class="m-2 w-200-input" placeholder="实习月数" size="large">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        <!-- </el-form-item> -->
+
+        <span class="ml-20 mr-10">每周天数</span>
+        <!-- <el-form-item prop="name"> -->
+        <el-select v-model="value" class="m-2 w-200-inputs" placeholder="每周天数" size="large">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        <!-- </el-form-item> -->
       </div>
-    </div>
-    <div
-      class="mb-40"
-      :class="{'hidden':activeNum==0,'show':activeNum==1,'none-show':activeNum==-1}"
-    >
-      <span>实习月数</span>
-      <el-select v-model="value" class="m-2 w-200-input ml-10" placeholder="实习月数" size="large">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-      <span class="ml-20">每周天数</span>
-      <el-select v-model="value" class="m-2 w-200-input ml-10" placeholder="每周天数" size="large">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-    </div>
-    <div class="mb-40 align-center">
-      <span>月薪范围</span>
-      <el-select v-model="value" class="m-2 w-176 ml-10" placeholder="最低薪资" size="large">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-      <div class="bor"></div>
-      <el-select v-model="value" class="m-2 w-176" placeholder="最高薪资" size="large">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-    </div>
-    <div class="mb-40 align-center">
-      <span>学历要求</span>
-      <el-select v-model="value" class="m-2 w-176 ml-10" placeholder="请选择学历" size="large">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-      <span class="ml-28 mr-15">招聘人数</span>
-      <el-input class="w-340 unit-input" v-model="input" placeholder="请如实填写,本数据会用于高校的就业报告编撰">
-        <template #append>人</template>
-      </el-input>
-    </div>
-    <div class="mb-40">
-      <span>意向专业</span>
-      <el-select
-        v-model="value"
-        class="m-2 w-615 ml-10"
-        placeholder="请输入, 最多可选10个专业, 非必填"
-        size="large"
-      >
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-    </div>
-    <div class="mb-75 align-center">
-      <span class="flex-noshrink">工作地点</span>
-      <el-select
-        v-model="value"
-        class="m-2 ml-10 w-340 flex-noshrink"
-        placeholder="请选择工作地点"
-        size="large"
-      >
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-      <span class="ml-28 flex-noshrink">详细地址</span>
-      <el-input class="ml-10 h-38" v-model="input" placeholder="请填写详细地址" />
-    </div>
-    <div class="title mb-50">职位描述</div>
-    <div class="">
-      <el-input v-model="input" type="textarea" class="text-area h-260" placeholder="请填写岗位要求和工作要求" />
-    </div>
-    <div class="submit-btn mtb-65">发布</div>
+      <div class="mb-40 align-center">
+        <span class="mr-10">月薪范围</span>
+
+        <el-form-item prop="salaryStart">
+          <el-select
+            v-model="ruleForm.salaryStart"
+            class="m-2 w-176"
+            placeholder="最低薪资"
+            size="large"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <div class="bor"></div>
+        <el-form-item prop="salaryEnd">
+          <el-select v-model="ruleForm.salaryEnd" class="m-2 w-176" placeholder="最高薪资" size="large">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="mb-40 align-center">
+        <span class="mr-10">学历要求</span>
+        <el-form-item prop="education">
+          <el-select
+            v-model="ruleForm.education"
+            class="m-2 w-176"
+            placeholder="请选择学历"
+            size="large"
+          >
+            <el-option
+              v-for="item in educationArr"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <span class="ml-28 mr-15">招聘人数</span>
+
+        <el-form-item prop="recruitersNum">
+          <el-input
+            class="w-350 unit-input"
+            v-model="ruleForm.recruitersNum"
+            placeholder="请如实填写,本数据会用于高校的就业报告编撰"
+          >
+            <template #append>人</template>
+          </el-input>
+        </el-form-item>
+      </div>
+      <div class="mb-40 align-center">
+        <span class="mr-10">意向专业</span>
+        <el-select
+          v-model="ruleForm.name"
+          class="m-2 w-615"
+          placeholder="请输入, 最多可选10个专业, 非必填"
+          size="large"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </div>
+      <div class="mb-75 align-center">
+        <span class="flex-noshrink mr-10">工作地点</span>
+        <el-form-item prop="workPlace">
+          <el-select
+            v-model="ruleForm.workPlace"
+            class="m-2 w-340 flex-noshrink"
+            placeholder="请选择工作地点"
+            size="large"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <span class="ml-28 flex-noshrink mr-10">详细地址</span>
+        <el-form-item prop="detailedLoc">
+          <el-input class="h-38" v-model="ruleForm.detailedLoc" placeholder="请填写详细地址" />
+        </el-form-item>
+      </div>
+      <div class="title mb-50">职位描述</div>
+      <div class>
+        <el-form-item prop="positionDes">
+          <el-input
+            v-model="ruleForm.positionDes"
+            type="textarea"
+            class="text-area h-260"
+            placeholder="请填写岗位要求和工作要求"
+          />
+        </el-form-item>
+      </div>
+      <div class="submit-btn mtb-65" @click="submitForm(ruleFormRef)">发布</div>
+    </el-form>
   </div>
   <FooterBar></FooterBar>
 </template>
 <script lang="ts" setup>
 import FooterBar from "@/components/footer/footerBar.vue";
-import { ref } from "vue";
+import { reactive, ref } from "vue";
+import type { FormInstance, FormRules } from "element-plus";
+import { usePersonStore } from "@/stores/person.js";
+let use = usePersonStore();
+interface Res{
+  code:number
+}
+const formSize = ref("default");
+const ruleFormRef = ref<FormInstance>();
+const ruleForm = reactive({
+  name: "",
+  education:""
+});
+const educationArr=ref([]);
+const getEducation = async function () {
+  const res = await use.getEducation();
+  console.log(res);
+  if (res.code == 200) {
+    educationArr.value=res.data;
+  }
+};
+getEducation()
+const rules = reactive<FormRules>({
+  name: [{ required: true, message: "请填写职位名称", trigger: "blur" }],
+  positionType: [
+    {
+      required: true,
+      message: "请选择职位类别",
+      trigger: "change",
+    },
+  ],
+  ifJust: [
+    {
+      required: true,
+      message: "请选择转正机会",
+      trigger: "change",
+    },
+  ],
+  salaryStart: [
+    {
+      required: true,
+      message: "请选择",
+      trigger: "change",
+    },
+  ],
+  salaryEnd: [
+    {
+      required: true,
+      message: "请选择",
+      trigger: "change",
+    },
+  ],
+  education: [
+    {
+      required: true,
+      message: "请选择学历",
+      trigger: "change",
+    },
+  ],
+  recruitersNum: [
+    {
+      required: true,
+      message: "请填写招聘人数",
+      trigger: "blur",
+    },
+  ],
+  workPlace: [
+    {
+      required: true,
+      message: "请选择工作地点",
+      trigger: "change",
+    },
+  ],
+  detailedLoc: [
+    {
+      required: true,
+      message: "请填写正确的详细地址",
+      trigger: "blur",
+    },
+  ],
+  positionDes: [
+    {
+      required: true,
+      message: "请输入20-10000个字符的内容",
+      trigger: "blur",
+    },
+  ],
+});
+
+const submitForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  await formEl.validate((valid, fields) => {
+    if (valid) {
+      console.log("submit!");
+    } else {
+      console.log("error submit!", fields);
+    }
+  });
+};
 
 const value = ref("");
 const activeNum = ref(-1);
@@ -163,9 +325,21 @@ const input = ref("");
   width: 1128px;
   margin: 0 auto;
 }
+.void-input {
+  :deep(.el-form-item__content) {
+    position: absolute;
+    top: 0;
+  }
+}
 :deep(.el-input__inner) {
   font-size: 14px;
   color: #515a6e;
+}
+:deep(.el-form-item__content) {
+  margin-left: 0 !important;
+}
+:deep(.el-form-item--default) {
+  margin-bottom: 0 !important;
 }
 .position-info {
   font-size: 14px;
@@ -230,7 +404,6 @@ const input = ref("");
   }
   .unit-input {
     :deep(.el-input__wrapper) {
-      // box-shadow: 0 1px 0 0 red inset,0 -1px 0 0 red inset,-1px 0 0 0 red inset,0 0 0 -1px blue inset;dcdfe6
       box-shadow: 0 1px 0 0 #dcdfe6 inset, 0 -1px 0 0 #dcdfe6 inset,
         -4px 0 0 0 white inset, 0 0 0 1px #dcdfe6 inset;
     }
@@ -323,22 +496,22 @@ const input = ref("");
 .w-320 {
   width: 320px;
 }
-.w-340 {
-  width: 340px;
+.w-350 {
+  width: 350px;
 }
-.w-615{
-    width: 615px;
+.w-615 {
+  width: 615px;
 }
 :deep(.el-textarea__inner) {
   height: 260px;
 }
-.mtb-65{
-    margin: 65px 0;
+.mtb-65 {
+  margin: 65px 0;
 }
-.mt-65{
-    margin-top: 65px;
+.mt-65 {
+  margin-top: 65px;
 }
-.mb-40{
-    margin-bottom: 40px;
+.mb-40 {
+  margin-bottom: 40px;
 }
 </style>

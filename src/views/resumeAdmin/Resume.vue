@@ -19,6 +19,7 @@ import candidateMain from "@/components/resumeAdmin/candidateMain.vue";
 import interviewMain from "@/components/resumeAdmin/interviewMain.vue";
 import inappropriate from "@/components/resumeAdmin/inappropriate.vue";
 let activeName = ref("first");
+
 </script>
 
 <style lang="scss" scoped>

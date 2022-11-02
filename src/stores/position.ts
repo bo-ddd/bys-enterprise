@@ -20,7 +20,7 @@ export const usePositionStore = defineStore("position", () => {
         return Api.getMajorList() as Res;
     }
     function getMonthDay() {
-        return Api.getMonthDay();
+        return Api.getMonthDay() as Res;
     }
     function getEducation() {
         return Api.getEducationList() as Res;

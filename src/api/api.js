@@ -77,5 +77,8 @@ export default {
      */
     getTalentList:(params)=>{
         return axios.post('/company/getTalent',params,postConfig);
+    },
+    getResume:(params)=>{
+        return axios.post('/company/getResume',params,postConfig);
     }
 }

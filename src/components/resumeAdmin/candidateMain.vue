@@ -8,7 +8,9 @@
                      <el-select class="stage-input m-2" placeholder="应聘阶段">
                          <el-option v-for="item in applicationStage.list" :key="item.value" :label="item.label" :value="item.value" />
                      </el-select>
-                     <el-cascader placeholder="学历" :options="allPositions" />
+                     <el-select  placeholder="学历">
+                         <el-option v-for="item in educationList" :key="item.value" :label="item.label" :value="item.value" />
+                     </el-select>
                      <el-input class="name-input" placeholder="姓名" />
                      <el-checkbox label="只看邀约投递的简历" size="small" />
                      <el-checkbox label="只看视频招聘会的简历" size="small" />
@@ -47,7 +49,24 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import card from "@/components/card/index";
-import footerBar from "@/components/footer/footerBar.vue";
+import footerBar from "@/components/footer/footerBar.vue"
+import { useEnterpriseStore } from "@/stores/enterprise"
+let enterprise = useEnterpriseStore();
+let getEducation = async ()=>{
+     let res = await enterprise.getEducation({});
+     educationList = res.data;
+ }
+ 
+ let getResume =  async ()=>{
+     let res = await enterprise.getResume({
+        companyId:1000,
+        pageIndex:1,
+        pageSize:10
+    });
+     console.log(res);
+ }
+ getEducation();
+ getResume();
 let userInfo = {
     name: "金艺林",
     sex: "女",
@@ -97,10 +116,7 @@ let applicationStage = {
     ]
 }
 
-let educationList = {
-    status:1,
-    message:"success",
-    list:[
+let educationList = [
          {
             label:"博士",
             value:""
@@ -130,7 +146,6 @@ let educationList = {
             value:""
          }
     ]
-}
 
 const checkAll = ref(false)
 const isIndeterminate = ref(false)

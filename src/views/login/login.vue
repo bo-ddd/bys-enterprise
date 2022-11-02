@@ -200,7 +200,7 @@
         </div>
         <!-- ------------- -->
         <!-- 页脚------ -->
-        <footer class="">
+        <footer class="footer">
             <ul class="just-center mt-30 fs-14">
                 <li class="just-center " v-for="item in footer" :key="item.id">
                     <p>{{ item.title }}</p>
@@ -590,27 +590,17 @@ $width100: 100%;
     border: 0;
     width: var(--size);
     height: var(--size);
-    //    line-height: var(--size) !important;
-    //    text-align: center;
 }
 
 
 
 .wrap-login {
-
     height: 100vh;
     background-image: url(@/assets/images/bg_login.png);
     background-size: 100%;
     background-repeat: no-repeat;
-    /* 背景图不平铺 */
-    background-repeat: no-repeat;
-    /* 当内容高度大于图片高度时，背景图像的位置相对于viewport固定 */
-    background-attachment: fixed;
-    /* 让背景图基于容器大小伸缩 */
     background-size: cover;
-    /* 设置背景颜色，背景图加载过程中会显示背景色 */
-    background-color: #464646;
-
+   
     // 头部
     header {
         font-size: 0;
@@ -705,9 +695,8 @@ $width100: 100%;
 
     // 页脚
     footer {
+        padding-bottom: 68px;
         ul {
-
-            // gap: ;
             li {
                 padding: 0 25px;
                 border-right: 1px solid #a4a4a4;

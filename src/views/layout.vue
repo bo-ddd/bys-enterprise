@@ -66,7 +66,7 @@ const handleSelect = (key: any) => {
           <span class="el-dropdown-link">
             <img class="avator" src="@/assets/images/avator.png" alt="">
             <el-icon class="el-icon--right">
-              <arrow-down />
+              <!-- <arrow-down /> -->
             </el-icon>
           </span>
           <template #dropdown>
@@ -111,6 +111,10 @@ const handleSelect = (key: any) => {
 
 :deep(.el-menu-item) {
   color: #d4d4d4 !important;
+}
+
+:deep(.el-icon) {
+  display: none;
 }
 
 

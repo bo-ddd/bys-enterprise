@@ -1,11 +1,13 @@
 <script lang="ts" setup>
 import { ref, reactive , type Ref } from "vue";
-import FooterBar from "@/components/footer/footerBar.vue"
+import FooterBar from "@/components/footer/footerBar.vue";
+import { usePersonStore } from "@/stores/person";
 interface Check {
     id: number,
     label: string | number,
     value: string | number,
 }
+console.log(usePersonStore);
 let checkSex: Ref<null | number | undefined> = ref();//性别
 let checkEducation: Ref<null | number | undefined> = ref();//学历
 let checkMajor: Ref<null | number | undefined> = ref();//专业

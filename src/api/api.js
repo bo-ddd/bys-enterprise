@@ -36,4 +36,11 @@ export default {
     getEducation:(params)=>{
         return axios.post('/drop/getEducation',params,postConfig)
     }
+
+    /**
+     * 
+     */
+    getEducationList:(params)=>{
+        return axios.post('/drop/getEducation',params,postConfig);
+    }
 }

@@ -15,7 +15,7 @@
                             </div>
                         </div>
                         <div class="major-right just-center">
-                            <div class="hover" @click="nav('edit')">
+                            <div class="hover" @click="nav('enterpriseRegistra')">
                                 <div class="icon mr-11">
                                     <i class="iconfont icon-bianji"></i>
                                 </div>
@@ -112,7 +112,7 @@
                     </div>
                 </div>
                 <div class="mt-25 text">
-                    阿斯科利积分兑换i去胡覅缺阿斯科利积分兑换i去胡覅缺阿阿斯科利积分兑换i去胡覅缺阿斯科利积分兑换i去胡覅缺阿斯科利积分兑换i去胡覅缺阿斯科利积分兑换i去胡覅缺阿斯科利积分兑换i去胡覅缺阿斯科利积分兑换i去胡覅缺阿斯科利积分兑换i去胡覅缺阿斯科利积分兑换i去胡覅缺
+                    兰州理工大学技术工程学院、甘肃能源化工职业学院、西安科技大学高新学院、成都信息工程大学、华北电力大学、山西工商学院、山西传媒学院、太原学院、太原电力高等专科学校、山西职业技术学院、山西轻工职业技术学院、忻州师范学院、运城职业技术学院、长治职业技术学院、西安电子科技大学、渭南职业技术学院
                 </div>
             </div>
 

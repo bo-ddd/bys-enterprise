@@ -13,8 +13,8 @@ interface Res{
 }
 export const usePositionStore = defineStore("position", () => {
 
-    function getPosition(params:PositionParam) {
-        return Api.getPositionList(params) as Res;
+    function getPosition(params) {
+        return Api.getPositionData(params) as Res;
     }
     function getProfessional() {
         return Api.getMajorList() as Res;

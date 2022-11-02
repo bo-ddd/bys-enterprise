@@ -58,7 +58,12 @@
         <span class="mr-10">实习月数</span>
 
         <!-- <el-form-item prop="name"> -->
-        <el-select v-model="value" class="m-2 w-200-input" placeholder="实习月数" size="large">
+        <el-select
+          v-model="ruleForm.internshipMonth"
+          class="m-2 w-200-input"
+          placeholder="实习月数"
+          size="large"
+        >
           <el-option
             v-for="item in monthArr"
             :key="item.value"
@@ -70,18 +75,18 @@
 
         <span class="ml-20 mr-10">每周天数</span>
         <!-- <el-form-item prop="name"> -->
-        <el-select v-model="value" class="m-2 w-200-inputs" placeholder="每周天数" size="large">
+        <el-select v-model="ruleForm.internshipDay" class="m-2 w-200-inputs" placeholder="每周天数" size="large">
           <el-option
             v-for="item in dayArr"
-            :key="item.value"
+            :key="item.label"
             :label="item.label"
-            :value="item.value"
+            :value="item.label"
           />
         </el-select>
         <!-- </el-form-item> -->
       </div>
       <div class="mb-40 align-center">
-        <span class="mr-10">月薪范围</span>
+        <span class="mr-10">{{activeNum==1?'日':'月'}}薪范围</span>
 
         <el-form-item prop="salaryStart">
           <el-select
@@ -92,9 +97,9 @@
           >
             <el-option
               v-for="item in moneyLeftArr"
-              :key="item.value"
+              :key="item.label"
               :label="item.label"
-              :value="item.value"
+              :value="item.label"
             />
           </el-select>
         </el-form-item>
@@ -158,20 +163,19 @@
       </div>
       <div class="mb-75 align-center">
         <span class="flex-noshrink mr-10">工作地点</span>
-        <el-form-item prop="workPlace">
-          <el-select
+        <el-form-item prop="workPlace" class="w-360">
+          <el-cascader
             v-model="ruleForm.workPlace"
-            class="m-2 w-340 flex-noshrink"
+            :options="cityData"
+            @change="handleChange"
+            class="w-340"
             placeholder="请选择工作地点"
-            size="large"
           >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
+            <template #default="{ node,data }">
+              <span>{{ data.label }}</span>
+              <span v-if="!node.isLeaf">({{ data.children.length }})</span>
+            </template>
+          </el-cascader>
         </el-form-item>
         <span class="ml-28 flex-noshrink mr-10">详细地址</span>
         <el-form-item prop="detailedLoc" class="w-100">
@@ -199,6 +203,7 @@ import FooterBar from "@/components/footer/footerBar.vue";
 import { reactive, ref } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
 import { usePositionStore } from "@/stores/position.js";
+import cityData from "@/assets/json/citydata.json";
 let use = usePositionStore();
 interface Res {
   code: number;
@@ -223,6 +228,8 @@ const ruleForm = reactive({
   detailedLoc: "",
   positionDes: "",
   recruitersNum: "",
+  internshipDay: 4,
+  internshipMonth: 3,
 });
 const educationArr = ref([]);
 const industryArr = ref([]);
@@ -266,8 +273,8 @@ const getData = async function () {
     moneyRightArr.value = res4.data.wishMoenyRightList;
   }
   if (res5.code == 200) {
-    dayArr.value=res5.data.dayList;
-    monthArr.value=res5.data.monthList;
+    dayArr.value = res5.data.dayList;
+    monthArr.value = res5.data.monthList;
   }
 };
 getData();
@@ -351,6 +358,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       console.log("submit!");
+      console.log(ruleForm);
     } else {
       console.log("error submit!", fields);
     }

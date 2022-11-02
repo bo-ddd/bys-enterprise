@@ -41,28 +41,28 @@ export default {
      * 获取学历下拉框
      */
     getEducationList:(params)=>{
-        return axios.post('/drop/getEducation',params,postConfig);
+        return axios.get('/drop/getEducation',params,postConfig);
     },
 
     /**
      * 获取专业下拉框
      */
     getMajorList:(params)=>{
-        return axios.post('/drop/getProfessional',params,postConfig);
+        return axios.get('/drop/getProfessional',params,postConfig);
     },
 
     /**
      * 获取期望薪资
      */
     getWishMoney:(params)=>{
-        return axios.post('/drop/getWishMoney',params,postConfig);
+        return axios.get('/drop/getWishMoney',params,postConfig);
     },
 
     /** 
      * 获取性别列表
      * */ 
     getSexList:(params)=>{
-        return axios.post('/drop/getSex',params,postConfig);
+        return axios.get('/drop/getSex',params,postConfig);
     },
 
     /**

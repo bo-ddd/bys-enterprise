@@ -18,7 +18,14 @@ import { ref } from 'vue'
 import candidateMain from "@/components/resumeAdmin/candidateMain.vue";
 import interviewMain from "@/components/resumeAdmin/interviewMain.vue";
 import inappropriate from "@/components/resumeAdmin/inappropriate.vue";
+import { useEnterpriseStore } from "@/stores/enterprise"
 let activeName = ref("first");
+let user = useEnterpriseStore();
+let getEducation = async ()=>{
+     let res = await user.getEducation({});
+     console.log(res);
+ }
+ getEducation();
 </script>
 
 <style lang="scss" scoped>

@@ -32,10 +32,8 @@ export default {
         return axios.post('/company/login', params, postConfig)
     },
 
-    /**
-     * 获取企业详细信息
-     */
-    getCompanyCommon:(params) =>{
-        return axios.post('/company/getCompanyCommon',params,postConfig)
+
+    getEducation:(params)=>{
+        return axios.post('/drop/getEducation',params,postConfig)
     }
 }

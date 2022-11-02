@@ -11,25 +11,23 @@
     >
       <div class="mb-40 align-center">
         <span class="flex-noshrink mr-10">职业名称</span>
-        <el-form-item prop="name">
-          <el-input class="mr-28 place-fs-14" v-model="ruleForm.name" placeholder="请填写职位名称" />
+        <el-form-item prop="positionName">
+          <el-input
+            class="w-360 mr-28 place-fs-14"
+            v-model="ruleForm.positionName"
+            placeholder="请填写职位名称"
+          />
         </el-form-item>
         <span class="flex-noshrink mr-10">职业类别</span>
-
-        <el-form-item prop="positionType">
-          <el-select
+        <el-form-item prop="positionType" class="w-360">
+          <el-cascader
+            class="w-360"
             v-model="ruleForm.positionType"
-            class="m-2 mr-28 w-360"
+            :props="props"
+            :options="industryArr"
+            @change="handleChange"
             placeholder="请选择职业类别"
-            size="large"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
+          />
         </el-form-item>
       </div>
       <div class="mb-40 align-center">
@@ -93,7 +91,7 @@
             size="large"
           >
             <el-option
-              v-for="item in options"
+              v-for="item in MoneyLeftArr"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -104,7 +102,7 @@
         <el-form-item prop="salaryEnd">
           <el-select v-model="ruleForm.salaryEnd" class="m-2 w-176" placeholder="最高薪资" size="large">
             <el-option
-              v-for="item in options"
+              v-for="item in MoneyRightArr"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -144,16 +142,17 @@
       <div class="mb-40 align-center">
         <span class="mr-10">意向专业</span>
         <el-select
-          v-model="ruleForm.name"
+          v-model="ruleForm.Professional"
           class="m-2 w-615"
           placeholder="请输入, 最多可选10个专业, 非必填"
           size="large"
+          multiple
         >
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="item in ProfessionalArr"
+            :key="item.sortId"
+            :label="item.professionalName"
+            :value="item.sortId"
           />
         </el-select>
       </div>
@@ -175,13 +174,13 @@
           </el-select>
         </el-form-item>
         <span class="ml-28 flex-noshrink mr-10">详细地址</span>
-        <el-form-item prop="detailedLoc">
+        <el-form-item prop="detailedLoc" class="w-100">
           <el-input class="h-38" v-model="ruleForm.detailedLoc" placeholder="请填写详细地址" />
         </el-form-item>
       </div>
       <div class="title mb-50">职位描述</div>
       <div class>
-        <el-form-item prop="positionDes">
+        <el-form-item prop="positionDes" class>
           <el-input
             v-model="ruleForm.positionDes"
             type="textarea"
@@ -199,28 +198,76 @@
 import FooterBar from "@/components/footer/footerBar.vue";
 import { reactive, ref } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
-import { usePersonStore } from "@/stores/person.js";
-let use = usePersonStore();
-interface Res{
-  code:number
+import { usePositionStore } from "@/stores/position.js";
+let use = usePositionStore();
+interface Res {
+  code: number;
 }
+const props = {
+  expandTrigger: "hover",
+};
+const handleChange = function (value:any) {
+  console.log(value);
+};
+
 const formSize = ref("default");
 const ruleFormRef = ref<FormInstance>();
 const ruleForm = reactive({
-  name: "",
-  education:""
+  positionName: "",
+  ifJust:'',
+  salaryStart:'',
+  salaryEnd:'',
+  positionType: [],
+  education: "",
+  workPlace:'',
+  detailedLoc:'',
+  positionDes:'',
+  recruitersNum:''
 });
-const educationArr=ref([]);
+const educationArr = ref([]);
+const industryArr = ref([]);
+const ProfessionalArr = ref([]);
+const MoneyLeftArr = ref([]);
+const MoneyRightArr = ref([]);
 const getEducation = async function () {
   const res = await use.getEducation();
+  const res2 = await use.getCompanyIndustry();
+  const res3 = await use.getProfessional();
+  const res4 = await use.getWishMoney();
   console.log(res);
   if (res.code == 200) {
-    educationArr.value=res.data;
+    educationArr.value = res.data;
+  }
+  if (res2.code == 200) {
+    let a = res2.data.map((item:any) => {
+      return {
+        value: item.sortId,
+        label: item.industryTypeName,
+        children: item.industyDownList.map((i:any) => {
+          return {
+            value: i.sortId,
+            label: i.industryName,
+            children: i.industyDownList,
+          };
+        }),
+      };
+    });
+    console.log(a);
+    industryArr.value = a;
+  }
+  if (res3.code == 200) {
+    ProfessionalArr.value = res3.data;
+  }
+  if (res4.code == 200) {
+    MoneyLeftArr.value = res4.data.wishMoenyLeftList;
+    MoneyRightArr.value = res4.data.wishMoenyRightList;
   }
 };
-getEducation()
+getEducation();
 const rules = reactive<FormRules>({
-  name: [{ required: true, message: "请填写职位名称", trigger: "blur" }],
+  positionName: [
+    { required: true, message: "请填写职位名称", trigger: "blur" },
+  ],
   positionType: [
     {
       required: true,
@@ -280,6 +327,12 @@ const rules = reactive<FormRules>({
   positionDes: [
     {
       required: true,
+      message: "请输入20-10000个字符的内容",
+      trigger: "blur",
+    },
+    {
+      min: 20,
+      max: 10000,
       message: "请输入20-10000个字符的内容",
       trigger: "blur",
     },
@@ -477,6 +530,9 @@ const input = ref("");
 }
 .w-360 {
   width: 360px;
+  :deep(.el-input) {
+    width: 360px;
+  }
 }
 .mb-75 {
   margin-bottom: 75px;
@@ -499,6 +555,9 @@ const input = ref("");
 .w-350 {
   width: 350px;
 }
+.w-340 {
+  width: 340px;
+}
 .w-615 {
   width: 615px;
 }
@@ -513,5 +572,8 @@ const input = ref("");
 }
 .mb-40 {
   margin-bottom: 40px;
+}
+.w-100 {
+  width: 100%;
 }
 </style>

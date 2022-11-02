@@ -97,6 +97,41 @@ let applicationStage = {
     ]
 }
 
+let educationList = {
+    status:1,
+    message:"success",
+    list:[
+         {
+            label:"博士",
+            value:""
+         },
+         {
+            label:"硕士",
+            value:""
+         },
+         {
+            label:"本科",
+            value:""
+         },
+         {
+            label:"大专",
+            value:""
+         },
+         {
+            label:"高中",
+            value:""
+         },
+         {
+            label:"中专/技校",
+            value:""
+         },
+         {
+            label:"初中及以下",
+            value:""
+         }
+    ]
+}
+
 const checkAll = ref(false)
 const isIndeterminate = ref(false)
 const checkedCities = ref(['',]) //选中的数组  里面有几个就选中几个
@@ -146,7 +181,7 @@ const handleCheckedCitiesChange = (value: string[]) => {
             }
         }
     }
-    
+
 :deep(.el-select-dropdown__item){
        font-size: 12px !important;
 }

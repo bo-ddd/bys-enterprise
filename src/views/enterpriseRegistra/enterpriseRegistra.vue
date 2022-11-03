@@ -187,11 +187,12 @@
                         </div>
 
                         <div class="align-center">
-                            <span>学校</span>
-                            <el-select v-model="value1" multiple placeholder="Select">
-                                <el-option v-for="item in schoolList" :key="item.value" :label="item.label"
-                                    :value="item.value" />
-                            </el-select>
+                            <el-form-item label="学校">
+                                <el-select v-model="schoolListVal" multiple placeholder="Select">
+                                    <el-option v-for="item in schoolList" :key="item.sortId" :label="item.schoolName"
+                                        :value="item.schoolId" />
+                                </el-select>
+                            </el-form-item>
                         </div>
                         <div></div>
                     </div>
@@ -218,29 +219,30 @@
 import footerBar from '@/components/footer/footerBar.vue';
 // 这个是企业注册地区的数据
 import RegisteredArea from './registeredArea';
-
 // 这个是form表单要用的
 import { reactive } from 'vue';
-
 // 这个是企业LOGO上传头像需要用到的
 import { ref } from 'vue';
 import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue';
 import type { UploadFile } from 'element-plus';
+import { useHomeStore } from '@/stores/home';
+// ajax
+const use = useHomeStore();
 
-// form的逻辑
+// form 表单数据
 const form = reactive({
     companyFullName: '',// 企业全称
     brandFullName: '',//品牌全称
     companyName: '',// 企业简称
-    companyStatus: '',// 企业状态 integer 整数类型
+    companyStatus: 0,// 企业状态 integer 整数类型
     companyLogo: '',// 企业Logo
     companyRegisterAddr: '',// 企业地址
     companyAddr: '',// 企业详细地址
     companyIndustryLeft: '',// 企业所属行业
     companyIndustryRight: '',// 企业所属行业
-    companyNature: '',// 企业性质 integer
-    companySize: '',// 企业规模 integer
-    companyTag: '',// 企业标签 integer
+    companyNature: 0,// 企业性质 integer
+    companySize: 0,// 企业规模 integer
+    companyTag: 0,// 企业标签 integer
     companySocialCreditCode: '',//企业社会信用代码
     companyLicense: '',// 企业营业执照 file
     companyLicenseUrl: '',// 企业营业执照Url 不填
@@ -251,6 +253,67 @@ const form = reactive({
     companyWebUrl: '',// 企业官网
     companyWishSchool: '',// 企业意向学校
 });
+// 调用 获取企业详细信息接口 报错
+// let getEnterprise = async function () {
+//     let res = await use.getEnterprise({ userId: 10000 });
+//     console.log(res);
+// }
+// getEnterprise();
+
+// 调用 修改企业详细信息接口 报错
+// let setModifyEnterpriseInfo = async function () {
+//     let { companyAddr,
+//         companyContactEmail,
+//         companyContactName,
+//         companyContactPhone,
+//         companyFullName,
+//         companyIndustryLeft,
+//         companyIndustryRight,
+//         companyIntroducation,
+//         companyLicense,
+//         companyLogo,
+//         companyName,
+//         companyNature,
+//         companyRegisterAddr,
+//         companySize,
+//         companySocialCreditCode,
+//         companyStatus,
+//         companyTag,
+//         companyWebUrl,
+//         companyWishSchool } = form;
+//     let res = await use.setModifyEnterpriseInfo({
+//         companyAddr,
+//         companyContactEmail,
+//         companyContactName,
+//         companyContactPhone,
+//         companyFullName,
+//         companyIndustryLeft,
+//         companyIndustryRight,
+//         companyIntroducation,
+//         companyLicense,
+//         companyLogo,
+//         companyName,
+//         companyNature,
+//         companyRegisterAddr,
+//         companySize,
+//         companySocialCreditCode,
+//         companyStatus,
+//         companyTag,
+//         companyWebUrl,
+//         companyWishSchool,
+//         userId:10000,
+//     });
+//     console.log(res);
+// }
+// setModifyEnterpriseInfo();
+
+// 调用 获取所属行业下拉框接口 报错
+// let getIndustryList = async function () {
+//     let res = await use.getIndustryList();
+//     console.log(res);
+// }
+// getIndustryList();
+
 const onSubmit = () => {
     console.log(form)
 };
@@ -270,81 +333,61 @@ const handleDownload = (file: UploadFile) => {
     console.log(file)
 };
 
-// 禁用状态选择器的逻辑
+// 所属行业
 const forbidden = ref('Option1');
-const enterpriseNatureVal = ref('')
+// 企业性质
+const enterpriseNatureVal = ref('其他')
+// 企业规模
 const enterpriseScaleVal = ref('')
+// 企业标签
 const enterpriseLabelVal = ref('')
 
 // 企业性质
-const enterpriseNature = [
-    {
-        value: 'Option1',
-        label: 'Option1',
-    },
-    {
-        value: 'Option2',
-        label: 'Option2',
-    },
-    {
-        value: 'Option3',
-        label: 'Option3',
-    },
-    {
-        value: 'Option4',
-        label: 'Option4',
-    },
-    {
-        value: 'Option5',
-        label: 'Option5',
-    },
-]
+interface EnterpriseNature {
+    label: string,
+    value: number,
+    createTime: null,
+    modifyTime: null
+}
+let enterpriseNature = reactive<EnterpriseNature[]>([]);
+
+// 调用 获取企业性质下拉框
+let getEnterpriseNatureList = async function () {
+    let res = await use.getEnterpriseNatureList();
+    Object.assign(enterpriseNature, res.data)
+}
+getEnterpriseNatureList();
+
 // 企业规模
-const enterpriseScale = [
-    {
-        value: 'Option1',
-        label: 'Option1',
-    },
-    {
-        value: 'Option2',
-        label: 'Option2',
-    },
-    {
-        value: 'Option3',
-        label: 'Option3',
-    },
-    {
-        value: 'Option4',
-        label: 'Option4',
-    },
-    {
-        value: 'Option5',
-        label: 'Option5',
-    },
-]
+interface EnterpriseScale {
+    createTime: null,
+    label: string,
+    modifyTime: null,
+    value: number,
+}
+let enterpriseScale = reactive<EnterpriseScale[]>([])
+// 调用 获取企业规模下拉框
+let getEnterpriseSizeList = async function () {
+    let res = await use.getEnterpriseSizeList();
+    Object.assign(enterpriseScale, res.data)
+}
+getEnterpriseSizeList();
+
 // 企业标签
-const enterpriseLabel = [
-    {
-        value: 'Option1',
-        label: 'Option1',
-    },
-    {
-        value: 'Option2',
-        label: 'Option2',
-    },
-    {
-        value: 'Option3',
-        label: 'Option3',
-    },
-    {
-        value: 'Option4',
-        label: 'Option4',
-    },
-    {
-        value: 'Option5',
-        label: 'Option5',
-    },
-]
+interface EnterpriseLabel {
+    createTime: null,
+    label: string,
+    modifyTime: null,
+    value: number,
+}
+let enterpriseLabel = reactive<EnterpriseLabel[]>([]);
+// 调用 获取企业标签下拉框
+let getEnterpriseTagList = async function () {
+    let res = await use.getEnterpriseTagList();
+    Object.assign(enterpriseLabel, res.data);
+}
+getEnterpriseTagList();
+
 // 所属行业
 const BelongingToIndustry = [
     {
@@ -369,42 +412,19 @@ const BelongingToIndustry = [
     },
 ]
 
-const value1 = ref([]);
+const schoolListVal = ref([]);
 // 学校列表
-const schoolList = [
-    {
-        value: 'Option1',
-        label: 'Option1',
-    },
-    {
-        value: 'Option2',
-        label: 'Option2',
-    },
-    {
-        value: 'Option3',
-        label: 'Option3',
-    },
-    {
-        value: 'Option4',
-        label: 'Option4',
-    },
-    {
-        value: 'Option5',
-        label: 'Option5',
-    },
-    {
-        value: '6',
-        label: '6',
-    },
-    {
-        value: '7',
-        label: '7',
-    },
-    {
-        value: '8',
-        label: '8',
-    },
-]
+interface SchoolList {
+    schoolId: number,
+    schoolName: string,
+    sortId: number,
+}
+const schoolList = reactive<SchoolList[]>([]);
+let getSchoolList = async function () {
+    let res = await use.getSchoolList();
+    Object.assign(schoolList, res.data);
+}
+getSchoolList();
 </script>
 
 <style lang="scss" scoped>
@@ -414,7 +434,7 @@ const schoolList = [
 
 ::v-deep.el-select {
     width: 240px;
-    height: 40px;
+    // height: 40px;
 }
 
 ::v-deep .el-button {

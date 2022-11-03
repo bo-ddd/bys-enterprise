@@ -24,7 +24,6 @@ let form = reactive({
 let inviationNumber = ref(0);//这个是当日邀请次数
 
 
-
 let paging = reactive({
     total:100,
     pageSize:1,
@@ -120,6 +119,15 @@ let getTalentList = async ()=>{
     console.log(res);
 }
 getTalentList();
+
+//邀请人才的方法;
+let inviteTalent = async (id:number)=>{
+    let res = await PersonStore.inviteTalent({
+        inviteUserId:id,
+        userId:10000,
+    });
+    console.log(res)
+}
 </script>
 <template>
     <div class="personnel">

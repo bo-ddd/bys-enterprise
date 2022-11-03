@@ -13,7 +13,7 @@ export const usePersonStore = defineStore('person', () => {
     return Api.getSexList(params);
   }
   function getPositionList(params:any){
-    return Api.getPositionList(params);
+    return Api.getPositionDrop(params);
   }
   function getWishMoney(params:any){
     return Api.getWishMoney(params);

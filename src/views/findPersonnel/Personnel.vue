@@ -2,6 +2,7 @@
 import { ref, reactive , type Ref } from "vue";
 import FooterBar from "@/components/footer/footerBar.vue";
 import { usePersonStore } from "@/stores/person";
+import { useHomeStore } from "@/stores/home";
 import cityJson from "@/assets/json/city.json";
 interface Check {
     id: number,
@@ -9,6 +10,7 @@ interface Check {
     value: string | number,
 }
 let PersonStore = usePersonStore();//引入personStore这个状态管理
+let HomeStore = useHomeStore();//引入homeStore这个状态管理
 let form = reactive({
     checkSex:null,//性别
     checkEducation:null,//学历
@@ -18,6 +20,10 @@ let form = reactive({
     lowestSalary:null,//最低薪资
     highestSalary:null,//最高薪资
 });//这个是模糊查询
+
+let inviationNumber = ref(0);//这个是当日邀请次数
+
+
 
 let paging = reactive({
     total:100,
@@ -57,6 +63,15 @@ let getEducationList = async ()=>{
     educationArr.push(...resData);
 }
 getEducationList();//调用获取学历列表
+
+//这个是获取邀请次数的方法
+let getInvationsNumber = async ()=>{
+    let res = await HomeStore.getEnterprise({
+        userId:10000,
+    })
+    console.log(res);
+}
+getInvationsNumber();
 
 //这个是获取专业列表的方法
 let getProfessionalList = async ()=>{
@@ -100,7 +115,8 @@ let getTalentList = async ()=>{
     });
     if(res.code != 200) return;
     talentList.length = 0;
-    talentList.push(...(res.data));
+    talentList.push(...(res.data).talentList);
+    paging.total = res.data.totalCount;
     console.log(res);
 }
 getTalentList();
@@ -239,7 +255,7 @@ getTalentList();
             <!-- 分页 -->
             <div class="page-wrap wrap mt-48">
                 <div class="page-content">
-                    <el-pagination :background="true" :pager-count="7" layout="prev, pager, next" :total="1000" />
+                    <el-pagination :background="true" :pager-count="7" layout="prev, pager, next" :total="paging.total" />
                 </div>
             </div>
         </div>

@@ -15,7 +15,7 @@
                             </div>
                         </div>
                         <div class="major-right just-center">
-                            <div class="hover" @click="nav('enterpriseRegistra')">
+                            <div class="hover hand" @click="nav('enterpriseRegistra')">
                                 <div class="icon mr-11">
                                     <i class="iconfont icon-bianji"></i>
                                 </div>
@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="btm justify-content">
-                    <div class="btm-item">
+                    <div class="btm-item hand" @click="nav('position')">
                         <div class="just-between">
                             <div class="left">
                                 <h3>2</h3>
@@ -53,7 +53,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="btm-item">
+                    <div class="btm-item hand" @click="nav('resume')">
                         <div class="just-between">
                             <div class="left">
                                 <h3>0</h3>
@@ -177,6 +177,10 @@ img {
     border-style: none;
 }
 
+.btm-item:hover {
+    color: #356ffb;
+}
+
 .icon-head-portrait {
     max-height: 86px;
     max-width: 86px;
@@ -246,6 +250,10 @@ img {
     height: 100%;
 }
 
+.hand {
+    cursor: pointer;
+}
+
 .brief-introduction {
     background-color: #ffffff;
     padding-left: 32px;
@@ -263,7 +271,6 @@ img {
 
                 &>.hover {
                     height: 15px;
-                    cursor: pointer;
                 }
 
                 .icon {

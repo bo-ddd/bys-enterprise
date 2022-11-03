@@ -2,17 +2,19 @@
     <div class="candidate wrap">
              <div class="candidate-header">
                  <div class="candidate-header_top">
-                     <el-select class="m-2" placeholder="投递职位">
+                     <el-select v-model="positionDropValue" class="m-2" placeholder="投递职位">
                          <el-option v-for="item in allPositions" :key="item.value" :label="item.label" :value="item.value" />
                      </el-select>
-                     <el-select class="stage-input m-2" placeholder="应聘阶段">
-                         <el-option v-for="item in applicationStage.list" :key="item.value" :label="item.label" :value="item.value" />
+                     <el-select v-model="stageValue" class="stage-input m-2" placeholder="应聘阶段">
+                         <el-option v-for="item in applicationStage" :key="item.value" :label="item.label" :value="item.value" />
                      </el-select>
-                     <el-cascader placeholder="学历" :options="allPositions" />
-                     <el-input class="name-input" placeholder="姓名" />
-                     <el-checkbox label="只看邀约投递的简历" size="small" />
-                     <el-checkbox label="只看视频招聘会的简历" size="small" />
-                     <el-button type="primary">确定</el-button>
+                     <el-select v-model="educationValue"  placeholder="学历">
+                         <el-option v-for="item in educationList" :key="item.value" :label="item.label" :value="item.value" />
+                     </el-select>
+                     <el-input v-model="userName" class="name-input" placeholder="姓名" />
+                     <div></div>
+                     <el-checkbox v-model="invitationStatus" label="只看邀约投递的简历" size="small" />
+                     <el-button type="primary" @click="fuzzyQuery()">确定</el-button>
                  </div>
                  <div class="candidate-header_bottom">
                      <el-checkbox :indeterminate="isIndeterminate" @change="handleCheckAllChange">全选</el-checkbox>
@@ -20,16 +22,21 @@
                      <el-button class="screen-btn" type="info" plain>批量不合适</el-button>
                  </div>
              </div>
-             <card.cardWrap class="mt-15" v-for="item in cities" :key="item">
+
+             <card.cardWrap class="mt-15" v-for="item in cardList" :key="item">
                  <template #header>
-                     <card.cardHeader :time="'2022-10-15 12:23:46'">
+                     <card.cardHeader :time="item.modifyTime">
                          <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                             <el-checkbox :label="item">投递职位 | Java开发工程师</el-checkbox>
+                             <el-checkbox :label="item.userId">投递职位 | {{item.positionName}}</el-checkbox>
                          </el-checkbox-group>
                      </card.cardHeader>
                  </template>
                  <template #main>
-                     <card.cardItem :userinfo="userInfo">
+                     <card.cardItem :userinfo="{
+                        sex:item.userSex,
+                        name:item.userName,
+                        deliveryStatus:item.deliveryStatus,
+                        education:`${item.userSchool}-${item.userProfessional}-${item.userEducation}`}">
                         <template #btn>
                             <el-button>不合适</el-button>
                             <el-button type="primary">通过筛选</el-button>
@@ -38,7 +45,7 @@
                  </template>
              </card.cardWrap>
              <div class="pagination">
-                 <el-pagination :page-size="20" :pager-count="11" layout="prev, pager, next" :total="1000" />
+                 <el-pagination  :page-size="pageSize"  v-model:current-page="currentPage" :pager-count="11" layout="prev, pager, next" :total="cardList.length" />
              </div>
              <footerBar></footerBar>
          </div>
@@ -47,95 +54,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import card from "@/components/card/index";
-import footerBar from "@/components/footer/footerBar.vue";
-let userInfo = {
-    name: "金艺林",
-    sex: "女",
-    education: "江苏大学京江学院-软件工程-本科"
-}
-const allPositions = [
-    {
-        value: '',
-        label: '全部职位',
-    },{
-        value: '',
-        label: 'java',
-    },{
-        value: '',
-        label: '软件测试工程师',
-    },
-]
-
-let applicationStage = {
-    status:1,
-    message:"success",
-    list:[
-         {
-            label:"全部",
-            value:""
-         },
-         {
-            label:"未查看",
-            value:""
-         },
-         {
-            label:"已查看",
-            value:""
-         },
-         {
-            label:"通过筛选",
-            value:""
-         },
-         {
-            label:"面试",
-            value:""
-         },
-         {
-            label:"拟录用",
-            value:""
-         }
-    ]
-}
-
-let educationList = {
-    status:1,
-    message:"success",
-    list:[
-         {
-            label:"博士",
-            value:""
-         },
-         {
-            label:"硕士",
-            value:""
-         },
-         {
-            label:"本科",
-            value:""
-         },
-         {
-            label:"大专",
-            value:""
-         },
-         {
-            label:"高中",
-            value:""
-         },
-         {
-            label:"中专/技校",
-            value:""
-         },
-         {
-            label:"初中及以下",
-            value:""
-         }
-    ]
-}
-
-const checkAll = ref(false)
-const isIndeterminate = ref(false)
-const checkedCities = ref(['',]) //选中的数组  里面有几个就选中几个
-const cities = ref(['Shanghai', 'Beijing', 'Guangzhou', 'Shenzhen']);
+import footerBar from "@/components/footer/footerBar.vue"
+import { useEnterpriseStore } from "@/stores/enterprise"
+let enterprise = useEnterpriseStore();
+let userName = ref("");
+let invitationStatus = ref(false);
+/**
+ * 多选框功能
+ */
+const checkAll = ref(false);
+const isIndeterminate = ref(false);
+const checkedCities = ref([]); //选中的数组  里面有几个就选中几个
+let cities = ref([]);
 const handleCheckAllChange = (val: boolean) => {
     checkedCities.value = val ? cities.value : []
     isIndeterminate.value = false
@@ -145,6 +75,83 @@ const handleCheckedCitiesChange = (value: string[]) => {
     checkAll.value = checkedCount === cities.value.length
     isIndeterminate.value = checkedCount > 0 && checkedCount < cities.value.length;
 }
+
+
+/**
+ * 获取应聘阶段下拉框
+ */
+let applicationStage:any = ref([]);
+let stageValue = ref();
+let getStage = async ()=>{
+    let res = await enterprise.getStage({});
+    applicationStage.value = res.data;
+}
+getStage();
+
+
+/**
+ * 获取投递职位下拉框
+ */
+let allPositions:any = ref([]);
+let positionDropValue = ref();
+let getPositionDrop =async ()=>{
+    let res = await enterprise.getPositionDrop({userId:10000});
+    allPositions.value = res.data;
+}
+getPositionDrop();
+
+
+
+/**获取学历下拉框 */
+let educationList:any = ref([]);
+let educationValue = ref();
+let getEducation = async () =>{
+     let res = await enterprise.getEducation({});
+     educationList.value = res.data;
+}
+getEducation();
+
+
+/**
+ * 获取个人信息名片列表
+ */
+let cardList:any = ref([]); 
+let pageSize = ref(10);
+let currentPage = ref(1);
+let getResume =  async ()=>{
+     let res = await enterprise.getResume({
+        pageIndex:currentPage.value,
+        pageSize:pageSize.value,
+        userId:10000,
+        companyId:10000,
+    });
+    cardList.value = res.data.data;
+    cities.value = cardList.value.map((item:any)=>{
+        return item.userId;
+    })
+}
+ getResume();
+
+ /**
+  * 模糊查询
+  */
+  let fuzzyQuery = async ()=>{
+  let res = await enterprise.getResume({
+        pageIndex:currentPage.value,
+        pageSize:pageSize.value,
+        userId:10000,
+        companyId:10000,
+        deliveryStatus:stageValue.value,
+        educationId :educationValue.value,
+        positionId:positionDropValue.value,
+        userName:userName.value,
+        invitationStatus:invitationStatus.value
+    });
+    cardList.value = res.data.data;
+    cities.value = cardList.value.map((item:any)=>{
+        return item.userId;
+    })
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -161,7 +168,6 @@ const handleCheckedCitiesChange = (value: string[]) => {
                 display: flex;
                 align-items: center;
                 gap: 0 10px;
-
                 .screen-btn {
                     margin-left: 10px;
                     width: 100px;
@@ -177,7 +183,7 @@ const handleCheckedCitiesChange = (value: string[]) => {
                 width: 140px;
             }
             .name-input {
-                width: 120px;
+                width: 140px;
             }
         }
     }

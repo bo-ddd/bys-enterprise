@@ -32,11 +32,9 @@ export default {
         return axios.post('/company/login', params, postConfig)
     },
 
-    /**
-     * 获取企业详细信息
-     */
-    getCompanyCommon:(params) =>{
-        return axios.post('/company/getCompanyCommon',params,postConfig)
+
+    getEducation:(params)=>{
+        return axios.post('/drop/getEducation',params,postConfig)
     },
 
     /**
@@ -44,5 +42,141 @@ export default {
      */
     getEducationList:(params)=>{
         return axios.post('/drop/getEducation',params,postConfig);
-    }
+    },
+
+    /**
+     * 获取企业详细信息
+     */
+    getEnterpriseInfo: (params) => {
+        return axios.post('/company/getCompanyCommon', params, postConfig);
+    },
+    
+    /**
+     * 修改企业详细信息
+     */
+    setModifyEnterpriseInfo:(params)=>{
+        return axios.post('/company/modifyCompanyCommon',params,postConfig);
+    },
+
+    /**
+     * 获取所属行业下拉框
+     */
+    getIndustryList: (params) => {
+        return axios.post('/drop/getCompanyIndustry', params, postConfig);
+    },
+
+    /**
+     * 获取企业性质下拉框
+     */
+    getEnterpriseNatureList: (params) => {
+        return axios.post('/drop/getCompanyNature', params, postConfig);
+    },
+    
+    /**
+     * 获取企业规模下拉框
+     */
+    getEnterpriseSizeList: (params) => {
+        return axios.post('/drop/getCompanySize', params, postConfig);
+    },
+    
+    /**
+     * 获取企业标签下拉框
+     */
+    getEnterpriseTagList: (params) => {
+        return axios.post('/drop/getCompanyTag', params, postConfig);
+    },
+    
+    /**
+     * 获取学校下拉框
+     */
+    getSchoolList: (params) => {
+        return axios.post('/drop/getSchool', params, postConfig);
+    },
+
+
+    /**
+     * 获取专业下拉框
+     */
+    getMajorList:(params)=>{
+        return axios.post('/drop/getProfessional',params,postConfig);
+    },
+
+    /**
+     * 获取期望薪资
+     */
+    getWishMoney:(params)=>{
+        return axios.post('/drop/getWishMoney',params,postConfig);
+    },
+
+    /** 
+     * 获取性别列表
+     * */ 
+    getSexList:(params={})=>{
+        return axios.post('/drop/getSex',params,postConfig);
+    },
+
+    /**
+     * 获取企业职位列表
+     */
+     getPositionDrop:(params)=>{
+        return axios.post('/drop/getPositionDrop',params,postConfig);
+    },
+
+    /**
+     * 获取人才列表
+     */
+    getTalentList:(params)=>{
+        return axios.post('/company/getTalent',params,postConfig);
+    },
+    getResume:(params)=>{
+        return axios.post('/company/getResume',params,postConfig);
+    },
+
+    /**
+     * 获取实习月数和天数下拉框
+     */
+    getMonthDay:(params)=>{
+        return axios.post('/drop/drop/getMonthDay',params,postConfig);
+    },
+
+    /**
+     * 获取职位类别下拉框
+     */
+    getCompanyIndustry:(params)=>{
+        return axios.post('/drop/getCompanyIndustry',params,postConfig);
+    },
+        
+    /**
+     * 获取企业职位列表
+     */
+     getPositionData:(params)=>{
+        return axios.post('/company/getPosition',params,postConfig);
+    },
+        
+    /**
+     * 获取实习薪资下拉列表
+     */
+     getInternshipMoney:(params)=>{
+        return axios.post('/drop/getInternshipMoney',params,postConfig);
+    },
+    /**
+     * 发布职业
+     */
+     releasePosition:(params)=>{
+        return axios.post('/company/releasePosition',params,postConfig);
+    },
+
+    /**
+     * 应聘阶段下拉框
+     */
+    getStage:(params)=>{
+        return axios.post('/drop/getStage',params,postConfig);
+    },
+
+    /**
+     * 修改简历状态
+     */
+     modifyResume:()=>{
+        return axios.post('/company/modifyResume',params,postConfig)
+     }
 }

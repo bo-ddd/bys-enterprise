@@ -13,8 +13,8 @@
                     </el-form-item>
 
                     <!-- 品牌全称 -->
-                    <el-form-item label="品牌全称">
-                        <el-input class="brand-name" v-model="form.brandFullName" />
+                    <el-form-item label="品牌名称">
+                        <el-input class="brand-name" v-model="form.companyName" />
                     </el-form-item>
 
                     <!-- 企业logo -->
@@ -232,8 +232,7 @@ const use = useHomeStore();
 // form 表单数据
 const form = reactive({
     companyFullName: '',// 企业全称
-    brandFullName: '',//品牌全称
-    companyName: '',// 企业简称
+    companyName: '',// 企业简称 (品牌名称)
     companyStatus: 0,// 企业状态 integer 整数类型
     companyLogo: '',// 企业Logo
     companyRegisterAddr: '',// 企业地址
@@ -253,66 +252,31 @@ const form = reactive({
     companyWebUrl: '',// 企业官网
     companyWishSchool: '',// 企业意向学校
 });
+
+let getEnterpriseData = reactive<any[]>([]);
 // 调用 获取企业详细信息接口 报错
-// let getEnterprise = async function () {
-//     let res = await use.getEnterprise({ userId: 10000 });
-//     console.log(res);
-// }
-// getEnterprise();
+let getEnterprise = async function () {
+    let res = await use.getEnterprise({ userId: 10000 });
+    Object.assign(getEnterpriseData, res.data);
+    console.log('企业详细信息接口返回值', getEnterpriseData);
+    Object.assign(form, res.data);
+}
+getEnterprise();
+console.log('form',form)
 
 // 调用 修改企业详细信息接口 报错
 // let setModifyEnterpriseInfo = async function () {
-//     let { companyAddr,
-//         companyContactEmail,
-//         companyContactName,
-//         companyContactPhone,
-//         companyFullName,
-//         companyIndustryLeft,
-//         companyIndustryRight,
-//         companyIntroducation,
-//         companyLicense,
-//         companyLogo,
-//         companyName,
-//         companyNature,
-//         companyRegisterAddr,
-//         companySize,
-//         companySocialCreditCode,
-//         companyStatus,
-//         companyTag,
-//         companyWebUrl,
-//         companyWishSchool } = form;
-//     let res = await use.setModifyEnterpriseInfo({
-//         companyAddr,
-//         companyContactEmail,
-//         companyContactName,
-//         companyContactPhone,
-//         companyFullName,
-//         companyIndustryLeft,
-//         companyIndustryRight,
-//         companyIntroducation,
-//         companyLicense,
-//         companyLogo,
-//         companyName,
-//         companyNature,
-//         companyRegisterAddr,
-//         companySize,
-//         companySocialCreditCode,
-//         companyStatus,
-//         companyTag,
-//         companyWebUrl,
-//         companyWishSchool,
-//         userId:10000,
-//     });
+//     let res = await use.setModifyEnterpriseInfo(form);
 //     console.log(res);
 // }
 // setModifyEnterpriseInfo();
 
 // 调用 获取所属行业下拉框接口 报错
-// let getIndustryList = async function () {
-//     let res = await use.getIndustryList();
-//     console.log(res);
-// }
-// getIndustryList();
+let getIndustryList = async function () {
+    let res = await use.getIndustryList();
+    console.log('所属行业的返回值', res);
+}
+getIndustryList();
 
 const onSubmit = () => {
     console.log(form)
@@ -350,7 +314,6 @@ interface EnterpriseNature {
     modifyTime: null
 }
 let enterpriseNature = reactive<EnterpriseNature[]>([]);
-
 // 调用 获取企业性质下拉框
 let getEnterpriseNatureList = async function () {
     let res = await use.getEnterpriseNatureList();

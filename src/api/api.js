@@ -118,7 +118,7 @@ export default {
     /**
      * 获取企业职位列表
      */
-    getPositionList:(params)=>{
+     getPositionDrop:(params)=>{
         return axios.post('/drop/getPositionDrop',params,postConfig);
     },
 
@@ -159,4 +159,17 @@ export default {
      getInternshipMoney:(params)=>{
         return axios.post('/drop/getInternshipMoney',params,postConfig);
     },
+    /**
+     * 发布职业
+     */
+     releasePosition:(params)=>{
+        return axios.post('/company/releasePosition',params,postConfig);
+    },
+
+    /**
+     * 应聘阶段下拉框
+     */
+    getStage:(params)=>{
+        return axios.post('/drop/getStage',params,postConfig);
+    }
 }

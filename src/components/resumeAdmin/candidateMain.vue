@@ -18,7 +18,7 @@
                  </div>
                  <div class="candidate-header_bottom">
                      <el-checkbox :indeterminate="isIndeterminate" @change="handleCheckAllChange">全选</el-checkbox>
-                     <el-button class="screen-btn" type="info" plain>批量通过筛选</el-button>
+                     <el-button class="screen-btn" type="info" @click="batchPass()" plain>批量通过筛选</el-button>
                      <el-button class="screen-btn" type="info" plain>批量不合适</el-button>
                  </div>
              </div>
@@ -27,7 +27,7 @@
                  <template #header>
                      <card.cardHeader :time="item.modifyTime">
                          <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                             <el-checkbox :label="item.userId">投递职位 | {{item.positionName}}</el-checkbox>
+                             <el-checkbox :label="item">投递职位 | {{item.positionName}}</el-checkbox>
                          </el-checkbox-group>
                      </card.cardHeader>
                  </template>
@@ -64,18 +64,30 @@ let invitationStatus = ref(false);
  */
 const checkAll = ref(false);
 const isIndeterminate = ref(false);
-const checkedCities = ref([]); //选中的数组  里面有几个就选中几个
+const checkedCities = ref([]); //选中的数组  选中几个就往里面放几个
 let cities = ref([]);
 const handleCheckAllChange = (val: boolean) => {
+    console.log(val);
+    
     checkedCities.value = val ? cities.value : []
-    isIndeterminate.value = false
+    isIndeterminate.value = false;
+    console.log(1);
+    
 }
 const handleCheckedCitiesChange = (value: string[]) => {
+    console.log(2);
+    
     const checkedCount = value.length
-    checkAll.value = checkedCount === cities.value.length
+    checkAll.value = checkedCount === cities.value.length;
     isIndeterminate.value = checkedCount > 0 && checkedCount < cities.value.length;
 }
 
+/**
+ * 批量通过
+ */
+let batchPass = ()=>{
+    console.log(checkedCities.value);
+}
 
 /**
  * 获取应聘阶段下拉框
@@ -126,9 +138,12 @@ let getResume =  async ()=>{
         companyId:10000,
     });
     cardList.value = res.data.data;
-    cities.value = cardList.value.map((item:any)=>{
-        return item.userId;
-    })
+    // cities.value = cardList.value.map((item:any)=>{
+    //     return item.userId;
+    // })
+    cities.value = cardList.value;
+    console.log(cities.value);
+    
 }
  getResume();
 
@@ -148,9 +163,10 @@ let getResume =  async ()=>{
         invitationStatus:invitationStatus.value
     });
     cardList.value = res.data.data;
-    cities.value = cardList.value.map((item:any)=>{
-        return item.userId;
-    })
+    // cities.value = cardList.value.map((item:any)=>{
+    //     return item.userId;
+    // })
+    cities.value = cardList.value;
   }
 </script>
 

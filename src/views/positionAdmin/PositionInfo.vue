@@ -9,7 +9,7 @@
       class="demo-ruleForm"
       :size="formSize"
     >
-      <div class="mb-40 align-center">
+      <div class="mb-40 align-center defaultImages">
         <span class="flex-noshrink mr-10">职业名称</span>
         <el-form-item prop="positionName">
           <el-input
@@ -31,25 +31,55 @@
         </el-form-item>
       </div>
       <div class="mb-40 align-center">
-        <span>工作性质</span>
-        <div
-          @click="select(0)"
-          class="select-btn ml-10"
-          :class="{'active':activeNum==0||activeNum==-1}"
-        >全职</div>
-        <div @click="select(1)" class="select-btn ml-10" :class="{'active':activeNum==1}">实习</div>
+        <span class="mr-10">工作性质</span>
+
+        <el-form-item prop="positionNature">
+          <el-radio-group v-model="ruleForm.data.positionNature">
+            <el-radio
+              @click="select(0)"
+              :class="{'active':activeNum==0||activeNum==-1}"
+              class="select-btn"
+              label="0"
+              size="large"
+              border
+            >全职</el-radio>
+            <el-radio
+              @click="select(1)"
+              :class="{'active':activeNum==1}"
+              class="select-btn"
+              label="1"
+              size="large"
+              border
+            >实习</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
         <div
           class="align-center ml-20"
           :class="{'hidden':activeNum==0,'show':activeNum==1,'none-show':activeNum==-1}"
         >
           <span class="mr-10">转正机会</span>
 
-          <el-form-item prop="positionPositive" class="void-input">
-            <input type="text" v-model="ruleForm.data.positionPositive" />
-            88
+          <el-form-item prop="positionPositive">
+            <el-radio-group v-model="ruleForm.data.positionPositive">
+              <el-radio
+                @click="select2(0)"
+                :label="true"
+                size="large"
+                :class="{'active':activeNum2==0}"
+                class="select-btn"
+                border
+              >可提供转正</el-radio>
+              <el-radio
+                @click="select2(1)"
+                :label="false"
+                size="large"
+                :class="{'active':activeNum2==1}"
+                class="select-btn"
+                border
+              >不提供转正</el-radio>
+            </el-radio-group>
           </el-form-item>
-          <div @click="select2(0)" class="select-btn" :class="{'active':activeNum2==0}">可提供转正</div>
-          <div @click="select2(1)" class="select-btn ml-10" :class="{'active':activeNum2==1}">不提供转正</div>
         </div>
       </div>
       <div
@@ -91,6 +121,7 @@
         <span class="mr-10">{{activeNum==1?'日':'月'}}薪范围</span>
         <el-form-item v-show="activeNum!=1" prop="salaryStart1">
           <el-select
+            v-show="activeNum!=1"
             v-model="ruleForm.data.salaryStart1"
             class="m-2 w-176"
             placeholder="最低薪资"
@@ -106,8 +137,8 @@
         </el-form-item>
         <el-form-item v-show="activeNum==1" prop="salaryStart2">
           <el-select
-            v-show="activeNum==1"
             v-model="ruleForm.data.salaryStart2"
+            v-show="activeNum==1"
             class="m-2 w-176"
             placeholder="最低薪资"
             size="large"
@@ -184,7 +215,7 @@
         </el-form-item>
       </div>
       <div class="mb-40 align-center">
-        <span class="mr-10">意向专业</span>
+        <span class="mr-10">意向专业{{ruleForm.data.positionNature}}</span>
         <el-select
           :multiple-limit="10"
           v-model="ruleForm.data.positionProfessional"
@@ -279,28 +310,26 @@ const ruleForm = reactive({
   data: {
     positionNature: 0, //工作性质
     positionName: "", //职位名称
-    positionPositive: true, //是否转正
+    positionPositive: "", //是否转正
     salaryStart: "", //薪资始
     salaryStart1: "", //薪资始
     salaryStart2: "", //薪资始
     salaryEnd: "", //薪资末
     salaryEnd1: "", //薪资末
     salaryEnd2: "", //薪资末
-    // positionMoney: "",//职位薪资范围id ,
     positionTypeArr: [],
-    // positionTypeLeft: roleForm.data.positionTypeArr[0],//职位类别
-    // positionTypeRight: positionTypeArr.value[1],//职位类别
     positionEducation: "", //学历
     positionProfessional: [], //专业
     positionDetailedAddr: "", //详细地址
-    positionDes: "dfssdfdsfdsfsfsfsdfsfsfsdfdsf", //职位描述
+    positionDes: "", //职位描述
     positionSize: "", //招聘人数
     internshipDay: 4, //每周天数
     internshipMonth: 3, //实习月数
     positionAddr: "", //工作地点
-    // internshipMoney: [salaryStart.value,salaryEnd.value],//实习薪资
   },
 });
+const radio1 = ref("1");
+const radio2 = ref("0");
 const getData = async function () {
   const res = await use.getEducation(); //学历
   const res2 = await use.getCompanyIndustry(); //行业
@@ -346,6 +375,74 @@ const getData = async function () {
   }
 };
 getData();
+const salaryStart1 = function (rule: any, value: any, callback: any) {
+  if (ruleForm.data.positionNature == 0) {
+    console.log(111);
+
+    if (!value) {
+      return callback(new Error("请选择"));
+    } else if (
+      ruleForm.data.salaryEnd1 &&
+      ruleForm.data.salaryStart1 >= ruleForm.data.salaryEnd1
+    ) {
+      return callback(new Error("请选择正确薪资范围"));
+    } else {
+      callback();
+    }
+  } else {
+    callback();
+  }
+};
+const salaryStart2 = function (rule: any, value: any, callback: any) {
+  if (ruleForm.data.positionNature == 1) {
+    if (!value) {
+      return callback(new Error("请选择"));
+    } else if (
+      ruleForm.data.salaryEnd1 &&
+      ruleForm.data.salaryStart2 >= ruleForm.data.salaryEnd2
+    ) {
+      return callback(new Error("请选择正确薪资范围"));
+    } else {
+      callback();
+    }
+  } else {
+    callback();
+  }
+};
+const salaryEnd1 = function (rule: any, value: any, callback: any) {
+  if (ruleForm.data.positionNature == 0) {
+    if (!value) {
+      return callback(new Error("请选择"));
+    } else if (
+      ruleForm.data.salaryEnd1 &&
+      ruleForm.data.salaryStart1 >= ruleForm.data.salaryEnd1
+    ) {
+      return callback(new Error("请选择正确薪资范围"));
+    } else {
+      callback();
+    }
+  } else {
+    callback();
+  }
+};
+const salaryEnd2 = function (rule: any, value: any, callback: any) {
+  if (ruleForm.data.positionNature == 1) {
+    console.log(111);
+
+    if (!value) {
+      return callback(new Error("请选择"));
+    } else if (
+      ruleForm.data.salaryEnd1 &&
+      ruleForm.data.salaryStart2 >= ruleForm.data.salaryEnd2
+    ) {
+      return callback(new Error("请选择正确薪资范围"));
+    } else {
+      callback();
+    }
+  } else {
+    callback();
+  }
+};
 const rules = reactive<FormRules>({
   positionName: [
     { required: true, message: "请填写职位名称", trigger: "blur" },
@@ -361,34 +458,38 @@ const rules = reactive<FormRules>({
     {
       required: true,
       message: "请选择转正机会",
-      trigger: "blur",
+      trigger: "change",
     },
   ],
   salaryStart1: [
     {
-      required: true,
-      message: "请选择最低薪资",
+      // required: true,
+      // message: "请选择最低薪资",
+      validator: salaryStart1,
       trigger: "change",
     },
   ],
   salaryStart2: [
     {
-      required: true,
-      message: "请选择最低薪资",
+      // required: true,
+      // message: "请选择最低薪资",
+      validator: salaryStart2,
       trigger: "change",
     },
   ],
   salaryEnd1: [
     {
-      required: true,
-      message: "请选择最高薪资",
+      // required: true,
+      // message: "请选择最高薪资",
+      validator: salaryEnd1,
       trigger: "change",
     },
   ],
   salaryEnd2: [
     {
-      required: true,
-      message: "请选择最高薪资",
+      // required: true,
+      // message: "请选择最高薪资",
+      validator: salaryEnd2,
       trigger: "change",
     },
   ],
@@ -435,12 +536,14 @@ const rules = reactive<FormRules>({
   ],
 });
 const select = function (index: number) {
+  console.log(rules);
   if (activeNum.value == -1) {
     (ruleForm.data.positionPositive as any) = "";
   }
   if (activeNum.value == -1 && index == 0) {
     return;
   }
+  // rules.salaryStart1[0].required=false
   activeNum.value = index;
   ruleForm.data.positionNature = index;
 };
@@ -453,12 +556,16 @@ const select2 = function (index: number) {
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   console.log(ruleForm.data);
+  console.log(formEl);
+
   if (!formEl) return;
   await formEl.validate((valid, fields: any) => {
+    console.log(valid);
+
     if (valid) {
       console.log("submit!");
       console.log(ruleForm.data);
-      addPosition(ruleForm.data)
+      addPosition(ruleForm.data);
     } else {
       console.log("error submit!", fields);
       ElMessage.error((<any>Object).values(fields)[0][0].message);
@@ -491,27 +598,30 @@ const addPosition = async function (params: any) {
     positionNature, //工作性质
     positionName, //职位名称
     positionPositive, //是否转正
-    positionDetailedAddr:'w', //详细地址
+    positionDetailedAddr, //详细地址
     positionDes, //职位描述
     positionSize, //招聘人数
     internshipDay, //每周天数
     internshipMonth, //实习月数
-    positionProfessional:'sss', //专业
-    internshipMoney:'1000', //实习日薪范围id
-    positionMoney:'5000', //职业薪资范围id
-    positionAddr:'af', //工作地点
+    positionProfessional: positionProfessional.join(","), //专业
+    internshipMoney: salaryStart2 + "," + salaryEnd2, //实习日薪范围id
+    positionMoney: salaryStart1 + "," + salaryEnd1, //职业薪资范围id
+    positionAddr: positionAddr.join(","), //工作地点
     positionTypeLeft: positionTypeArr[0],
     positionTypeRight: positionTypeArr[1], //职位类别
-    positionStatus:1,
+    positionStatus: 1,
     userId: "10000",
-    positionId:'',//职位id
+    positionId: "", //职位id
   };
-  let res = await use.addPosition(form);
-  console.log(res);
+  // let res = await use.addPosition(form);
+  // console.log(res);
 };
 </script>
 
 <style lang="scss" scoped>
+:deep(.el-radio__input) {
+  display: none !important;
+}
 .position-wrap {
   width: 1128px;
   margin: 0 auto;
@@ -565,14 +675,21 @@ const addPosition = async function (params: any) {
     border-radius: 4px;
   }
   .select-btn {
+    // display: flex;
+    // justify-content: center;
     width: 124px;
     height: 40px;
+    text-align: center;
     padding: 0 15px;
     line-height: 40px;
     text-align: center;
     box-sizing: border-box;
     z-index: 1;
     background-color: #f6f7f9;
+    :deep(.el-radio__label) {
+      width: 100%;
+      padding: 0;
+    }
   }
   .active {
     color: #2d8cf0;

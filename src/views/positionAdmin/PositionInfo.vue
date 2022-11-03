@@ -104,7 +104,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item v-show="activeNum==1" prop="salaryStart1">
+        <el-form-item v-show="activeNum==1" prop="salaryStart2">
           <el-select
             v-show="activeNum==1"
             v-model="ruleForm.data.salaryStart2"
@@ -136,7 +136,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="activeNum==1" prop="salaryEnd1">
+        <el-form-item v-if="activeNum==1" prop="salaryEnd2">
           <el-select
             v-show="activeNum==1"
             v-model="ruleForm.data.salaryEnd2"
@@ -284,6 +284,7 @@ const ruleForm = reactive({
     salaryStart1: "", //薪资始
     salaryStart2: "", //薪资始
     salaryEnd: "", //薪资末
+    salaryEnd1: "", //薪资末
     salaryEnd2: "", //薪资末
     // positionMoney: "",//职位薪资范围id ,
     positionTypeArr: [],
@@ -296,6 +297,7 @@ const ruleForm = reactive({
     positionSize: "", //招聘人数
     internshipDay: 4, //每周天数
     internshipMonth: 3, //实习月数
+    positionAddr: "", //工作地点
     // internshipMoney: [salaryStart.value,salaryEnd.value],//实习薪资
   },
 });
@@ -450,18 +452,63 @@ const select2 = function (index: number) {
 };
 
 const submitForm = async (formEl: FormInstance | undefined) => {
+  console.log(ruleForm.data);
   if (!formEl) return;
-  await formEl.validate((valid, fields:any) => {
+  await formEl.validate((valid, fields: any) => {
     if (valid) {
       console.log("submit!");
       console.log(ruleForm.data);
+      addPosition(ruleForm.data)
     } else {
       console.log("error submit!", fields);
       ElMessage.error((<any>Object).values(fields)[0][0].message);
     }
   });
 };
-// const 
+const addPosition = async function (params: any) {
+  const {
+    positionEducation,
+    positionNature,
+    positionName,
+    positionPositive,
+    positionDetailedAddr,
+    positionDes,
+    positionSize,
+    internshipDay,
+    internshipMonth,
+    positionTypeArr,
+    positionAddr,
+    positionProfessional,
+    salaryStart2,
+    salaryEnd2,
+    salaryStart1,
+    salaryEnd1,
+  } = params;
+  let internshipMoney = [salaryStart2, salaryEnd2];
+  let positionMoney = [salaryStart1, salaryEnd1];
+  let form = {
+    positionEducation, //学历id
+    positionNature, //工作性质
+    positionName, //职位名称
+    positionPositive, //是否转正
+    positionDetailedAddr:'w', //详细地址
+    positionDes, //职位描述
+    positionSize, //招聘人数
+    internshipDay, //每周天数
+    internshipMonth, //实习月数
+    positionProfessional:'sss', //专业
+    internshipMoney:'1000', //实习日薪范围id
+    positionMoney:'5000', //职业薪资范围id
+    positionAddr:'af', //工作地点
+    positionTypeLeft: positionTypeArr[0],
+    positionTypeRight: positionTypeArr[1], //职位类别
+    positionStatus:1,
+    userId: "10000",
+    positionId:'',//职位id
+  };
+  let res = await use.addPosition(form);
+  console.log(res);
+};
 </script>
 
 <style lang="scss" scoped>

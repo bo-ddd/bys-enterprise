@@ -45,7 +45,7 @@
           <div class="job-box mb-15" v-for="item in positionList" :key="item.userId">
             <div class="info-job just-between">
               <div class="job-title fs-18">
-                <div class="mb-15">Java开发工程师</div>
+                <div class="mb-15"> {{item.positionName}}&nbsp;  </div>
                 <div class="info-list align-center">
                   <div class="money-num mr-15">10-15k</div>
                   <div class="align-center fs-14">
@@ -55,7 +55,7 @@
                     <div class="bor"></div>
                     <div>北京</div>
                     <div class="bor"></div>
-                    <div>Java工程师</div>
+                    <div>{{item.positionType}}</div>
                   </div>
                 </div>
               </div>
@@ -81,7 +81,7 @@
             <div class="edit-job just-between fs-14">
               <div>
                 创建时间 :
-                <span>&nbsp; 2022-09-15 10:34:04</span>
+                <span>&nbsp; {{item.createTime}}</span>
               </div>
               <div class="align-center">
                 <div class="cur-po">编辑</div>
@@ -250,6 +250,9 @@ const to = function (path: string) {
     .info-job {
       padding: 30px 25px;
       border-bottom: 2px solid #f6f7f9;
+      .job-title{
+        width: 400px;
+      }
       .info-list {
         color: rgb(81, 90, 110);
 

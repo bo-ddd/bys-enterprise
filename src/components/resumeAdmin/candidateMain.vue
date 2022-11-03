@@ -6,7 +6,7 @@
                          <el-option v-for="item in allPositions" :key="item.value" :label="item.label" :value="item.value" />
                      </el-select>
                      <el-select class="stage-input m-2" placeholder="应聘阶段">
-                         <el-option v-for="item in applicationStage.list" :key="item.value" :label="item.label" :value="item.value" />
+                         <el-option v-for="item in applicationStage" :key="item.value" :label="item.label" :value="item.value" />
                      </el-select>
                      <el-select  placeholder="学历">
                          <el-option v-for="item in educationList" :key="item.value" :label="item.label" :value="item.value" />
@@ -56,15 +56,13 @@ import card from "@/components/card/index";
 import footerBar from "@/components/footer/footerBar.vue"
 import { useEnterpriseStore } from "@/stores/enterprise"
 let enterprise = useEnterpriseStore();
-let cardList:any = ref([]); 
-let pageSize = ref(10);
-let currentPage = ref(1);
+
 /**
- * 多选框的
+ * 多选框功能
  */
-const checkAll = ref(false)
-const isIndeterminate = ref(false)
-const checkedCities = ref([]) //选中的数组  里面有几个就选中几个
+const checkAll = ref(false);
+const isIndeterminate = ref(false);
+const checkedCities = ref([]); //选中的数组  里面有几个就选中几个
 let cities = ref([]);
 const handleCheckAllChange = (val: boolean) => {
     checkedCities.value = val ? cities.value : []
@@ -75,48 +73,46 @@ const handleCheckedCitiesChange = (value: string[]) => {
     checkAll.value = checkedCount === cities.value.length
     isIndeterminate.value = checkedCount > 0 && checkedCount < cities.value.length;
 }
-let educationList:any = ref([]);
-let allPositions = ref([])
-let applicationStage = {
-    status:1,
-    message:"success",
-    list:[
-         {
-            label:"全部",
-            value:""
-         },
-         {
-            label:"未查看",
-            value:""
-         },
-         {
-            label:"已查看",
-            value:""
-         },
-         {
-            label:"通过筛选",
-            value:""
-         },
-         {
-            label:"面试",
-            value:""
-         },
-         {
-            label:"拟录用",
-            value:""
-         }
-    ]
+
+
+/**
+ * 获取应聘阶段下拉框
+ */
+let applicationStage:any = ref([]);
+let getStage = async ()=>{
+    let res = await enterprise.getStage({});
+    applicationStage.value = res.data;
 }
-let getPositionList =async ()=>{
-    let res = await enterprise.getPositionList({userId:10000});
+getStage();
+
+
+/**
+ * 获取投递职位下拉框
+ */
+let allPositions:any = ref([]);
+let getPositionDrop =async ()=>{
+    let res = await enterprise.getPositionDrop({userId:10000});
     allPositions.value = res.data;
 }
-getPositionList();
+getPositionDrop();
+
+
+
+/**获取学历下拉框 */
+let educationList:any = ref([]);
 let getEducation = async () =>{
      let res = await enterprise.getEducation({});
      educationList.value = res.data;
 }
 getEducation();
+
+
+/**
+ * 获取个人信息名片列表
+ */
+let cardList:any = ref([]); 
+let pageSize = ref(10);
+let currentPage = ref(1);
 let getResume =  async ()=>{
      let res = await enterprise.getResume({
         companyId:10000,

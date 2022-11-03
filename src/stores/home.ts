@@ -3,10 +3,67 @@ import Api from "@/api/api.js";
 
 
 export const useHomeStore = defineStore("home", () => {
-
-    function getEducation(payload: {}) {
-        return Api.getEducationList(payload);
+    // 获取企业详细信息接口
+    function getEnterprise(payload: { userId: number }) {
+        return Api.getEnterpriseInfo(payload);
+    }
+    // 修改企业详细信息接口
+    function setModifyEnterpriseInfo(payload: {
+        companyAddr: string,
+        companyContactEmail: string,
+        companyContactName: string,
+        companyContactPhone: string,
+        companyFullName: string,
+        companyIndustryLeft: string,
+        companyIndustryRight: string,
+        companyIntroducation: string,
+        companyLicense: string,
+        companyLogo: any,
+        companyName: string,
+        companyNature: number,
+        companyRegisterAddr: string,
+        companySize: number,
+        companySocialCreditCode: string,
+        companyStatus: number,
+        companyTag: number,
+        companyWebUrl: string,
+        companyWishSchool: string,
+        userId: number
+    }) {
+        return Api.setModifyEnterpriseInfo(payload);
+    }
+    // 获取所属行业下拉框
+    function getIndustryList(payload = {}) {
+        return Api.getIndustryList(payload);
     }
 
-    return { getEducation };
+    // 获取企业性质下拉框
+    function getEnterpriseNatureList(payload = {}) {
+        return Api.getEnterpriseNatureList(payload);
+    }
+
+    // 获取企业规模下拉框
+    function getEnterpriseSizeList(payload = {}) {
+        return Api.getEnterpriseSizeList(payload);
+    }
+
+    // 获取企业标签下拉框
+    function getEnterpriseTagList(payload = {}) {
+        return Api.getEnterpriseTagList(payload);
+    }
+
+    // 获取学校下拉框
+    function getSchoolList(payload = {}) {
+        return Api.getSchoolList(payload);
+    }
+
+    return {
+        getEnterprise,
+        setModifyEnterpriseInfo,
+        getIndustryList,
+        getEnterpriseNatureList,
+        getEnterpriseSizeList,
+        getEnterpriseTagList,
+        getSchoolList,
+    };
 });

@@ -8,7 +8,7 @@
       >
         <div class="nav-title">
           <span>在招中</span>
-          <span class="fs-12 num">3</span>
+          <span class="fs-12 num">{{recruitNum}}</span>
         </div>
         <div class="bottom-line"></div>
       </div>
@@ -19,7 +19,7 @@
       >
         <div class="nav-title">
           <span>已下线</span>
-          <span class="fs-12 num">3</span>
+          <span class="fs-12 num">{{downNum}}</span>
         </div>
         <div class="bottom-line"></div>
       </div>
@@ -42,10 +42,10 @@
               </div>
             </div>
           </div>
-          <div class="job-box mb-15">
+          <div class="job-box mb-15" v-for="item in positionList" :key="item.userId">
             <div class="info-job just-between">
               <div class="job-title fs-18">
-                <div class="mb-15">Java开发工程师</div>
+                <div class="mb-15"> {{item.positionName}}&nbsp;  </div>
                 <div class="info-list align-center">
                   <div class="money-num mr-15">10-15k</div>
                   <div class="align-center fs-14">
@@ -55,7 +55,7 @@
                     <div class="bor"></div>
                     <div>北京</div>
                     <div class="bor"></div>
-                    <div>Java工程师</div>
+                    <div>{{item.positionType}}</div>
                   </div>
                 </div>
               </div>
@@ -81,7 +81,7 @@
             <div class="edit-job just-between fs-14">
               <div>
                 创建时间 :
-                <span>&nbsp; 2022-09-15 10:34:04</span>
+                <span>&nbsp; {{item.createTime}}</span>
               </div>
               <div class="align-center">
                 <div class="cur-po">编辑</div>
@@ -92,7 +92,7 @@
               </div>
             </div>
           </div>
-          <div class="just-center">
+          <div class="just-center" v-if="recruitNum>10">
             <el-pagination
               :background="true"
               v-model:currentPage="pageNum"
@@ -122,23 +122,49 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 // import { usePositionStore,PositionParams } from "@/stores/position";
 let use = usePositionStore();
+const recruitNum = ref(0);
+const downNum = ref(0);
 const total = ref(0);
-const pageNum = ref(1)
+const pageNum = ref(1);
 const pageSize = ref(10);
-let getPosition = async function (params:any) {
-  let res = await use.getPosition(params);
-  console.log(res);
-  let {data}=res
-  if (res.code == 200) {
-    total.value = res.data.length;
+const positionList = ref([]);
+let getList = async function () {
+  let res1 = await use.getPosition({
+    pageIndex: 1,
+    userId: 10000,
+    pageSize: 10,
+    positionStatus: 1,
+  });
+  if (res1.code == 200 && res1.data) {
+    recruitNum.value = res1.data.data.length;
+    console.log(recruitNum.value);
+    positionList.value = res1.data.data;
+  }
+  let res2 = await use.getPosition({
+    pageIndex: 1,
+    userId: 10000,
+    pageSize: 10,
+    positionStatus: 2,
+  });
+  if (res2.code == 200 && res2.data) {
+    downNum.value = res2.data.data.length;
   }
 };
-getPosition({
-  pageIndex: pageNum.value,
-  userId: 10000,
-  pageSize: pageSize.value,
-  positionStatus: 2,
-});
+getList();
+// let getPosition = async function (params: any) {
+//   let res = await use.getPosition(params);
+//   console.log(res);
+//   let { data } = res;
+//   if (res.code == 200) {
+//     total.value = res.data.length;
+//   }
+// };
+// getPosition({
+//   pageIndex: pageNum.value,
+//   userId: 10000,
+//   pageSize: pageSize.value,
+//   positionStatus: 0,
+// });
 const router = useRouter();
 const tabFlag = ref(true);
 const currentIndex = ref(0);
@@ -224,6 +250,9 @@ const to = function (path: string) {
     .info-job {
       padding: 30px 25px;
       border-bottom: 2px solid #f6f7f9;
+      .job-title{
+        width: 400px;
+      }
       .info-list {
         color: rgb(81, 90, 110);
 

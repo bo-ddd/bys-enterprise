@@ -17,7 +17,14 @@ let form = reactive({
     checkCity:null,//城市
     lowestSalary:null,//最低薪资
     highestSalary:null,//最高薪资
-});
+});//这个是模糊查询
+
+let paging = reactive({
+    total:100,
+    pageSize:1,
+    pageIndex:10,
+});//分页
+
 let showGuid = ref(false);//展示导航
 let circleUrl = ref('https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png');       
 let checkItem = ref(0);//默认展示哪个页面
@@ -30,11 +37,9 @@ let handleGuideChange = (bool:boolean)=>{
 
 //清空选择的方法
 let cancelCheck = ()=>{
-    console.log(form);
     for (const key in form) {
         form[key] = null;
     }
-    console.log(form);
 }
 
 let educationArr = reactive<Check[]>([]);//学历的列表
@@ -57,6 +62,7 @@ getEducationList();//调用获取学历列表
 let getProfessionalList = async ()=>{
     let res = await PersonStore.getMajorList();
     if(res.code !== 200) return;
+    majorArr.length = 0;
     majorArr.push(...(res.data));
 }
 getProfessionalList();//调用获取专业列表
@@ -74,7 +80,7 @@ let getPositionList = async ()=>{
     let res = await PersonStore.getPositionList({
         userId:10000,
     });
-    console.log(res);
+    positionArr.push(...(res.data))
 }
 getPositionList();
 
@@ -83,9 +89,6 @@ let getWishMoneyList = async ()=>{
     let res = await PersonStore.getWishMoney();
     wishMoneyLeftList.push(...(res.data).wishMoenyLeftList);
     wishMoneyRightList.push(...(res.data).wishMoenyRightList);
-    console.log(wishMoneyLeftList);
-    console.log(wishMoneyRightList);
-    console.log(res);
 }
 getWishMoneyList();
 
@@ -95,6 +98,9 @@ let getTalentList = async ()=>{
         pageSize:10,
         pageIndex:1,
     });
+    if(res.code != 200) return;
+    talentList.length = 0;
+    talentList.push(...(res.data));
     console.log(res);
 }
 getTalentList();
@@ -144,7 +150,7 @@ getTalentList();
                         <el-option v-for="item in majorArr" :key="item.sortId" :label="item.professionalName" :value="item.sortId" />
                     </el-select>
                     <el-select v-model="form.checkPosition" class="m-2 check-education mr-30" placeholder="意向职位选择" size="large">
-                        <el-option v-for="item in educationArr" :key="item.value" :label="item.label" :value="item.value" />
+                        <el-option v-for="item in positionArr" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                 </div>
                 <div class="filter-wrap-btm">
@@ -174,7 +180,7 @@ getTalentList();
                 </div>
 
                 <!-- 每一项数据 -->
-                <div class="data-item">
+                <div class="data-item" v-for="item in talentList" :key="item.id">
 
                     <!--头像-->
                     <div class="cbleft1">
@@ -224,7 +230,7 @@ getTalentList();
                     
                     <!-- 活跃时间 -->
                     <div class="cbleft5">
-                        <p class="titlest fs-12 cl-ccc">2022-10-17活跃</p>
+                        <p class="titlest fs-12 cl-ccc">{{item.lastLoginTime}}活跃</p>
                         <el-button type="primary" class="mt-50">邀请投递</el-button>
                     </div>
                 </div>
@@ -233,7 +239,7 @@ getTalentList();
             <!-- 分页 -->
             <div class="page-wrap wrap mt-48">
                 <div class="page-content">
-                    <el-pagination :background="true" pager-count="4" layout="prev, pager, next" :total="1000" />
+                    <el-pagination :background="true" :pager-count="7" layout="prev, pager, next" :total="1000" />
                 </div>
             </div>
         </div>

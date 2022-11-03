@@ -62,7 +62,7 @@ export default {
      * 获取所属行业下拉框
      */
     getIndustryList: (params) => {
-        return axios.post('/drop/getCompanyindustry', params, postConfig);
+        return axios.post('/drop/getCompanyIndustry', params, postConfig);
     },
 
     /**
@@ -118,7 +118,7 @@ export default {
     /**
      * 获取企业职位列表
      */
-    getPositionList:(params)=>{
+     getPositionDrop:(params)=>{
         return axios.post('/drop/getPositionDrop',params,postConfig);
     },
 
@@ -165,4 +165,32 @@ export default {
      releasePosition:(params)=>{
         return axios.post('/company/releasePosition',params,postConfig);
     },
+
+    /**
+     * 应聘阶段下拉框
+     */
+    getStage:(params)=>{
+        return axios.post('/drop/getStage',params,postConfig);
+    },
+
+    /**
+     * 修改简历状态
+     */
+     modifyResume:()=>{
+        return axios.post('/company/modifyResume',params,postConfig);
+     },
+
+     /**
+      * 邀请人才列表
+      */
+      getInvite:()=>{
+        return axios.post('/company/getInvite',params,postConfig);
+      },
+
+      /**
+       * 邀请人才
+       */
+      inviteTalent:()=>{
+        return axios.post('/company/inviteTalent',params,postConfig)
+      }
 }

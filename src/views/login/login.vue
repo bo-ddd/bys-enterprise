@@ -17,7 +17,7 @@
                 </div>
                 <div class="main mt-30">
                     <!-- tabs 登录 -->
-                    <el-tabs v-model="activeName" class="demo-tabs" >
+                    <el-tabs v-model="activeName" class="demo-tabs">
                         <!-- 密码登录 -->
                         <el-tab-pane label="密码登录" name="first">
                             <el-form ref="ruleFormPassRef" label-position="right" :model="ruleFormPass"
@@ -64,10 +64,10 @@
                                             :disabled="ruleFormValidate.phone.length == 11 ? false : true"
                                             :color="ruleFormValidate.phone.length == 11 ? '#356ffa' : '#ececec'"
                                             :class="'btn-validate ' + (ruleFormValidate.phone.length == 11 ? 'c-ffffff' : 'c-b9b9b9')"
-                                            @click="getvalidate($event,ruleFormValidate)">
+                                            @click="getvalidate($event, ruleFormValidate)">
                                             获取验证码</el-button>
-                                        <el-button v-show="!ruleFormValidate.isCountDown" style="width:102px" disabled color='#ececec'
-                                            class="btn-validate c-b9b9b9">
+                                        <el-button v-show="!ruleFormValidate.isCountDown" style="width:102px" disabled
+                                            color='#ececec' class="btn-validate c-b9b9b9">
                                             {{ `${ruleFormValidate.countDown}秒后重试` }}</el-button>
                                     </div>
                                 </el-form-item>
@@ -104,10 +104,10 @@
                                     :disabled="ruleFormRegister.phone.length == 11 ? false : true"
                                     :color="ruleFormRegister.phone.length == 11 ? '#356ffa' : '#ececec'"
                                     :class="'btn-validate ' + (ruleFormRegister.phone.length == 11 ? 'c-ffffff' : 'c-b9b9b9')"
-                                    @click="getvalidate($event,ruleFormRegister)">
+                                    @click="getvalidate($event, ruleFormRegister)">
                                     获取验证码</el-button>
-                                <el-button v-show="!ruleFormRegister.isCountDown" style="width:102px" disabled color='#ececec'
-                                    class="btn-validate c-b9b9b9">
+                                <el-button v-show="!ruleFormRegister.isCountDown" style="width:102px" disabled
+                                    color='#ececec' class="btn-validate c-b9b9b9">
                                     {{ `${ruleFormRegister.countDown}秒后重试` }}</el-button>
                             </div>
                         </el-form-item>
@@ -153,10 +153,10 @@
                                     :disabled="ruleFormForgotPw.phone.length == 11 ? false : true"
                                     :color="ruleFormForgotPw.phone.length == 11 ? '#356ffa' : '#ececec'"
                                     :class="'btn-validate ' + (ruleFormForgotPw.phone.length == 11 ? 'c-ffffff' : 'c-b9b9b9')"
-                                    @click="getvalidate($event,ruleFormForgotPw)">
+                                    @click="getvalidate($event, ruleFormForgotPw)">
                                     获取验证码</el-button>
-                                <el-button v-show="!ruleFormForgotPw.isCountDown" style="width:102px" disabled color='#ececec'
-                                    class="btn-validate c-b9b9b9">
+                                <el-button v-show="!ruleFormForgotPw.isCountDown" style="width:102px" disabled
+                                    color='#ececec' class="btn-validate c-b9b9b9">
                                     {{ `${ruleFormForgotPw.countDown}秒后重试` }}</el-button>
                             </div>
                         </el-form-item>
@@ -215,13 +215,21 @@
 <script setup lang="ts">
 
 import { reactive, ref } from 'vue'
-import {  useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
+import { useUserStore } from '@/stores/user';
 const router = useRouter();
+
+
+let user = useUserStore();
+let login = async (options: any) => {
+    let res = await user.login(options);
+    console.log(res)
+}
 
 // 获取验证码
 
-let getvalidate = (e: any,rule:any) => {
+let getvalidate = (e: any, rule: any) => {
     let count = rule.countDown;
     rule.isCountDown = false
     e.target.disabled = true
@@ -229,8 +237,8 @@ let getvalidate = (e: any,rule:any) => {
         rule.countDown--;
         if (rule.countDown == 0) {
             clearInterval(interval)
-            rule.countDown= count;
-            rule.isCountDown= true;
+            rule.countDown = count;
+            rule.isCountDown = true;
         }
     }, 1000);
 }
@@ -300,17 +308,24 @@ const rulesPass = reactive<FormRules>({
         { required: true, message: '请输入手机号', trigger: 'blur' },
         { validator: validatePhone, }
     ],
-    password: [
-        { required: true, message: '请输入密码', trigger: 'blur' },
-        { min: 6, max: 20, message: '6-20位之间', trigger: 'blur' },
-    ],
+    // password: [
+    //     { required: true, message: '请输入密码', trigger: 'blur' },
+    //     { min: 6, max: 20, message: '6-20位之间', trigger: 'blur' },
+    // ],
 })
 
 const submitFormPass = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     await formEl.validate((valid, fields) => {
         if (valid) {
-            router.push({path:'/home'})
+            login({
+                phone: ruleFormPass.phone,
+                password:ruleFormPass.password,
+                loginType:0,
+            }).then(res=>{
+                console.log(res)
+            })
+            // router.push({ path: '/home' })
         } else {
             console.log('error submit!', fields)
         }
@@ -322,8 +337,8 @@ const ruleFormValidateRef = ref<FormInstance>()
 const ruleFormValidate = reactive({
     phone: '',
     validate: '',
-    countDown:60,
-    isCountDown:true
+    countDown: 60,
+    isCountDown: true
 })
 
 const rulesValidate = reactive<FormRules>({
@@ -355,8 +370,8 @@ const ruleFormRegister = reactive({
     phone: '',
     validate: '',
     password: '',
-    countDown:60,
-    isCountDown:true
+    countDown: 60,
+    isCountDown: true
 })
 
 const rulesRegister = reactive<FormRules>({
@@ -366,7 +381,7 @@ const rulesRegister = reactive<FormRules>({
     ],
     validate: [
         { required: true, message: '请输入验证码', trigger: 'blur' },
-        { min: 6, max: 6, message: '请输入6位验证码', trigger: 'blur' },
+        { min: 4, max: 4, message: '请输入6位验证码', trigger: 'blur' },
     ],
     password: [
         { required: true, message: '请输入密码', trigger: 'blur' },
@@ -378,7 +393,16 @@ const submitFormRegister = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     await formEl.validate((valid, fields) => {
         if (valid) {
-            console.log('submit!')
+            console.log('submit!');
+            console.log(ruleFormRegister.phone)
+            // 注册接口
+            login({
+                phone: ruleFormRegister.phone,
+                smsCode:ruleFormRegister.validate,
+                password:ruleFormRegister.password,
+                loginType:2,
+                inviteCode:0,
+            })
         } else {
             console.log('error submit!', fields)
         }
@@ -390,8 +414,8 @@ const ruleFormForgotPwRef = ref<FormInstance>()
 const ruleFormForgotPw = reactive({
     phone: '',
     validate: '',
-    countDown:60,
-    isCountDown:true
+    countDown: 60,
+    isCountDown: true
 })
 
 const rulesForgotPw = reactive<FormRules>({
@@ -600,7 +624,7 @@ $width100: 100%;
     background-size: 100%;
     background-repeat: no-repeat;
     background-size: cover;
-   
+
     // 头部
     header {
         font-size: 0;
@@ -696,6 +720,7 @@ $width100: 100%;
     // 页脚
     footer {
         padding-bottom: 68px;
+
         ul {
             li {
                 padding: 0 25px;

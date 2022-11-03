@@ -88,17 +88,20 @@
                 <div class="bor"></div>
                 <div class="cur-po">停止招聘</div>
                 <div class="bor"></div>
-                <div class="cur-po">删除</div>
+                <div class="cur-po" @click="deletePosition">删除</div>
               </div>
             </div>
           </div>
-          <div class="just-center" v-if="recruitNum>10">
+          <div class="just-center mb-20" v-if="total>10">
             <el-pagination
               :background="true"
               v-model:currentPage="pageNum"
               v-model:page-size="pageSize"
               layout="prev, pager, next"
               :total="total"
+              @next-click="next"
+              @prev-click="prev"
+              @current-change="handleCurrentChange"
             />
           </div>
         </div>
@@ -116,31 +119,74 @@
   <FooterBar></FooterBar>
 </template>
 <script lang="ts" setup>
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { usePositionStore } from "@/stores/position";
 import FooterBar from "@/components/footer/footerBar.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-// import { usePositionStore,PositionParams } from "@/stores/position";
 let use = usePositionStore();
-const recruitNum = ref(0);
 const downNum = ref(0);
 const total = ref(0);
 const pageNum = ref(1);
 const pageSize = ref(10);
 const positionList = ref([]);
+const handleSizeChange = (val: number) => {
+  console.log(`${val} items per page`)
+}
+const handleCurrentChange =async (val: number) => {
+  console.log(`current page: ${val}`);
+  let res=await getPositionList({
+    pageIndex: val,
+    userId: 10000,
+    pageSize: 10,
+    positionStatus: 1,
+  })
+  console.log(res);
+  positionList.value=res.data.data;
+}
+let getPositionList=function(params:any){
+  return use.getPosition(params)
+}
+const deletePosition=function(){
+  tipShow()
+}
+let tipShow=function(){
+return ElMessageBox.confirm(
+    '是否确认删除该职位?',
+    'Warning',
+    {
+      confirmButtonText: '确认删除',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+      ElMessage({
+        type: 'success',
+        message: 'Delete completed',
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: 'Delete canceled',
+      })
+    })
+}
+ 
 let getList = async function () {
-  let res1 = await use.getPosition({
+  let res1 = await getPositionList({
     pageIndex: 1,
     userId: 10000,
     pageSize: 10,
     positionStatus: 1,
   });
-  if (res1.code == 200 && res1.data) {
-    recruitNum.value = res1.data.data.length;
-    console.log(recruitNum.value);
-    positionList.value = res1.data.data;
+  if (res1.code == 200) {
+    console.log(res1);
+    total.value=res1.data.maxCount;
+    positionList.value=res1.data.data
   }
-  let res2 = await use.getPosition({
+  let res2 = await getPositionList({
     pageIndex: 1,
     userId: 10000,
     pageSize: 10,
@@ -151,22 +197,7 @@ let getList = async function () {
   }
 };
 getList();
-// let getPosition = async function (params: any) {
-//   let res = await use.getPosition(params);
-//   console.log(res);
-//   let { data } = res;
-//   if (res.code == 200) {
-//     total.value = res.data.length;
-//   }
-// };
-// getPosition({
-//   pageIndex: pageNum.value,
-//   userId: 10000,
-//   pageSize: pageSize.value,
-//   positionStatus: 0,
-// });
 const router = useRouter();
-const tabFlag = ref(true);
 const currentIndex = ref(0);
 const tab = function (num: number) {
   currentIndex.value = num;

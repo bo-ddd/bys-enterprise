@@ -171,5 +171,38 @@ export default {
      */
     getStage:(params)=>{
         return axios.post('/drop/getStage',params,postConfig);
-    }
+    },
+
+    /**
+     * 修改简历状态
+     */
+     modifyResume:()=>{
+        return axios.post('/company/modifyResume',params,postConfig);
+     },
+
+     /**
+      * 邀请人才列表
+      */
+      getInvite:()=>{
+        return axios.post('/company/getInvite',params,postConfig);
+      },
+
+      /**
+       * 邀请人才
+       */
+      inviteTalent:()=>{
+        return axios.post('/company/inviteTalent',params,postConfig)
+      },
+      /**
+       * 删除职位
+       */
+      deletePosition:()=>{
+        return axios.post('/company/delPosition',params,postConfig)
+      },
+      /**
+       * 修改职位信息
+       */
+       modifyPosition:()=>{
+        return axios.post('/company/modifyPosition',params,postConfig)
+      },
 }

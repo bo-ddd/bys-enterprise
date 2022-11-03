@@ -17,9 +17,13 @@ export const useEnterpriseStore = defineStore("enterprise", () => {
     return Api.getResume(payload);
   }
 
-  let getPositionList = (payload:{userId:number})=>{
-    return Api.getPositionList(payload)
+  let getPositionDrop = (payload:{userId:number})=>{
+    return Api.getPositionDrop(payload);
   }
 
-  return { getEducation, getResume,getPositionList};
+  let getStage = (payload:{})=>{
+    return Api.getStage(payload);
+  }
+
+  return { getEducation, getResume,getPositionDrop,getStage };
 });

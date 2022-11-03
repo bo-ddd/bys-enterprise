@@ -176,21 +176,21 @@ export default {
     /**
      * 修改简历状态
      */
-     modifyResume:()=>{
+     modifyResume:(params)=>{
         return axios.post('/company/modifyResume',params,postConfig);
      },
 
      /**
       * 邀请人才列表
       */
-      getInvite:()=>{
+      getInvite:(params)=>{
         return axios.post('/company/getInvite',params,postConfig);
       },
 
       /**
        * 邀请人才
        */
-      inviteTalent:()=>{
+      inviteTalent:(params)=>{
         return axios.post('/company/inviteTalent',params,postConfig)
       }
 }

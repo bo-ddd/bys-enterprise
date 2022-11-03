@@ -24,9 +24,9 @@
 <script setup lang="ts">
 import { defineProps, toRefs } from 'vue'
 interface UserInfo {
-    name: string,
-    sex: string,
-    education: string,
+    name:string,
+    sex:string,
+    education:string,
     deliveryStatus:string
 }
 let props = defineProps<{

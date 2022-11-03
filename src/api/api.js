@@ -196,13 +196,13 @@ export default {
       /**
        * 删除职位
        */
-      deletePosition:()=>{
+      deletePosition:(params)=>{
         return axios.post('/company/delPosition',params,postConfig)
       },
       /**
        * 修改职位信息
        */
-       modifyPosition:()=>{
+       modifyPosition:(params)=>{
         return axios.post('/company/modifyPosition',params,postConfig)
       },
 }

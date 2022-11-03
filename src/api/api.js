@@ -62,7 +62,7 @@ export default {
      * 获取所属行业下拉框
      */
     getIndustryList: (params) => {
-        return axios.post('/drop/getCompanyindustry', params, postConfig);
+        return axios.post('/drop/getCompanyIndustry', params, postConfig);
     },
 
     /**

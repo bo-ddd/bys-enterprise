@@ -37,6 +37,12 @@ export const usePositionStore = defineStore("position", () => {
     function addPosition(params:any){
         return Api.releasePosition(params) as Res
     }
+    function deletePosition(params:any){
+        return Api.deletePosition(params) as Res
+    }
+    function updatePosition(params:any){
+        return Api.modifyPosition(params) as Res
+    }
 
-    return { getPosition, getProfessional, getMonthDay, getEducation, getCompanyIndustry, getWishMoney,getInternshipMoney,addPosition };
+    return { getPosition, getProfessional, getMonthDay, getEducation, getCompanyIndustry, getWishMoney,getInternshipMoney,addPosition,deletePosition,updatePosition };
 });

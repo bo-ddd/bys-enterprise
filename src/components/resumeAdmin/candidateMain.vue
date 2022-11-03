@@ -25,31 +25,33 @@
             </div>
         </div>
 
-        <card.cardWrap class="mt-15" v-for="item in cardList" :key="item">
-            <template #header>
-                <card.cardHeader :time="item.modifyTime">
-                    <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                        <el-checkbox :label="item">投递职位 | {{ item.positionName }}</el-checkbox>
-                    </el-checkbox-group>
-                </card.cardHeader>
-            </template>
-            <template #main>
-                <card.cardItem :userinfo="{
-                    sex: item.userSex,
-                    name: item.userName,
-                    deliveryStatus: item.deliveryStatus,
-                    education: `${item.userSchool}-${item.userProfessional}-${item.userEducation}`
-                }">
-                    <template #btn>
-                        <el-button @click="inappropriate(item)">不合适</el-button>
-                        <el-button type="primary">通过筛选</el-button>
-                    </template>
-                </card.cardItem>
-            </template>
-        </card.cardWrap>
-        <div class="pagination">
-            <el-pagination :page-size="pageSize" v-model:current-page="currentPage" :pager-count="11"
-                layout="prev, pager, next" :total="total" />
+        <div class="main">
+            <card.cardWrap class="mt-15" v-for="item in cardList" :key="item">
+                <template #header>
+                    <card.cardHeader :time="item.modifyTime">
+                        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+                            <el-checkbox :label="item">投递职位 | {{ item.positionName }}</el-checkbox>
+                        </el-checkbox-group>
+                    </card.cardHeader>
+                </template>
+                <template #main>
+                    <card.cardItem :userinfo="{
+                        sex: item.userSex,
+                        name: item.userName,
+                        deliveryStatus: item.deliveryStatus,
+                        education: `${item.userSchool}-${item.userProfessional}-${item.userEducation}`
+                    }">
+                        <template #btn>
+                            <el-button @click="inappropriate(item)">不合适</el-button>
+                            <el-button @click="byFilter(item)" type="primary">通过筛选</el-button>
+                        </template>
+                    </card.cardItem>
+                </template>
+            </card.cardWrap>
+            <div class="pagination" v-show="cardList.length > 5">
+                <el-pagination :page-size="pageSize" v-model:current-page="currentPage" :pager-count="11"
+                    layout="prev, pager, next" :total="total" />
+            </div>
         </div>
         <footerBar></footerBar>
     </div>
@@ -78,6 +80,32 @@ let inappropriate = async (item: any) => {
         interviewTime: item.interviewTime,
         positionId: item.positionId,
         statusId: 6,
+        userId: 10000
+    })
+    if (res.code == 200) {
+        ElMessage({
+            message: 'success',
+            type: 'success',
+        })
+        getResume();
+    } else {
+        ElMessage.error('this is a error message.')
+    }
+}
+
+/***
+ * 通过筛选
+ */
+let byFilter = async (item: any) => {
+    let res = await enterprise.modifyResume({
+        deliveryId: item.deliveryId,
+        interviewAddr: item.interviewAddr,
+        interviewName: item.interviewName,
+        interviewNote: item.interviewNote,
+        interviewPhone: item.interviewPhone,
+        interviewTime: item.interviewTime,
+        positionId: item.positionId,
+        statusId: 3,
         userId: 10000
     })
     if (res.code == 200) {
@@ -126,7 +154,11 @@ let applicationStage: any = ref([]);
 let stageValue = ref();
 let getStage = async () => {
     let res = await enterprise.getStage({});
-    applicationStage.value = res.data;
+    if (res.code == 200) {
+        applicationStage.value = res.data;
+    } else {
+        ElMessage.error('this is a error message.')
+    }
 }
 getStage();
 
@@ -138,7 +170,11 @@ let allPositions: any = ref([]);
 let positionDropValue = ref();
 let getPositionDrop = async () => {
     let res = await enterprise.getPositionDrop({ userId: 10000 });
-    allPositions.value = res.data;
+    if (res.code == 200) {
+        allPositions.value = res.data;
+    } else {
+        ElMessage.error('this is a error message.')
+    }
 }
 getPositionDrop();
 
@@ -149,7 +185,11 @@ let educationList: any = ref([]);
 let educationValue = ref();
 let getEducation = async () => {
     let res = await enterprise.getEducation({});
-    educationList.value = res.data;
+    if (res.code == 200) {
+        educationList.value = res.data;
+    } else {
+        ElMessage.error('this is a error message.')
+    }
 }
 getEducation();
 
@@ -168,12 +208,16 @@ let getResume = async () => {
         userId: 10000,
         companyId: 10000,
     });
-    total.value = res.data.maxCount;
-    cardList.value = res.data.data;
-    // cities.value = cardList.value.map((item:any)=>{
-    //     return item.userId;
-    // })
-    cities.value = cardList.value;
+    if (res.code == 200) {
+        total.value = res.data.maxCount;
+        cardList.value = res.data.data;
+        // cities.value = cardList.value.map((item:any)=>{
+        //     return item.userId;
+        // })
+        cities.value = cardList.value;
+    } else {
+        ElMessage.error('this is a error message.')
+    }
 }
 getResume();
 
@@ -192,16 +236,28 @@ let fuzzyQuery = async () => {
         userName: userName.value,
         invitationStatus: invitationStatus.value
     });
-    cardList.value = res.data.data;
-    // cities.value = cardList.value.map((item:any)=>{
-    //     return item.userId;
-    // })
-    cities.value = cardList.value;
+    if (res.code == 200) {
+        ElMessage({
+            message: 'success',
+            type: 'success',
+        })
+        cardList.value = res.data.data;
+        // cities.value = cardList.value.map((item:any)=>{
+        //     return item.userId;
+        // })
+        cities.value = cardList.value;
+    } else {
+        ElMessage.error('this is a error message.')
+    }
 }
 </script>
 
 <style lang="scss" scoped>
 .candidate {
+    .main {
+        min-height: 50vh;
+    }
+
     .pagination {
         display: flex;
         width: 100%;

@@ -2,19 +2,19 @@
     <div class="candidate wrap">
              <div class="candidate-header">
                  <div class="candidate-header_top">
-                     <el-select class="m-2" placeholder="投递职位">
+                     <el-select v-model="positionDropValue" class="m-2" placeholder="投递职位">
                          <el-option v-for="item in allPositions" :key="item.value" :label="item.label" :value="item.value" />
                      </el-select>
-                     <el-select class="stage-input m-2" placeholder="应聘阶段">
+                     <el-select v-model="stageValue" class="stage-input m-2" placeholder="应聘阶段">
                          <el-option v-for="item in applicationStage" :key="item.value" :label="item.label" :value="item.value" />
                      </el-select>
-                     <el-select  placeholder="学历">
+                     <el-select v-model="educationValue"  placeholder="学历">
                          <el-option v-for="item in educationList" :key="item.value" :label="item.label" :value="item.value" />
                      </el-select>
-                     <el-input class="name-input" placeholder="姓名" />
-                     <el-checkbox label="只看邀约投递的简历" size="small" />
-                     <el-checkbox label="只看视频招聘会的简历" size="small" />
-                     <el-button type="primary">确定</el-button>
+                     <el-input v-model="userName" class="name-input" placeholder="姓名" />
+                     <div></div>
+                     <el-checkbox v-model="invitationStatus" label="只看邀约投递的简历" size="small" />
+                     <el-button type="primary" @click="fuzzyQuery()">确定</el-button>
                  </div>
                  <div class="candidate-header_bottom">
                      <el-checkbox :indeterminate="isIndeterminate" @change="handleCheckAllChange">全选</el-checkbox>
@@ -35,9 +35,10 @@
                      <card.cardItem :userinfo="{
                         sex:item.userSex,
                         name:item.userName,
-                        education:`${item.userSchool}-${item.userProfessional}`}">
+                        deliveryStatus:item.deliveryStatus,
+                        education:`${item.userSchool}-${item.userProfessional}-${item.userEducation}`}">
                         <template #btn>
-                            <el-button>{{item.deliveryStatus}}</el-button>
+                            <el-button>不合适</el-button>
                             <el-button type="primary">通过筛选</el-button>
                         </template>
                     </card.cardItem>
@@ -56,7 +57,8 @@ import card from "@/components/card/index";
 import footerBar from "@/components/footer/footerBar.vue"
 import { useEnterpriseStore } from "@/stores/enterprise"
 let enterprise = useEnterpriseStore();
-
+let userName = ref("");
+let invitationStatus = ref(false);
 /**
  * 多选框功能
  */
@@ -79,6 +81,7 @@ const handleCheckedCitiesChange = (value: string[]) => {
  * 获取应聘阶段下拉框
  */
 let applicationStage:any = ref([]);
+let stageValue = ref();
 let getStage = async ()=>{
     let res = await enterprise.getStage({});
     applicationStage.value = res.data;
@@ -90,6 +93,7 @@ getStage();
  * 获取投递职位下拉框
  */
 let allPositions:any = ref([]);
+let positionDropValue = ref();
 let getPositionDrop =async ()=>{
     let res = await enterprise.getPositionDrop({userId:10000});
     allPositions.value = res.data;
@@ -100,6 +104,7 @@ getPositionDrop();
 
 /**获取学历下拉框 */
 let educationList:any = ref([]);
+let educationValue = ref();
 let getEducation = async () =>{
      let res = await enterprise.getEducation({});
      educationList.value = res.data;
@@ -115,17 +120,38 @@ let pageSize = ref(10);
 let currentPage = ref(1);
 let getResume =  async ()=>{
      let res = await enterprise.getResume({
-        companyId:10000,
-        userId:10000,
         pageIndex:currentPage.value,
-        pageSize:pageSize.value
+        pageSize:pageSize.value,
+        userId:10000,
+        companyId:10000,
     });
     cardList.value = res.data.data;
     cities.value = cardList.value.map((item:any)=>{
-         return item.userId;
+        return item.userId;
     })
 }
  getResume();
+
+ /**
+  * 模糊查询
+  */
+  let fuzzyQuery = async ()=>{
+  let res = await enterprise.getResume({
+        pageIndex:currentPage.value,
+        pageSize:pageSize.value,
+        userId:10000,
+        companyId:10000,
+        deliveryStatus:stageValue.value,
+        educationId :educationValue.value,
+        positionId:positionDropValue.value,
+        userName:userName.value,
+        invitationStatus:invitationStatus.value
+    });
+    cardList.value = res.data.data;
+    cities.value = cardList.value.map((item:any)=>{
+        return item.userId;
+    })
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -142,7 +168,6 @@ let getResume =  async ()=>{
                 display: flex;
                 align-items: center;
                 gap: 0 10px;
-
                 .screen-btn {
                     margin-left: 10px;
                     width: 100px;
@@ -158,7 +183,7 @@ let getResume =  async ()=>{
                 width: 140px;
             }
             .name-input {
-                width: 120px;
+                width: 140px;
             }
         }
     }

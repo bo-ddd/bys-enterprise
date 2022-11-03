@@ -171,5 +171,12 @@ export default {
      */
     getStage:(params)=>{
         return axios.post('/drop/getStage',params,postConfig);
-    }
+    },
+
+    /**
+     * 修改简历状态
+     */
+     modifyResume:()=>{
+        return axios.post('/company/modifyResume',params,postConfig)
+     }
 }

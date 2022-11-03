@@ -3,7 +3,7 @@
     <div class="title mb-40 mt-65">职位信息</div>
     <el-form
       ref="ruleFormRef"
-      :model="ruleForm"
+      :model="ruleForm.data"
       :rules="rules"
       label-width="120px"
       class="demo-ruleForm"
@@ -14,15 +14,15 @@
         <el-form-item prop="positionName">
           <el-input
             class="w-360 mr-28 place-fs-14"
-            v-model="ruleForm.positionName"
+            v-model="ruleForm.data.positionName"
             placeholder="请填写职位名称"
           />
         </el-form-item>
         <span class="flex-noshrink mr-10">职业类别</span>
-        <el-form-item prop="positionType" class="w-360">
+        <el-form-item prop="positionTypeArr" class="w-360">
           <el-cascader
             class="w-360"
-            v-model="ruleForm.positionType"
+            v-model="ruleForm.data.positionTypeArr"
             :props="props"
             :options="industryArr"
             @change="handleChange"
@@ -44,8 +44,9 @@
         >
           <span class="mr-10">转正机会</span>
 
-          <el-form-item prop="ifJust" class="void-input">
-            <input type="text" v-model="ruleForm.ifJust" />
+          <el-form-item prop="positionPositive" class="void-input">
+            <input type="text" v-model="ruleForm.data.positionPositive" />
+            88
           </el-form-item>
           <div @click="select2(0)" class="select-btn" :class="{'active':activeNum2==0}">可提供转正</div>
           <div @click="select2(1)" class="select-btn ml-10" :class="{'active':activeNum2==1}">不提供转正</div>
@@ -57,9 +58,8 @@
       >
         <span class="mr-10">实习月数</span>
 
-        <!-- <el-form-item prop="name"> -->
         <el-select
-          v-model="ruleForm.internshipMonth"
+          v-model="ruleForm.data.internshipMonth"
           class="m-2 w-200-input"
           placeholder="实习月数"
           size="large"
@@ -71,11 +71,14 @@
             :value="item.value"
           />
         </el-select>
-        <!-- </el-form-item> -->
 
         <span class="ml-20 mr-10">每周天数</span>
-        <!-- <el-form-item prop="name"> -->
-        <el-select v-model="ruleForm.internshipDay" class="m-2 w-200-inputs" placeholder="每周天数" size="large">
+        <el-select
+          v-model="ruleForm.data.internshipDay"
+          class="m-2 w-200-inputs"
+          placeholder="每周天数"
+          size="large"
+        >
           <el-option
             v-for="item in dayArr"
             :key="item.label"
@@ -83,20 +86,34 @@
             :value="item.label"
           />
         </el-select>
-        <!-- </el-form-item> -->
       </div>
       <div class="mb-40 align-center">
         <span class="mr-10">{{activeNum==1?'日':'月'}}薪范围</span>
-
-        <el-form-item prop="salaryStart">
+        <el-form-item v-show="activeNum!=1" prop="salaryStart1">
           <el-select
-            v-model="ruleForm.salaryStart"
+            v-model="ruleForm.data.salaryStart1"
             class="m-2 w-176"
             placeholder="最低薪资"
             size="large"
           >
             <el-option
-              v-for="item in moneyLeftArr"
+              v-for="item in moneyLeftArr1"
+              :key="item.label"
+              :label="item.label"
+              :value="item.label"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-show="activeNum==1" prop="salaryStart1">
+          <el-select
+            v-show="activeNum==1"
+            v-model="ruleForm.data.salaryStart2"
+            class="m-2 w-176"
+            placeholder="最低薪资"
+            size="large"
+          >
+            <el-option
+              v-for="item in moneyLeftArr2"
               :key="item.label"
               :label="item.label"
               :value="item.label"
@@ -104,10 +121,31 @@
           </el-select>
         </el-form-item>
         <div class="bor"></div>
-        <el-form-item prop="salaryEnd">
-          <el-select v-model="ruleForm.salaryEnd" class="m-2 w-176" placeholder="最高薪资" size="large">
+        <el-form-item v-if="activeNum!=1" prop="salaryEnd1">
+          <el-select
+            v-model="ruleForm.data.salaryEnd1"
+            class="m-2 w-176"
+            placeholder="最高薪资"
+            size="large"
+          >
             <el-option
-              v-for="item in moneyRightArr"
+              v-for="item in moneyRightArr1"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="activeNum==1" prop="salaryEnd1">
+          <el-select
+            v-show="activeNum==1"
+            v-model="ruleForm.data.salaryEnd2"
+            class="m-2 w-176"
+            placeholder="最高薪资"
+            size="large"
+          >
+            <el-option
+              v-for="item in moneyRightArr2"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -117,9 +155,9 @@
       </div>
       <div class="mb-40 align-center">
         <span class="mr-10">学历要求</span>
-        <el-form-item prop="education">
+        <el-form-item prop="positionEducation">
           <el-select
-            v-model="ruleForm.education"
+            v-model="ruleForm.data.positionEducation"
             class="m-2 w-176"
             placeholder="请选择学历"
             size="large"
@@ -134,10 +172,11 @@
         </el-form-item>
         <span class="ml-28 mr-15">招聘人数</span>
 
-        <el-form-item class prop="recruitersNum">
+        <el-form-item class prop="positionSize">
           <el-input
+            oninput="value=value.replace(/[^\d]/g,'')"
             class="w-350 unit-input"
-            v-model="ruleForm.recruitersNum"
+            v-model="ruleForm.data.positionSize"
             placeholder="请如实填写,本数据会用于高校的就业报告编撰"
           >
             <template #append>人</template>
@@ -147,25 +186,26 @@
       <div class="mb-40 align-center">
         <span class="mr-10">意向专业</span>
         <el-select
-          v-model="ruleForm.Professional"
+          :multiple-limit="10"
+          v-model="ruleForm.data.positionProfessional"
           class="m-2 w-615"
           placeholder="请输入, 最多可选10个专业, 非必填"
           size="large"
           multiple
         >
           <el-option
-            v-for="item in ProfessionalArr"
-            :key="item.sortId"
+            v-for="item in professionalArr"
+            :key="item.professionalId"
             :label="item.professionalName"
-            :value="item.sortId"
+            :value="item.professionalId"
           />
         </el-select>
       </div>
       <div class="mb-75 align-center">
         <span class="flex-noshrink mr-10">工作地点</span>
-        <el-form-item prop="workPlace" class="w-360">
+        <el-form-item prop="positionAddr" class="w-360">
           <el-cascader
-            v-model="ruleForm.workPlace"
+            v-model="ruleForm.data.positionAddr"
             :options="cityData"
             @change="handleChange"
             class="w-340"
@@ -178,15 +218,19 @@
           </el-cascader>
         </el-form-item>
         <span class="ml-28 flex-noshrink mr-10">详细地址</span>
-        <el-form-item prop="detailedLoc" class="w-100">
-          <el-input class="h-38" v-model="ruleForm.detailedLoc" placeholder="请填写详细地址" />
+        <el-form-item prop="positionDetailedAddr" class="w-100">
+          <el-input
+            class="h-38"
+            v-model="ruleForm.data.positionDetailedAddr"
+            placeholder="请填写详细地址"
+          />
         </el-form-item>
       </div>
       <div class="title mb-50">职位描述</div>
       <div class>
         <el-form-item prop="positionDes" class>
           <el-input
-            v-model="ruleForm.positionDes"
+            v-model="ruleForm.data.positionDes"
             type="textarea"
             class="text-area h-260"
             placeholder="请填写岗位要求和工作要求"
@@ -199,8 +243,9 @@
   <FooterBar></FooterBar>
 </template>
 <script lang="ts" setup>
+import { ElMessage } from "element-plus";
 import FooterBar from "@/components/footer/footerBar.vue";
-import { reactive, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
 import { usePositionStore } from "@/stores/position.js";
 import cityData from "@/assets/json/citydata.json";
@@ -211,39 +256,56 @@ interface Res {
 const props = {
   expandTrigger: "hover",
 };
+const value = ref("");
+const activeNum = ref(-1);
+const activeNum2 = ref(-1);
+
 const handleChange = function (value: any) {
   console.log(value);
 };
-
 const formSize = ref("default");
 const ruleFormRef = ref<FormInstance>();
-const ruleForm = reactive({
-  positionName: "",
-  ifJust: "",
-  salaryStart: "",
-  salaryEnd: "",
-  positionType: [],
-  education: "",
-  workPlace: "",
-  detailedLoc: "",
-  positionDes: "",
-  recruitersNum: "",
-  internshipDay: 4,
-  internshipMonth: 3,
-});
+
 const educationArr = ref([]);
 const industryArr = ref([]);
-const ProfessionalArr = ref([]);
-const moneyLeftArr = ref([]);
-const moneyRightArr = ref([]);
+const professionalArr = ref([]);
+const moneyLeftArr1 = ref([]);
+const moneyRightArr1 = ref([]);
+const moneyLeftArr2 = ref([]);
+const moneyRightArr2 = ref([]);
 const dayArr = ref([]);
 const monthArr = ref([]);
+const ruleForm = reactive({
+  data: {
+    positionNature: 0, //工作性质
+    positionName: "", //职位名称
+    positionPositive: true, //是否转正
+    salaryStart: "", //薪资始
+    salaryStart1: "", //薪资始
+    salaryStart2: "", //薪资始
+    salaryEnd: "", //薪资末
+    salaryEnd2: "", //薪资末
+    // positionMoney: "",//职位薪资范围id ,
+    positionTypeArr: [],
+    // positionTypeLeft: roleForm.data.positionTypeArr[0],//职位类别
+    // positionTypeRight: positionTypeArr.value[1],//职位类别
+    positionEducation: "", //学历
+    positionProfessional: [], //专业
+    positionDetailedAddr: "", //详细地址
+    positionDes: "dfssdfdsfdsfsfsfsdfsfsfsdfdsf", //职位描述
+    positionSize: "", //招聘人数
+    internshipDay: 4, //每周天数
+    internshipMonth: 3, //实习月数
+    // internshipMoney: [salaryStart.value,salaryEnd.value],//实习薪资
+  },
+});
 const getData = async function () {
   const res = await use.getEducation(); //学历
   const res2 = await use.getCompanyIndustry(); //行业
   const res3 = await use.getProfessional(); //专业
   const res4 = await use.getWishMoney(); //薪资
   const res5 = await use.getMonthDay(); //月和天
+  const res6 = await use.getInternshipMoney(); //实习薪资
   console.log(res);
   if (res.code == 200) {
     educationArr.value = res.data;
@@ -266,15 +328,19 @@ const getData = async function () {
     industryArr.value = a;
   }
   if (res3.code == 200) {
-    ProfessionalArr.value = res3.data;
+    professionalArr.value = res3.data;
   }
   if (res4.code == 200) {
-    moneyLeftArr.value = res4.data.wishMoenyLeftList;
-    moneyRightArr.value = res4.data.wishMoenyRightList;
+    moneyLeftArr1.value = res4.data.wishMoenyLeftList;
+    moneyRightArr1.value = res4.data.wishMoenyRightList;
   }
   if (res5.code == 200) {
     dayArr.value = res5.data.dayList;
     monthArr.value = res5.data.monthList;
+  }
+  if (res6.code == 200) {
+    moneyLeftArr2.value = res6.data.wishMoenyLeftList;
+    moneyRightArr2.value = res6.data.wishMoenyRightList;
   }
 };
 getData();
@@ -282,56 +348,70 @@ const rules = reactive<FormRules>({
   positionName: [
     { required: true, message: "请填写职位名称", trigger: "blur" },
   ],
-  positionType: [
+  positionTypeArr: [
     {
       required: true,
       message: "请选择职位类别",
       trigger: "change",
     },
   ],
-  ifJust: [
+  positionPositive: [
     {
       required: true,
       message: "请选择转正机会",
-      trigger: "change",
+      trigger: "blur",
     },
   ],
-  salaryStart: [
+  salaryStart1: [
     {
       required: true,
-      message: "请选择",
+      message: "请选择最低薪资",
       trigger: "change",
     },
   ],
-  salaryEnd: [
+  salaryStart2: [
     {
       required: true,
-      message: "请选择",
+      message: "请选择最低薪资",
       trigger: "change",
     },
   ],
-  education: [
+  salaryEnd1: [
+    {
+      required: true,
+      message: "请选择最高薪资",
+      trigger: "change",
+    },
+  ],
+  salaryEnd2: [
+    {
+      required: true,
+      message: "请选择最高薪资",
+      trigger: "change",
+    },
+  ],
+  positionEducation: [
     {
       required: true,
       message: "请选择学历",
       trigger: "change",
     },
   ],
-  recruitersNum: [
+  positionSize: [
     {
       required: true,
       message: "请填写招聘人数",
       trigger: "blur",
     },
   ],
-  workPlace: [
+  positionAddr: [
     {
       required: true,
       message: "请选择工作地点",
       trigger: "change",
     },
   ],
-  detailedLoc: [
+  positionDetailedAddr: [
     {
       required: true,
       message: "请填写正确的详细地址",
@@ -352,40 +432,36 @@ const rules = reactive<FormRules>({
     },
   ],
 });
+const select = function (index: number) {
+  if (activeNum.value == -1) {
+    (ruleForm.data.positionPositive as any) = "";
+  }
+  if (activeNum.value == -1 && index == 0) {
+    return;
+  }
+  activeNum.value = index;
+  ruleForm.data.positionNature = index;
+};
+const select2 = function (index: number) {
+  activeNum2.value = index;
+  ruleForm.data.positionPositive = (activeNum.value == 1 &&
+    activeNum2.value == 0) as any;
+  console.log(ruleForm.data.positionPositive);
+};
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
-  await formEl.validate((valid, fields) => {
+  await formEl.validate((valid, fields:any) => {
     if (valid) {
       console.log("submit!");
-      console.log(ruleForm);
+      console.log(ruleForm.data);
     } else {
       console.log("error submit!", fields);
+      ElMessage.error((<any>Object).values(fields)[0][0].message);
     }
   });
 };
-
-const value = ref("");
-const activeNum = ref(-1);
-const activeNum2 = ref(-1);
-const select = function (index: number) {
-  activeNum.value = index;
-};
-const select2 = function (index: number) {
-  if (index == activeNum2.value) {
-    activeNum2.value = -1;
-  } else {
-    activeNum2.value = index;
-  }
-};
-const options = [
-  {
-    value: "Option1",
-    label: "Option1",
-  },
-];
-
-const input = ref("");
+// const 
 </script>
 
 <style lang="scss" scoped>

@@ -69,7 +69,9 @@ let cities = ref([]);
 const handleCheckAllChange = (val: boolean) => {
     console.log(val);
     
-    checkedCities.value = val ? cities.value : []
+    checkedCities.value = val ? cities.value : [];
+    console.log();
+    
     isIndeterminate.value = false;
     console.log(1);
     

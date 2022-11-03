@@ -152,6 +152,19 @@ export default {
      getPositionData:(params)=>{
         return axios.post('/company/getPosition',params,postConfig);
     },
+        
+    /**
+     * 获取实习薪资下拉列表
+     */
+     getInternshipMoney:(params)=>{
+        return axios.post('/drop/getInternshipMoney',params,postConfig);
+    },
+    /**
+     * 发布职业
+     */
+     releasePosition:(params)=>{
+        return axios.post('/company/releasePosition',params,postConfig);
+    },
 
     /**
      * 应聘阶段下拉框

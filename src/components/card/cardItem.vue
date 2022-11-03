@@ -13,7 +13,7 @@
         </div>
         <div></div>
         <div class="c-5151 fs-14">
-            <span>未查看</span>
+            <span>{{userinfo.deliveryStatus}}</span>
         </div>
         <div>
             <slot name="btn"></slot>
@@ -24,9 +24,10 @@
 <script setup lang="ts">
 import { defineProps, toRefs } from 'vue'
 interface UserInfo {
-    name: string,
-    sex: string,
-    education: string
+    name:string,
+    sex:string,
+    education:string,
+    deliveryStatus:string
 }
 let props = defineProps<{
     userinfo: UserInfo

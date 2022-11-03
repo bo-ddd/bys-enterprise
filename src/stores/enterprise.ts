@@ -9,10 +9,15 @@ export const useEnterpriseStore = defineStore("enterprise", () => {
   }
 
   let getResume = (payload: {
-    pageIndex: number
-    pageSize: number,
-    companyId: number,
-    userId: number
+    pageIndex?:number
+    pageSize?:number,
+    companyId:number,
+    userId:number,
+    deliveryStatus?:number,
+    educationId?:number,
+    positionId?:number,
+    userName?:string,
+    invitationStatus?:boolean
   }) => {
     return Api.getResume(payload);
   }
@@ -25,5 +30,19 @@ export const useEnterpriseStore = defineStore("enterprise", () => {
     return Api.getStage(payload);
   }
 
-  return { getEducation, getResume,getPositionDrop,getStage };
+  let modifyResume = (payload:{
+    deliveryId:number,
+    interviewAddr:string,
+    interviewName:string,
+    interviewNote:string,
+    interviewPhone:string,
+    interviewTime:string,
+    positionId:number,
+    statusId:number,
+    userId:number
+  })=>{
+    return Api.modifyResume(payload);
+  }
+
+  return { getEducation, getResume,getPositionDrop,getStage,modifyResume };
 });

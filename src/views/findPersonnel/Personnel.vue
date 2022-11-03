@@ -2,6 +2,7 @@
 import { ref, reactive , type Ref } from "vue";
 import FooterBar from "@/components/footer/footerBar.vue";
 import { usePersonStore } from "@/stores/person";
+import { useHomeStore } from "@/stores/home";
 import cityJson from "@/assets/json/city.json";
 interface Check {
     id: number,
@@ -9,6 +10,7 @@ interface Check {
     value: string | number,
 }
 let PersonStore = usePersonStore();//引入personStore这个状态管理
+let HomeStore = useHomeStore();//引入homeStore这个状态管理
 let form = reactive({
     checkSex:null,//性别
     checkEducation:null,//学历
@@ -17,7 +19,17 @@ let form = reactive({
     checkCity:null,//城市
     lowestSalary:null,//最低薪资
     highestSalary:null,//最高薪资
-});
+});//这个是模糊查询
+
+let inviationNumber = ref(0);//这个是当日邀请次数
+
+
+let paging = reactive({
+    total:100,
+    pageSize:1,
+    pageIndex:10,
+});//分页
+
 let showGuid = ref(false);//展示导航
 let circleUrl = ref('https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png');       
 let checkItem = ref(0);//默认展示哪个页面
@@ -30,11 +42,9 @@ let handleGuideChange = (bool:boolean)=>{
 
 //清空选择的方法
 let cancelCheck = ()=>{
-    console.log(form);
     for (const key in form) {
         form[key] = null;
     }
-    console.log(form);
 }
 
 let educationArr = reactive<Check[]>([]);//学历的列表
@@ -53,10 +63,20 @@ let getEducationList = async ()=>{
 }
 getEducationList();//调用获取学历列表
 
+//这个是获取邀请次数的方法
+let getInvationsNumber = async ()=>{
+    let res = await HomeStore.getEnterprise({
+        userId:10000,
+    })
+    console.log(res);
+}
+getInvationsNumber();
+
 //这个是获取专业列表的方法
 let getProfessionalList = async ()=>{
     let res = await PersonStore.getMajorList();
     if(res.code !== 200) return;
+    majorArr.length = 0;
     majorArr.push(...(res.data));
 }
 getProfessionalList();//调用获取专业列表
@@ -74,7 +94,7 @@ let getPositionList = async ()=>{
     let res = await PersonStore.getPositionList({
         userId:10000,
     });
-    console.log(res);
+    positionArr.push(...(res.data))
 }
 getPositionList();
 
@@ -83,9 +103,6 @@ let getWishMoneyList = async ()=>{
     let res = await PersonStore.getWishMoney();
     wishMoneyLeftList.push(...(res.data).wishMoenyLeftList);
     wishMoneyRightList.push(...(res.data).wishMoenyRightList);
-    console.log(wishMoneyLeftList);
-    console.log(wishMoneyRightList);
-    console.log(res);
 }
 getWishMoneyList();
 
@@ -95,9 +112,22 @@ let getTalentList = async ()=>{
         pageSize:10,
         pageIndex:1,
     });
+    if(res.code != 200) return;
+    talentList.length = 0;
+    talentList.push(...(res.data).talentList);
+    paging.total = res.data.totalCount;
     console.log(res);
 }
 getTalentList();
+
+//邀请人才的方法;
+let inviteTalent = async (id:number)=>{
+    let res = await PersonStore.inviteTalent({
+        inviteUserId:id,
+        userId:10000,
+    });
+    console.log(res)
+}
 </script>
 <template>
     <div class="personnel">
@@ -144,7 +174,7 @@ getTalentList();
                         <el-option v-for="item in majorArr" :key="item.sortId" :label="item.professionalName" :value="item.sortId" />
                     </el-select>
                     <el-select v-model="form.checkPosition" class="m-2 check-education mr-30" placeholder="意向职位选择" size="large">
-                        <el-option v-for="item in educationArr" :key="item.value" :label="item.label" :value="item.value" />
+                        <el-option v-for="item in positionArr" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                 </div>
                 <div class="filter-wrap-btm">
@@ -174,7 +204,7 @@ getTalentList();
                 </div>
 
                 <!-- 每一项数据 -->
-                <div class="data-item">
+                <div class="data-item" v-for="item in talentList" :key="item.id">
 
                     <!--头像-->
                     <div class="cbleft1">
@@ -185,9 +215,9 @@ getTalentList();
                     <div class="cbleft2 ml-16">
                         <p class="name fs-18">费小姐</p>
                         <div class="description mt-16 cl-ccc">
-                            <p class="fs-12">24岁</p>
+                            <p class="fs-12">{{item.userAge ? item.userAge : '24'}}岁</p>
                             <div class="line"></div>
-                            <p class="fs-12">硕士</p>
+                            <p class="fs-12">{{item.userEducation? item.userEducation : '硕士'}}</p>
                         </div>
                     </div>
 
@@ -210,7 +240,7 @@ getTalentList();
                         <p class="titlest fs-12 ml-28">求职意向</p>
                         <div class="occupation-item mt-16">
                             <img src="@/assets/images/icon-dingwei.png" class="icon">
-                            <p class="description fs-14 ml-12">辽宁省-大连市、辽宁省-沈阳市、吉林省-长春市</p>
+                            <p class="description fs-14 ml-12">{{item.wishPosition ? item.wishPosition : '辽宁省-大连市、辽宁省-沈阳市、吉林省-长春市'}}</p>
                         </div>
                         <div class="occupation-item mt-12">
                             <img src="@/assets/images/icon-bangong.png" class="icon">
@@ -224,8 +254,8 @@ getTalentList();
                     
                     <!-- 活跃时间 -->
                     <div class="cbleft5">
-                        <p class="titlest fs-12 cl-ccc">2022-10-17活跃</p>
-                        <el-button type="primary" class="mt-50">邀请投递</el-button>
+                        <p class="titlest fs-12 cl-ccc">{{item.lastLoginTime}}活跃</p>
+                        <el-button type="primary" class="mt-50" @click="inviteTalent(item.userId)">邀请投递</el-button>
                     </div>
                 </div>
             </div>
@@ -233,7 +263,7 @@ getTalentList();
             <!-- 分页 -->
             <div class="page-wrap wrap mt-48">
                 <div class="page-content">
-                    <el-pagination :background="true" pager-count="4" layout="prev, pager, next" :total="1000" />
+                    <el-pagination :background="true" :pager-count="7" layout="prev, pager, next" :total="paging.total" />
                 </div>
             </div>
         </div>

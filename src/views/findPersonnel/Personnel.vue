@@ -215,9 +215,9 @@ let inviteTalent = async (id:number)=>{
                     <div class="cbleft2 ml-16">
                         <p class="name fs-18">费小姐</p>
                         <div class="description mt-16 cl-ccc">
-                            <p class="fs-12">24岁</p>
+                            <p class="fs-12">{{item.userAge ? item.userAge : '24'}}岁</p>
                             <div class="line"></div>
-                            <p class="fs-12">硕士</p>
+                            <p class="fs-12">{{item.userEducation? item.userEducation : '硕士'}}</p>
                         </div>
                     </div>
 
@@ -240,7 +240,7 @@ let inviteTalent = async (id:number)=>{
                         <p class="titlest fs-12 ml-28">求职意向</p>
                         <div class="occupation-item mt-16">
                             <img src="@/assets/images/icon-dingwei.png" class="icon">
-                            <p class="description fs-14 ml-12">辽宁省-大连市、辽宁省-沈阳市、吉林省-长春市</p>
+                            <p class="description fs-14 ml-12">{{item.wishPosition ? item.wishPosition : '辽宁省-大连市、辽宁省-沈阳市、吉林省-长春市'}}</p>
                         </div>
                         <div class="occupation-item mt-12">
                             <img src="@/assets/images/icon-bangong.png" class="icon">

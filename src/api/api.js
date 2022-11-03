@@ -192,5 +192,17 @@ export default {
        */
       inviteTalent:(params)=>{
         return axios.post('/company/inviteTalent',params,postConfig)
-      }
+      },
+      /**
+       * 删除职位
+       */
+      deletePosition:(params)=>{
+        return axios.post('/company/delPosition',params,postConfig)
+      },
+      /**
+       * 修改职位信息
+       */
+       modifyPosition:(params)=>{
+        return axios.post('/company/modifyPosition',params,postConfig)
+      },
 }

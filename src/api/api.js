@@ -159,4 +159,10 @@ export default {
      getInternshipMoney:(params)=>{
         return axios.post('/drop/getInternshipMoney',params,postConfig);
     },
+    /**
+     * 发布职业
+     */
+     releasePosition:(params)=>{
+        return axios.post('/company/releasePosition',params,postConfig);
+    },
 }

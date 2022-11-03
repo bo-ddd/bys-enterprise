@@ -35,7 +35,7 @@
                     <div class="btm-item hand" @click="nav('position')">
                         <div class="just-between">
                             <div class="left">
-                                <h3>2</h3>
+                                <h3 class="fs-22 h3">2</h3>
                                 <div class="test">在招职位</div>
                             </div>
                             <div class="right mr-14">
@@ -45,7 +45,7 @@
                         </div>
                         <div class="just-between">
                             <div class="bottom">
-                                <h3>1</h3>
+                                <h3 class="fs-22 h3">1</h3>
                                 <div class="test">七日内刷新过职位</div>
                             </div>
                             <div class="icon-img">
@@ -56,7 +56,7 @@
                     <div class="btm-item hand" @click="nav('resume')">
                         <div class="just-between">
                             <div class="left">
-                                <h3>0</h3>
+                                <h3 class="fs-22 h3">0</h3>
                                 <div class="test">新简历</div>
                             </div>
                             <div class="right mr-14">
@@ -66,7 +66,7 @@
                         </div>
                         <div class="just-between">
                             <div class="bottom">
-                                <h3>18</h3>
+                                <h3 class="fs-22 h3">18</h3>
                                 <div class="test">未查看简历</div>
                             </div>
                             <div class="icon-img">
@@ -77,7 +77,7 @@
                     <div class="btm-item">
                         <div class="just-between">
                             <div class="left">
-                                <h3>147</h3>
+                                <h3 class="fs-22 h3">147</h3>
                                 <div class="test">在职招聘会</div>
                             </div>
                             <div class="right mr-14">
@@ -87,7 +87,7 @@
                         </div>
                         <div class="just-between">
                             <div class="bottom">
-                                <h3>0</h3>
+                                <h3 class="fs-22 h3">0</h3>
                                 <div class="test">我报名的</div>
                             </div>
                             <div class="icon-img">
@@ -181,9 +181,8 @@ img {
     color: #356ffb;
 }
 
-.icon-head-portrait {
-    max-height: 86px;
-    max-width: 86px;
+.fs-22 {
+    font-size: 22px;
 }
 
 .mt-16 {
@@ -293,11 +292,11 @@ img {
         &>.left {
             border-right: 1px solid #eef0f2;
 
-            &>.img {
-                height: 86px;
-                width: 86px;
-                border: 1px solid #eef0f2;
+            .icon-head-portrait {
+                max-height: 84px;
+                max-width: 84px;
                 border-radius: 5px;
+                border: 1px solid #eef0f2;
             }
 
             .test {
@@ -340,10 +339,12 @@ img {
 
             .left h3 {
                 margin: 8px 0;
+            }
 
-                &>.test {
-                    margin: 3px 0;
-                }
+            .test {
+                margin-top: 7px;
+                font-size: 13px;
+                color: #515a6e;
             }
 
             .right {

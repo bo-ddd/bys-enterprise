@@ -62,9 +62,9 @@
                         <el-input class="el-input_560-40" v-model="form.companyAddr" />
                     </el-form-item>
 
-                    <!-- 禁用状态的选择器 -->
+                    <!-- 禁用状态的选择器 disabled -->
                     <el-form-item label="所属行业">
-                        <el-select class="el" v-model="forbidden" disabled placeholder="Select">
+                        <el-select class="el" v-model="forbidden" placeholder="Select">
                             <el-option v-for="item in BelongingToIndustry" :key="item.value" :label="item.label"
                                 :value="item.value" />
                         </el-select>
@@ -119,7 +119,7 @@
                                                 </el-icon>
                                             </span>
                                             <span v-if="!disabled" class="el-upload-list__item-delete"
-                                                @click="handleDownload(file)">
+                                                @change="handleDownload(file)">
                                                 <el-icon>
                                                     <Download />
                                                 </el-icon>
@@ -253,6 +253,11 @@ const form = reactive({
     companyWishSchool: '',// 企业意向学校
 });
 
+// 点击提交按钮走的方法
+const onSubmit = () => {
+    console.log(form)
+};
+// companyWebUrl
 let getEnterpriseData = reactive<any[]>([]);
 // 调用 获取企业详细信息接口 报错
 let getEnterprise = async function () {
@@ -262,8 +267,13 @@ let getEnterprise = async function () {
     Object.assign(form, res.data);
 }
 getEnterprise();
-console.log('form',form)
+console.log('form', form)
 
+
+let getPositionList = async function () {
+    let res = await getPositionList()
+    // console.log(res);
+}
 // 调用 修改企业详细信息接口 报错
 // let setModifyEnterpriseInfo = async function () {
 //     let res = await use.setModifyEnterpriseInfo(form);
@@ -274,13 +284,10 @@ console.log('form',form)
 // 调用 获取所属行业下拉框接口 报错
 let getIndustryList = async function () {
     let res = await use.getIndustryList();
-    console.log('所属行业的返回值', res);
+    console.log('所属行业下拉框的返回值', res);
 }
 getIndustryList();
 
-const onSubmit = () => {
-    console.log(form)
-};
 
 // 上传企业LOGO的逻辑
 const dialogImageUrl = ref('');
@@ -291,11 +298,16 @@ const handleRemove = (file: UploadFile) => {
 };
 const handlePictureCardPreview = (file: UploadFile) => {
     dialogImageUrl.value = file.url!
-    dialogVisible.value = true
+    dialogVisible.value = true;
+    console.log(1);
+
 };
 const handleDownload = (file: UploadFile) => {
     console.log(file)
+    console.log('log ~ file.url', file.url);
 };
+
+
 
 // 所属行业
 const forbidden = ref('Option1');
@@ -395,28 +407,28 @@ getSchoolList();
     margin-left: 16px;
 }
 
-::v-deep.el-select {
+:deep(.el-select) {
     width: 240px;
     // height: 40px;
 }
 
-::v-deep .el-button {
+:deep(.el-button) {
     width: 268px;
     height: 40px;
     margin: 32px 0 64px 156px;
 }
 
-::v-deep textarea {
+:deep(textarea) {
     width: 560px !important;
     height: 184px;
 }
 
-::v-deep el-select {
+:deep(el-select) {
     max-width: 560px;
     height: 192px;
 }
 
-::v-deep.input_280-40 {
+:deep(.input_280-40) {
     width: 280px;
     height: 40px;
 }

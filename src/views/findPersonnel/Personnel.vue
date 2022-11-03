@@ -255,7 +255,7 @@ let inviteTalent = async (id:number)=>{
                     <!-- 活跃时间 -->
                     <div class="cbleft5">
                         <p class="titlest fs-12 cl-ccc">{{item.lastLoginTime}}活跃</p>
-                        <el-button type="primary" class="mt-50">邀请投递</el-button>
+                        <el-button type="primary" class="mt-50" @click="inviteTalent(item.userId)">邀请投递</el-button>
                     </div>
                 </div>
             </div>

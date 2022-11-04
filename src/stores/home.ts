@@ -56,6 +56,15 @@ export const useHomeStore = defineStore("home", () => {
     function getSchoolList(payload = {}) {
         return Api.getSchoolList(payload);
     }
+    // 获取职位列表
+    function getPositionList(payload: {
+        pageIndex: number,
+        pageSize: number,
+        positionStatus: number,
+        userId: number
+    }) {
+        return Api.getPositionData(payload);
+    }
 
     return {
         getEnterprise,
@@ -65,5 +74,6 @@ export const useHomeStore = defineStore("home", () => {
         getEnterpriseSizeList,
         getEnterpriseTagList,
         getSchoolList,
+        getPositionList
     };
 });

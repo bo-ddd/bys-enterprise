@@ -215,7 +215,7 @@
         </el-form-item>
       </div>
       <div class="mb-40 align-center">
-        <span class="mr-10">意向专业{{ruleForm.data.positionNature}}</span>
+        <span class="mr-10">意向专业</span>
         <el-select
           :multiple-limit="10"
           v-model="ruleForm.data.positionProfessional"
@@ -279,7 +279,9 @@ import FooterBar from "@/components/footer/footerBar.vue";
 import { computed, reactive, ref } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
 import { usePositionStore } from "@/stores/position.js";
+import { useRouter } from "vue-router";
 import cityData from "@/assets/json/citydata.json";
+const router = useRouter();
 let use = usePositionStore();
 interface Res {
   code: number;
@@ -443,6 +445,17 @@ const salaryEnd2 = function (rule: any, value: any, callback: any) {
     callback();
   }
 };
+const positiveChange = function (rule: any, value: any, callback: any) {
+  if (ruleForm.data.positionNature == 1) {
+    if (!value) {
+      return callback(new Error("请选择转正机会"));
+    } else {
+      callback();
+    }
+  } else {
+    callback();
+  }
+};
 const rules = reactive<FormRules>({
   positionName: [
     { required: true, message: "请填写职位名称", trigger: "blur" },
@@ -456,8 +469,9 @@ const rules = reactive<FormRules>({
   ],
   positionPositive: [
     {
-      required: true,
-      message: "请选择转正机会",
+      // required: true,
+      // message: "请选择转正机会",
+      validator: positiveChange,
       trigger: "change",
     },
   ],
@@ -604,17 +618,27 @@ const addPosition = async function (params: any) {
     internshipDay, //每周天数
     internshipMonth, //实习月数
     positionProfessional: positionProfessional.join(","), //专业
-    internshipMoney: salaryStart2 + "," + salaryEnd2, //实习日薪范围id
-    positionMoney: salaryStart1 + "," + salaryEnd1, //职业薪资范围id
+    internshipMoney:positionNature==1?salaryStart2 + "," + salaryEnd2:'', //实习日薪范围id
+    positionMoney:positionNature==0? salaryStart1 + "," + salaryEnd1:'', //职业薪资范围id
     positionAddr: positionAddr.join(","), //工作地点
     positionTypeLeft: positionTypeArr[0],
     positionTypeRight: positionTypeArr[1], //职位类别
-    positionStatus: 1,
+    positionStatus: 2,
     userId: "10000",
     positionId: "", //职位id
   };
-  // let res = await use.addPosition(form);
-  // console.log(res);
+  let res = await use.addPosition(form);
+  console.log(res);
+  if (res.code == 200) {
+    ElMessage({
+      type: "success",
+      message: "新增成功",
+    });
+    to("/position");
+  }
+};
+const to = function (path: string) {
+  router.push(path);
 };
 </script>
 

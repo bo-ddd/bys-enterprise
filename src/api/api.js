@@ -205,4 +205,10 @@ export default {
        modifyPosition:(params)=>{
         return axios.post('/company/modifyPosition',params,postConfig)
       },
+      /**
+       * 获取VIP下拉框
+       */
+       getVip:(params)=>{
+        return axios.post('/drop/getVip',params,postConfig)
+      },
 }

@@ -83,7 +83,10 @@ let fuzzyQuery = async () => {
 
 <style lang="scss" scoped>
 .interview {
-    .interview-header {
+     .main{
+        min-height:50vh;
+     }
+     .interview-header {
         padding: 40px 0;
         display: flex;
         align-items: center;

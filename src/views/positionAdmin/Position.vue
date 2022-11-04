@@ -84,11 +84,11 @@
                 <span>&nbsp; {{item.createTime}}</span>
               </div>
               <div class="align-center">
-                <div class="cur-po">编辑</div>
+                <div class="cur-po" @click="setPosition(item)">编辑</div>
                 <div class="bor"></div>
                 <div class="cur-po">停止招聘</div>
                 <div class="bor"></div>
-                <div class="cur-po" @click="deleteClick(item.positionId)">删除</div>
+                <div class="cur-po" @click="deleteClick(item.positionId,item.positionStatus )">删除</div>
               </div>
             </div>
           </div>
@@ -125,6 +125,7 @@ import FooterBar from "@/components/footer/footerBar.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 let use = usePositionStore();
+const recruitNum = ref(0);
 const downNum = ref(0);
 const total = ref(0);
 const pageNum = ref(1);
@@ -135,64 +136,72 @@ const handleSizeChange = (val: number) => {
 };
 const handleCurrentChange = async (val: number) => {
   console.log(`current page: ${val}`);
-  let res = await getPositionList({
-    pageIndex: val,
+  pageNum.value = val;
+  let res = await getPositionList();
+  console.log(res);
+};
+let getPositionList =async function () {
+  let res =await use.getPosition({
+    pageIndex: pageNum.value,
     userId: 10000,
-    pageSize: 10,
-    positionStatus: 1,
+    pageSize: pageSize.value,
+    positionStatus: 2,
   });
   console.log(res);
-  positionList.value = res.data.data;
-};
-let getPositionList = function (params: any) {
-  return use.getPosition(params);
+  
+  if (res.code == 200&&res.data) {
+    positionList.value=res.data.data;
+    recruitNum.value = res.data.maxCount;
+  }
 };
 let deletePosition = function (params: any) {
   return use.deletePosition(params);
 };
-const deleteClick = function (userId: any) {
+const deleteClick = function (positionId: any, positionStatus: any) {
   ElMessageBox.confirm("是否确认删除该职位?", "Warning", {
     confirmButtonText: "确认删除",
     cancelButtonText: "取消",
     type: "warning",
-  }).then(async () => {
-    console.log(1);
+  })
+    .then(async () => {
+      console.log(1);
 
-    let res1 = await deletePosition({ userId });
-    console.log(3);
-
-    console.log(res1);
-
-    if (res1.code == 200) {
-      ElMessage({
-        type: "success",
-        message: "删除成功",
+      let res1 = await deletePosition({
+        positionId,
+        userId: 10000,
+        positionStatus,
       });
-    } else {
+      console.log(3);
+
+      console.log(res1);
+
+      if (res1.code == 200) {
+        ElMessage({
+          type: "success",
+          message: "删除成功",
+        });
+        let res2 = getPositionList();
+      } else {
+        ElMessage({
+          type: "warning",
+          message: "删除失败",
+        });
+      }
+    })
+    .catch(() => {
       ElMessage({
-        type: "success",
+        type: "info",
         message: "取消删除",
       });
-    }
-  });
+    });
 };
 let getList = async function () {
-  let res1 = await getPositionList({
+  let res1 = await getPositionList();
+  let res2 = await use.getPosition({
     pageIndex: 1,
     userId: 10000,
     pageSize: 10,
-    positionStatus: 1,
-  });
-  if (res1.code == 200) {
-    console.log(res1);
-    total.value = res1.data.maxCount;
-    positionList.value = res1.data.data;
-  }
-  let res2 = await getPositionList({
-    pageIndex: 1,
-    userId: 10000,
-    pageSize: 10,
-    positionStatus: 2,
+    positionStatus: 3,
   });
   if (res2.code == 200 && res2.data) {
     downNum.value = res2.data.data.length;
@@ -204,8 +213,13 @@ const currentIndex = ref(0);
 const tab = function (num: number) {
   currentIndex.value = num;
 };
-const to = function (path: string) {
-  router.push(path);
+const to = function (path: string,) {
+router.push({
+  path,
+  query:{
+
+  }
+});
 };
 </script>
 <style lang="scss" scoped>
@@ -260,8 +274,10 @@ const to = function (path: string) {
     }
   }
   .job {
+    box-sizing: border-box;
     overflow: hidden;
     min-height: calc(100vh - 55px);
+    padding-bottom: 120px;
   }
   .job-head {
     .point-num {
@@ -316,10 +332,16 @@ const to = function (path: string) {
       .refresh-info {
         gap: 0 12px;
         .autorefresh-btn {
-          padding: 7px 15px;
+          box-sizing: border-box;
+          padding: 7px 12px;
           border: 1px solid #356ffa;
           color: #356ffa;
           border-radius: 4px;
+          transition: all 0.3s;
+        }
+        .autorefresh-btn:hover{
+            background-color: #356ffa;
+          color: white;
         }
         .refresh-btn {
           padding: 7px 15px;

@@ -215,7 +215,7 @@
         </el-form-item>
       </div>
       <div class="mb-40 align-center">
-        <span class="mr-10">意向专业{{ruleForm.data.positionNature}}</span>
+        <span class="mr-10">意向专业</span>
         <el-select
           :multiple-limit="10"
           v-model="ruleForm.data.positionProfessional"

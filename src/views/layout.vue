@@ -29,7 +29,7 @@ let list = reactive([
   {
     id: 5,
     title: '会员中心',
-    url: '',
+    url: '/memberCenter',
   },
 ])
 
@@ -43,6 +43,10 @@ const handleSelect = (key: any) => {
       path:key.url
     })
   }
+}
+
+const outLogin = () => {
+  router.push({ path: '/' })
 }
 
 </script>
@@ -71,9 +75,9 @@ const handleSelect = (key: any) => {
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item>修改密码</el-dropdown-item>
-              <el-dropdown-item>联系客服</el-dropdown-item>
-              <el-dropdown-item>退出登录</el-dropdown-item>
+              <el-dropdown-item >修改密码</el-dropdown-item>
+              <el-dropdown-item >联系客服</el-dropdown-item>
+              <el-dropdown-item @click="outLogin" >退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>

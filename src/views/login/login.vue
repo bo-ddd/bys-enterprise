@@ -216,19 +216,20 @@
 
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
+import type { FormInstance, FormRules, } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/stores/user';
 const router = useRouter();
 
-
-let user = useUserStore();
-let login = async (options: any) => {
-    let res = await user.login(options);
-    console.log(res)
+interface Res {
+    code: number,
+    data: number,
+    msg: string,
 }
 
-// 获取验证码
+let user = useUserStore();
 
+// 获取验证码后
 let getvalidate = (e: any, rule: any) => {
     let count = rule.countDown;
     rule.isCountDown = false
@@ -304,10 +305,10 @@ const ruleFormPass = reactive({
 })
 
 const rulesPass = reactive<FormRules>({
-    phone: [
-        { required: true, message: '请输入手机号', trigger: 'blur' },
-        { validator: validatePhone, }
-    ],
+    // phone: [
+    //     { required: true, message: '请输入手机号', trigger: 'blur' },
+    //     { validator: validatePhone, }
+    // ],
     // password: [
     //     { required: true, message: '请输入密码', trigger: 'blur' },
     //     { min: 6, max: 20, message: '6-20位之间', trigger: 'blur' },
@@ -318,14 +319,20 @@ const submitFormPass = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     await formEl.validate((valid, fields) => {
         if (valid) {
+            // 登录
+            let login = async (options: any) => {
+                let res = await user.login(options);
+                console.log("-----------res---------------")
+                console.log(res);
+                if (res.code == 200) {
+                    router.push({ path: '/home' })
+                }
+            }
             login({
                 phone: ruleFormPass.phone,
-                password:ruleFormPass.password,
-                loginType:0,
-            }).then(res=>{
-                console.log(res)
+                password: ruleFormPass.password,
+                loginType: 0,
             })
-            // router.push({ path: '/home' })
         } else {
             console.log('error submit!', fields)
         }
@@ -342,21 +349,36 @@ const ruleFormValidate = reactive({
 })
 
 const rulesValidate = reactive<FormRules>({
-    phone: [
-        { required: true, message: '请输入手机号', trigger: 'blur' },
-        { validator: validatePhone, }
-    ],
-    validate: [
-        { required: true, message: '请输入验证码', trigger: 'blur' },
-        { min: 6, max: 6, message: '请输入6位验证码', trigger: 'blur' },
-    ],
+    // phone: [
+    //     { required: true, message: '请输入手机号', trigger: 'blur' },
+    //     { validator: validatePhone, }
+    // ],
+    // validate: [
+    //     { required: true, message: '请输入验证码', trigger: 'blur' },
+    //     { min: 6, max: 6, message: '请输入6位验证码', trigger: 'blur' },
+    // ],
 })
 
 const submitFormValidate = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     await formEl.validate((valid, fields) => {
         if (valid) {
-            console.log('submit!')
+            console.log()
+            // 登录
+            let login = async (options: any) => {
+                let res = await user.login(options);
+                console.log("-----------注册---------------")
+                console.log(res);
+                if (res.code == 200) {
+                    localStorage.setItem('smsCode',ruleFormValidate.validate)
+                    router.push({ path: '/home' })
+                }
+            }
+            login({
+                phone: ruleFormValidate.phone,
+                smsCode: ruleFormValidate.validate,
+                loginType: 1,
+            })
         } else {
             console.log('error submit!', fields)
         }
@@ -375,33 +397,47 @@ const ruleFormRegister = reactive({
 })
 
 const rulesRegister = reactive<FormRules>({
-    phone: [
-        { required: true, message: '请输入手机号', trigger: 'blur' },
-        { validator: validatePhone, }
-    ],
-    validate: [
-        { required: true, message: '请输入验证码', trigger: 'blur' },
-        { min: 4, max: 4, message: '请输入6位验证码', trigger: 'blur' },
-    ],
-    password: [
-        { required: true, message: '请输入密码', trigger: 'blur' },
-        { min: 6, max: 20, message: '6-20位之间', trigger: 'blur' },
-    ],
+    // phone: [
+    //     { required: true, message: '请输入手机号', trigger: 'blur' },
+    //     { validator: validatePhone, }
+    // ],
+    // validate: [
+    //     { required: true, message: '请输入验证码', trigger: 'blur' },
+    //     { min: 4, max: 4, message: '请输入6位验证码', trigger: 'blur' },
+    // ],
+    // password: [
+    //     { required: true, message: '请输入密码', trigger: 'blur' },
+    //     { min: 6, max: 20, message: '6-20位之间', trigger: 'blur' },
+    // ],
 })
 
 const submitFormRegister = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     await formEl.validate((valid, fields) => {
         if (valid) {
-            console.log('submit!');
-            console.log(ruleFormRegister.phone)
             // 注册接口
-            login({
+            let register = async (options: any) => {
+                let res = await user.login(options);
+                console.log(res);
+                if (res.code == 200) {
+                    ElMessage({
+                        message: '注册成功，请登录',
+                        type: 'success',
+                    });
+                    isOpen.value = 1;
+                } else {
+                    ElMessage({
+                        message: '账号已存在，请登录',
+                        type: 'warning',
+                    });
+                }
+            }
+            register({
                 phone: ruleFormRegister.phone,
-                smsCode:ruleFormRegister.validate,
-                password:ruleFormRegister.password,
-                loginType:2,
-                inviteCode:0,
+                smsCode: ruleFormRegister.validate,
+                password: ruleFormRegister.password,
+                loginType: 2,
+                inviteCode: 0,
             })
         } else {
             console.log('error submit!', fields)
@@ -419,21 +455,21 @@ const ruleFormForgotPw = reactive({
 })
 
 const rulesForgotPw = reactive<FormRules>({
-    phone: [
-        { required: true, message: '请输入手机号', trigger: 'blur' },
-        { validator: validatePhone, }
-    ],
-    validate: [
-        { required: true, message: '请输入验证码', trigger: 'blur' },
-        { min: 6, max: 6, message: '请输入6位验证码', trigger: 'blur' },
-    ],
+    // phone: [
+    //     { required: true, message: '请输入手机号', trigger: 'blur' },
+    //     { validator: validatePhone, }
+    // ],
+    // validate: [
+    //     { required: true, message: '请输入验证码', trigger: 'blur' },
+    //     { min: 6, max: 6, message: '请输入6位验证码', trigger: 'blur' },
+    // ],
 })
 
 const submitFormForgotPw = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     await formEl.validate((valid, fields) => {
         if (valid) {
-            console.log('submit!')
+            localStorage.setItem('phone',ruleFormForgotPw.phone)
             next();
         } else {
             console.log('error submit!', fields)
@@ -476,8 +512,25 @@ const submitFormResetPw = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     await formEl.validate((valid, fields) => {
         if (valid) {
-            console.log('submit!')
-            next();
+            //重置密码
+            let register = async (options: any) => {
+                let res = await user.login(options);
+                console.log(res);
+                if (res.code == 200) {
+                    ElMessage({
+                        message: '重置成功，请登录',
+                        type: 'success',
+                    });
+                    isOpen.value = 1;
+                } 
+            }
+            register({
+                phone:localStorage.getItem('phone'),
+                password: ruleFormResetPw.password,
+                loginType: 3,
+                inviteCode: 0,
+            })
+           
         } else {
             console.log('error submit!', fields)
         }

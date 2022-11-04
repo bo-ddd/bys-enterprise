@@ -211,4 +211,11 @@ export default {
        getVip:(params)=>{
         return axios.post('/drop/getVip',params,postConfig)
       },
+
+      /**
+       * 获取职位类别下拉框
+       */
+      getPosition:(params)=>{
+        return axios.post('/drop/getPosition',params,postConfig);
+      }
 }

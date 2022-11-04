@@ -23,38 +23,47 @@ let form = reactive({
 
 let inviationNumber = ref(0);//这个是当日邀请次数
 
+let invitationUserId = ref();//邀请的人才id；
 
 let paging = reactive({
     total: 100,
     pageSize: 10,
     pageIndex: 1,
-});//分页
+});//邀请人员分页
 
+//邀请人员后一个页面的分页
 let pagingInvite = reactive({
     total: 100,
     pageSize: 10,
     pageIndex: 1,
 })
 
+const dialogFormVisible = ref(false);//弹出弹层
+
+
 //这个是监听页数
 watch(paging, () => {
-    console.log(paging.pageSize);
+    //监听页数更改直接调用获取人才列表的接口
     getTalentList();
 })
 
 let showGuid = ref(false);//展示导航
 let circleUrl = ref('https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png');
 let checkItem = ref(0);//默认展示哪个页面
+
+//切换页面
 let handleItemChange = (index: number) => {
     checkItem.value = index;
 }
+
+//是否展开导航
 let handleGuideChange = (bool: boolean) => {
     showGuid.value = bool;
 }
 
 //清空选择的方法
 let cancelCheck = () => {
-    for (const key in form) {
+    for (const key in form as any) {
         form[key] = null;
     }
 }
@@ -66,6 +75,7 @@ let positionArr = reactive<any[]>([]);//职位列表
 let wishMoneyLeftList = reactive<any[]>([]);//这个是期望薪资左边的列表
 let wishMoneyRightList = reactive<any[]>([]);//这个是期望薪资右边的列表
 let talentList = reactive<any[]>([]);//这个是人才列表
+let positionCategoryList = reactive<any[]>([]);//这个是获取职位类别的数组
 //这个是学历的列表
 let getEducationList = async () => {
     let res = await PersonStore.getEducation();
@@ -121,8 +131,6 @@ getWishMoneyList();
 
 //获取到人才的列表
 let getTalentList = async () => {
-    console.log('--------------------');
-    console.log(form);
     let obj = {};
     for (const key in form) {
         if(form[key]){
@@ -141,26 +149,52 @@ let getTalentList = async () => {
 getTalentList();
 
 //邀请人才的方法;
-let inviteTalent = async (id: number) => {
+let inviteTalent = async () => {
     let res = await PersonStore.inviteTalent({
-        inviteUserId: id,
+        inviteUserId: invitationUserId,
         userId: 10000,
     });
-    console.log(res)
+    dialogFormVisible.value = false;
+    if(res.code !==200){
+        console.log('邀请人才接口报错');
+    }else{
+        console.log('邀请人才成功!!');
+    }
 }
 
 //获取邀请人才列表
 let inviteTalentList = async ()=>{
     let res = await PersonStore.getInviteList({
-        userId:10000
+        userId:10000,
     })
     console.log(res);
 }
 inviteTalentList();
 
 //这个是邀请投递的弹层
-const dialogTableVisible = ref(true);
-const dialogFormVisible = ref(true)
+
+//邀请的哪个人才
+let invitationPost =async (userId:number)=>{
+    dialogFormVisible.value = true;
+    invitationUserId.value = userId;
+    // 这个里面需要调用回显人才信息的接口
+    //再之后没有了
+}
+
+//获取职位类别
+let getPositionCategory = async ()=>{
+    let res = await PersonStore.getPosition();
+    console.log('获取职位类别');
+    console.log(res);
+    if(res.code !== 200) return;
+    // positionDownList: (2) [{…}, {…}]
+    // positionTypeId: "1"
+    // positionTypeName: "互联网"
+    // sortId: 1
+    console.log(res.data);
+    positionCategoryList.push(...(res.data));
+}
+getPositionCategory();
 </script>
 <template>
     <div class="personnel">
@@ -210,11 +244,7 @@ const dialogFormVisible = ref(true)
                         <el-option v-for="item in majorArr" :key="item.sortId" :label="item.professionalName"
                             :value="item.sortId" />
                     </el-select>
-                    <el-select v-model="form.industry" class="m-2 check-education mr-30" placeholder="意向职位选择"
-                        size="large">
-                        <el-option v-for="item in positionArr" :key="item.value" :label="item.label"
-                            :value="item.value" />
-                    </el-select>
+                    <el-cascader v-model="form.industry" :props="{'children':'positionDownList','label':'positionTypeName','value':'positionTypeId'}"	 class="check-education mr-30" :options="positionCategoryList" clearable />
                 </div>
                 <div class="filter-wrap-btm">
                     <div class="check">
@@ -303,7 +333,7 @@ const dialogFormVisible = ref(true)
                     <!-- 活跃时间 -->
                     <div class="cbleft5">
                         <p class="titlest fs-12 cl-ccc">{{ item.lastLoginTime }}活跃</p>
-                        <el-button type="primary" class="mt-50">邀请投递</el-button>
+                        <el-button type="primary" class="mt-50" @click="invitationPost(item.userId)">邀请投递</el-button>
                     </div>
                 </div>
             </div>
@@ -332,10 +362,10 @@ const dialogFormVisible = ref(true)
 
                 <!-- 邀请的选择容器 -->
                 <div class="filter-wrap">
-                    <el-select v-model="form.checkSex" class="m-2 check-sex mr-30" placeholder="状态选择" size="large">
+                    <el-select v-model="form.sex" class="m-2 check-sex mr-30" placeholder="状态选择" size="large">
                         <el-option v-for="item in sexArr" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
-                    <el-select v-model="form.checkPosition" class="m-2 check-position mr-30" placeholder="意向职位选择"
+                    <el-select v-model="form.professional" class="m-2 check-position mr-30" placeholder="意向职位选择"
                         size="large">
                         <el-option v-for="item in positionArr" :key="item.value" :label="item.label"
                             :value="item.value" />
@@ -457,7 +487,7 @@ const dialogFormVisible = ref(true)
                 <p class="cl-blue">触达率200%</p>
             </div>
             <p class="fs-12">本次邀请将扣除1个邀请点数</p>
-            <div class="invitation-btn mt-30">邀请投递</div>
+            <div class="invitation-btn mt-30" @click="inviteTalent()">邀请投递</div>
         </el-dialog>
 
         <!-- 底部 -->

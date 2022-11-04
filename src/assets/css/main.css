@@ -121,6 +121,10 @@ body {
     font-weight: 600;
 }
 
+.fw-700 {
+    font-weight: 700;
+}
+
 .pl-50 {
     padding-left: 50px;
 }
@@ -295,6 +299,9 @@ body {
 .c-8d9ea7 {
     color: #8d9ea7;
 }
+.c-515a6e {
+    color: #515a6e;
+}
 
 .over-hidden {
     overflow: hidden;
@@ -302,6 +309,9 @@ body {
 
 .fs-20 {
     font-size: 20px;
+}
+.fs-28 {
+    font-size: 28px;
 }
 
 .fs-16 {

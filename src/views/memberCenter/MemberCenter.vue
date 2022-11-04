@@ -115,10 +115,10 @@
 
 <script setup lang="ts">
 import { useVipStore } from "@/stores/vip";
-import { reactive,provide} from "vue";
-import { useRoute,useRouter } from 'vue-router';
+import { reactive,} from "vue";
+import { useRouter } from 'vue-router';
 let router = useRouter();
-let vipList = reactive([]);
+let vipList:any = reactive([]);
 let useVip = useVipStore();
 let getVip = async () => {
     let res = await useVip.getVip({});
@@ -160,9 +160,7 @@ let ulList = [
     },
 ]
 let handle = function(index:number):void{
-    console.log(vipList[index])
-    provide('data',vipList[index])
-    router.push({ path: '/MemberDetails' })
+    router.push({ path: '/MemberDetails', query:vipList[index]})
 }
 
 </script>

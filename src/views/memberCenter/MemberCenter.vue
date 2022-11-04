@@ -28,28 +28,147 @@
                     </div>
                 </div>
             </div>
-            <div class="vip-type">
-                <div class="vip-wrap">
-                    
+        </main>
+        <div class="vip-type wrap ">
+            <div class="vip-wrap flex mt-30">
+                <div class="cate">
+                    <div class="title"></div>
+                    <div class="subheading flex-ja-center">
+                        <p class="fs-16 fw-600 ">权益</p>
+                    </div>
+                    <ul class="">
+                        <li class="flex-ja-center" v-for="item in ulList" :key="item.id">
+                            {{ item.title }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="cate ordinary" >
+                    <div class="title flex-ja-center fs-24">
+                        <p>{{ vipList[0].vipName }}</p>
+                    </div>
+                    <div class="subheading  flex-wrap">
+                      
+
+                    </div>
+                    <ul class="">
+                        <li class=" flex-ja-center">
+                            {{ vipList[0].downloadCount }}
+                        </li>
+                        <li class=" flex-ja-center">
+                            {{ vipList[0].refreshPosition }}
+                        </li>
+                        <li class=" flex-ja-center">
+                            {{ 0 }}
+                        </li>
+                        <li class=" flex-ja-center">
+                            {{ vipList[0].positionCount }}
+                        </li>
+                        <li class=" flex-ja-center">
+                            {{ vipList[0].refreshPositionCount }}
+                        </li>
+                        <li class=" flex-ja-center">
+                            {{ vipList[0].invitationTalentCount }}
+                        </li>
+                        <li class=" flex-ja-center">
+                            {{ vipList[0].refreshPositionCardCount }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="cate silver" @click="handle(1)">
+                    <div class="title flex-ja-center fs-24">
+                        <img class="icon" src="@/assets/images/title_silver.png" alt="">
+                        <p>{{ vipList[1].vipName }}</p>
+                    </div>
+                    <div class="subheading flex-wrap">
+                        <p class="fs-12 mt-35"><i class="fs-14">￥</i><span class="fs-24">{{ vipList[1].vipPrice
+                        }}</span>/月</p>
+                         <van-button class="btn">立即开通</van-button>
+                    </div>
+                    <ul class="">
+                        <li class=" flex-ja-center">
+                            {{ vipList[1].downloadCount }}
+                        </li>
+                        <li class=" flex-ja-center">
+                            {{ vipList[1].refreshPosition }}
+                        </li>
+                        <li class=" flex-ja-center">
+                            {{ 0 }}
+                        </li>
+                        <li class=" flex-ja-center">
+                            {{ vipList[1].positionCount }}
+                        </li>
+                        <li class=" flex-ja-center">
+                            {{ vipList[1].refreshPositionCount }}
+                        </li>
+                        <li class=" flex-ja-center">
+                            {{ vipList[1].invitationTalentCount }}
+                        </li>
+                        <li class=" flex-ja-center">
+                            {{ vipList[1].refreshPositionCardCount }}
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </main>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-  import { useVipStore } from "@/stores/vip";
-  let useVip = useVipStore();
-  let getVip = async ()=>{
-      let res = await useVip.getVip({});
-      console.log(res);
-  }
-  getVip();
+import { useVipStore } from "@/stores/vip";
+import { reactive,provide} from "vue";
+import { useRoute,useRouter } from 'vue-router';
+let router = useRouter();
+let vipList = reactive([]);
+let useVip = useVipStore();
+let getVip = async () => {
+    let res = await useVip.getVip({});
+    vipList.push(...res.data);
+    console.log(res);
+}
+(async function () {
+    await getVip();
+    console.log(vipList);
+})()
+let ulList = [
+    {
+        id: 1,
+        title: '批量下载收到的简历'
+    },
+    {
+        id: 2,
+        title: '短信邀请学生投递'
+    },
+    {
+        id: 3,
+        title: '自动刷新全部职位'
+    },
+    {
+        id: 4,
+        title: '同时在招职位'
+    },
+    {
+        id: 5,
+        title: '职位刷新点数'
+    },
+    {
+        id: 6,
+        title: '邀请学生点数'
+    },
+    {
+        id: 7,
+        title: '职位自动刷新卡'
+    },
+]
+let handle = function(index:number):void{
+    console.log(vipList[index])
+    provide('data',vipList[index])
+    router.push({ path: '/MemberDetails' })
+}
+
 </script>
 
 <style lang="scss" scoped>
 .member {
-    height: 100vh;
     background-color: #0e2664;
 
     header {
@@ -62,6 +181,7 @@
     }
 
     .container {
+        border-radius: 2px;
         border: 3px solid #1c3b8d;
         background-color: #112f7d;
 
@@ -100,33 +220,77 @@
                     }
                 }
             }
-            .desc{
+
+            .desc {
                 padding: 26px 0;
-                .content{
+
+                .content {
                     padding: 5px 10px;
                     border: 1px solid #ffffff;
+
                     .icon-rise {
-                            width: 15px;
-                        }
+                        width: 15px;
+                    }
+                }
+            }
+        }
+    }
+
+    .vip-type {
+        border-radius: 2px;
+        background-color: #ffffff;
+
+        .vip-wrap {
+            .cate {
+                width: 100%;
+
+                .title {
+                    height: 80px;
+
+                    .icon {
+                        width: 40px;
+                    }
+                }
+
+                .subheading {
+                    height: 120px;
+                }
+
+                ul {
+                    li {
+                        line-height: 60px;
+                        border-top: 1px solid #ededed;
+                    }
+                }
+            }
+
+            .ordinary {
+                .title {
+                    background-color: rgb(248, 252, 255);
+                }
+                
+            }
+
+            .ordinary:hover {
+                background-color: rgba(240, 244, 249, 0.5);
+            }
+
+            .silver:hover {
+                background-color: rgba(246, 246, 246, 0.5);
+            }
+
+            .silver {
+                .title {
+                    background-color: rgb(245, 245, 245);
+                }
+                .btn{
+                    padding: 6px 40px;
+                    border-radius:4px ;
+                    background: linear-gradient(146deg,#ffe7cc,#e2ad7d);
                 }
             }
         }
     }
 }
 
-.c-ebab85 {
-    color: #ebab85;
-}
-
-.c-79593a {
-    color: #79593a;
-}
-
-.c-573617 {
-    color: #573617;
-}
-
-.fw-400 {
-    font-weight: 400;
-}
 </style>

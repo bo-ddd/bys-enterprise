@@ -25,6 +25,11 @@ const router = createRouter({
           name: 'MemberCenter',
           component: () => import('@/views/memberCenter/MemberCenter.vue')
         },
+        {
+          path: '/memberDetails',
+          name: 'MemberDetails',
+          component: () => import('@/views/memberCenter/MemberDetails.vue')
+        },
 
         {
           path: '/findPersonnel',

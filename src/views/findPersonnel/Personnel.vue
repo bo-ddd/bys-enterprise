@@ -2,6 +2,7 @@
 import { ref, reactive , type Ref } from "vue";
 import FooterBar from "@/components/footer/footerBar.vue";
 import { usePersonStore } from "@/stores/person";
+import { useHomeStore } from "@/stores/home";
 import cityJson from "@/assets/json/city.json";
 interface Check {
     id: number,
@@ -9,6 +10,7 @@ interface Check {
     value: string | number,
 }
 let PersonStore = usePersonStore();//引入personStore这个状态管理
+let HomeStore = useHomeStore();//引入homeStore这个状态管理
 let form = reactive({
     checkSex:null,//性别
     checkEducation:null,//学历
@@ -18,6 +20,9 @@ let form = reactive({
     lowestSalary:null,//最低薪资
     highestSalary:null,//最高薪资
 });//这个是模糊查询
+
+let inviationNumber = ref(0);//这个是当日邀请次数
+
 
 let paging = reactive({
     total:100,
@@ -57,6 +62,15 @@ let getEducationList = async ()=>{
     educationArr.push(...resData);
 }
 getEducationList();//调用获取学历列表
+
+//这个是获取邀请次数的方法
+let getInvationsNumber = async ()=>{
+    let res = await HomeStore.getEnterprise({
+        userId:10000,
+    })
+    console.log(res);
+}
+getInvationsNumber();
 
 //这个是获取专业列表的方法
 let getProfessionalList = async ()=>{
@@ -100,10 +114,20 @@ let getTalentList = async ()=>{
     });
     if(res.code != 200) return;
     talentList.length = 0;
-    talentList.push(...(res.data));
+    talentList.push(...(res.data).talentList);
+    paging.total = res.data.totalCount;
     console.log(res);
 }
 getTalentList();
+
+//邀请人才的方法;
+let inviteTalent = async (id:number)=>{
+    let res = await PersonStore.inviteTalent({
+        inviteUserId:id,
+        userId:10000,
+    });
+    console.log(res)
+}
 </script>
 <template>
     <div class="personnel">
@@ -191,9 +215,9 @@ getTalentList();
                     <div class="cbleft2 ml-16">
                         <p class="name fs-18">费小姐</p>
                         <div class="description mt-16 cl-ccc">
-                            <p class="fs-12">24岁</p>
+                            <p class="fs-12">{{item.userAge ? item.userAge : '24'}}岁</p>
                             <div class="line"></div>
-                            <p class="fs-12">硕士</p>
+                            <p class="fs-12">{{item.userEducation? item.userEducation : '硕士'}}</p>
                         </div>
                     </div>
 
@@ -216,7 +240,7 @@ getTalentList();
                         <p class="titlest fs-12 ml-28">求职意向</p>
                         <div class="occupation-item mt-16">
                             <img src="@/assets/images/icon-dingwei.png" class="icon">
-                            <p class="description fs-14 ml-12">辽宁省-大连市、辽宁省-沈阳市、吉林省-长春市</p>
+                            <p class="description fs-14 ml-12">{{item.wishPosition ? item.wishPosition : '辽宁省-大连市、辽宁省-沈阳市、吉林省-长春市'}}</p>
                         </div>
                         <div class="occupation-item mt-12">
                             <img src="@/assets/images/icon-bangong.png" class="icon">
@@ -231,7 +255,7 @@ getTalentList();
                     <!-- 活跃时间 -->
                     <div class="cbleft5">
                         <p class="titlest fs-12 cl-ccc">{{item.lastLoginTime}}活跃</p>
-                        <el-button type="primary" class="mt-50">邀请投递</el-button>
+                        <el-button type="primary" class="mt-50" @click="inviteTalent(item.userId)">邀请投递</el-button>
                     </div>
                 </div>
             </div>
@@ -239,7 +263,7 @@ getTalentList();
             <!-- 分页 -->
             <div class="page-wrap wrap mt-48">
                 <div class="page-content">
-                    <el-pagination :background="true" :pager-count="7" layout="prev, pager, next" :total="1000" />
+                    <el-pagination :background="true" :pager-count="7" layout="prev, pager, next" :total="paging.total" />
                 </div>
             </div>
         </div>

@@ -176,7 +176,33 @@ export default {
     /**
      * 修改简历状态
      */
-     modifyResume:()=>{
-        return axios.post('/company/modifyResume',params,postConfig)
-     }
+     modifyResume:(params)=>{
+        return axios.post('/company/modifyResume',params,postConfig);
+     },
+
+     /**
+      * 邀请人才列表
+      */
+      getInvite:(params)=>{
+        return axios.post('/company/getInvite',params,postConfig);
+      },
+
+      /**
+       * 邀请人才
+       */
+      inviteTalent:(params)=>{
+        return axios.post('/company/inviteTalent',params,postConfig)
+      },
+      /**
+       * 删除职位
+       */
+      deletePosition:(params)=>{
+        return axios.post('/company/delPosition',params,postConfig)
+      },
+      /**
+       * 修改职位信息
+       */
+       modifyPosition:(params)=>{
+        return axios.post('/company/modifyPosition',params,postConfig)
+      },
 }

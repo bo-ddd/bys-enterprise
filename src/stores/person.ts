@@ -13,7 +13,7 @@ export const usePersonStore = defineStore('person', () => {
     return Api.getSexList(params);
   }
   function getPositionList(params:any){
-    return Api.getPositionList(params);
+    return Api.getPositionDrop(params);
   }
   function getWishMoney(params:any){
     return Api.getWishMoney(params);
@@ -21,5 +21,13 @@ export const usePersonStore = defineStore('person', () => {
   function getTalentList(params:any){
     return Api.getTalentList(params);
   }
-  return { count , getEducation, getMajorList,getSexList,getPositionList,getWishMoney,getTalentList}
+  //获取人才列表
+  function getInviteList(params:any){
+    return Api.getInvite(params);
+  }
+  //邀请人才
+  function inviteTalent(params:any){
+    return Api.inviteTalent(params);
+  }
+  return { count , getEducation, getMajorList,getSexList,getPositionList,getWishMoney,getTalentList,getInviteList,inviteTalent}
 })

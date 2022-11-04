@@ -45,7 +45,7 @@
           <div class="job-box mb-15" v-for="item in positionList" :key="item.userId">
             <div class="info-job just-between">
               <div class="job-title fs-18">
-                <div class="mb-15"> {{item.positionName}}&nbsp;  </div>
+                <div class="mb-15">{{item.positionName}}&nbsp;</div>
                 <div class="info-list align-center">
                   <div class="money-num mr-15">10-15k</div>
                   <div class="align-center fs-14">
@@ -84,21 +84,24 @@
                 <span>&nbsp; {{item.createTime}}</span>
               </div>
               <div class="align-center">
-                <div class="cur-po">编辑</div>
+                <div class="cur-po" @click="setPosition(item)">编辑</div>
                 <div class="bor"></div>
                 <div class="cur-po">停止招聘</div>
                 <div class="bor"></div>
-                <div class="cur-po">删除</div>
+                <div class="cur-po" @click="deleteClick(item.positionId,item.positionStatus )">删除</div>
               </div>
             </div>
           </div>
-          <div class="just-center" v-if="recruitNum>10">
+          <div class="just-center mb-20" v-if="total>10">
             <el-pagination
               :background="true"
               v-model:currentPage="pageNum"
               v-model:page-size="pageSize"
               layout="prev, pager, next"
               :total="total"
+              @next-click="next"
+              @prev-click="prev"
+              @current-change="handleCurrentChange"
             />
           </div>
         </div>
@@ -116,11 +119,11 @@
   <FooterBar></FooterBar>
 </template>
 <script lang="ts" setup>
+import { ElMessage, ElMessageBox } from "element-plus";
 import { usePositionStore } from "@/stores/position";
 import FooterBar from "@/components/footer/footerBar.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-// import { usePositionStore,PositionParams } from "@/stores/position";
 let use = usePositionStore();
 const recruitNum = ref(0);
 const downNum = ref(0);
@@ -128,51 +131,95 @@ const total = ref(0);
 const pageNum = ref(1);
 const pageSize = ref(10);
 const positionList = ref([]);
-let getList = async function () {
-  let res1 = await use.getPosition({
-    pageIndex: 1,
+const handleSizeChange = (val: number) => {
+  console.log(`${val} items per page`);
+};
+const handleCurrentChange = async (val: number) => {
+  console.log(`current page: ${val}`);
+  pageNum.value = val;
+  let res = await getPositionList();
+  console.log(res);
+};
+let getPositionList =async function () {
+  let res =await use.getPosition({
+    pageIndex: pageNum.value,
     userId: 10000,
-    pageSize: 10,
-    positionStatus: 1,
+    pageSize: pageSize.value,
+    positionStatus: 2,
   });
-  if (res1.code == 200 && res1.data) {
-    recruitNum.value = res1.data.data.length;
-    console.log(recruitNum.value);
-    positionList.value = res1.data.data;
+  console.log(res);
+  
+  if (res.code == 200&&res.data) {
+    positionList.value=res.data.data;
+    recruitNum.value = res.data.maxCount;
   }
+};
+let deletePosition = function (params: any) {
+  return use.deletePosition(params);
+};
+const deleteClick = function (positionId: any, positionStatus: any) {
+  ElMessageBox.confirm("是否确认删除该职位?", "Warning", {
+    confirmButtonText: "确认删除",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(async () => {
+      console.log(1);
+
+      let res1 = await deletePosition({
+        positionId,
+        userId: 10000,
+        positionStatus,
+      });
+      console.log(3);
+
+      console.log(res1);
+
+      if (res1.code == 200) {
+        ElMessage({
+          type: "success",
+          message: "删除成功",
+        });
+        let res2 = getPositionList();
+      } else {
+        ElMessage({
+          type: "warning",
+          message: "删除失败",
+        });
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        type: "info",
+        message: "取消删除",
+      });
+    });
+};
+let getList = async function () {
+  let res1 = await getPositionList();
   let res2 = await use.getPosition({
     pageIndex: 1,
     userId: 10000,
     pageSize: 10,
-    positionStatus: 2,
+    positionStatus: 3,
   });
   if (res2.code == 200 && res2.data) {
     downNum.value = res2.data.data.length;
   }
 };
 getList();
-// let getPosition = async function (params: any) {
-//   let res = await use.getPosition(params);
-//   console.log(res);
-//   let { data } = res;
-//   if (res.code == 200) {
-//     total.value = res.data.length;
-//   }
-// };
-// getPosition({
-//   pageIndex: pageNum.value,
-//   userId: 10000,
-//   pageSize: pageSize.value,
-//   positionStatus: 0,
-// });
 const router = useRouter();
-const tabFlag = ref(true);
 const currentIndex = ref(0);
 const tab = function (num: number) {
   currentIndex.value = num;
 };
-const to = function (path: string) {
-  router.push(path);
+const to = function (path: string,) {
+router.push({
+  path,
+  query:{
+
+  }
+});
 };
 </script>
 <style lang="scss" scoped>
@@ -227,8 +274,10 @@ const to = function (path: string) {
     }
   }
   .job {
+    box-sizing: border-box;
     overflow: hidden;
     min-height: calc(100vh - 55px);
+    padding-bottom: 120px;
   }
   .job-head {
     .point-num {
@@ -250,7 +299,7 @@ const to = function (path: string) {
     .info-job {
       padding: 30px 25px;
       border-bottom: 2px solid #f6f7f9;
-      .job-title{
+      .job-title {
         width: 400px;
       }
       .info-list {
@@ -283,10 +332,16 @@ const to = function (path: string) {
       .refresh-info {
         gap: 0 12px;
         .autorefresh-btn {
-          padding: 7px 15px;
+          box-sizing: border-box;
+          padding: 7px 12px;
           border: 1px solid #356ffa;
           color: #356ffa;
           border-radius: 4px;
+          transition: all 0.3s;
+        }
+        .autorefresh-btn:hover{
+            background-color: #356ffa;
+          color: white;
         }
         .refresh-btn {
           padding: 7px 15px;

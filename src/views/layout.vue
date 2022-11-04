@@ -29,7 +29,7 @@ let list = reactive([
   {
     id: 5,
     title: '会员中心',
-    url: '',
+    url: '/memberCenter',
   },
 ])
 

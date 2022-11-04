@@ -445,9 +445,19 @@ const dialogFormVisible = ref(true)
             <el-select v-model="form.checkPosition" class="m-2 check-position mr-30" placeholder="意向职位选择" size="large">
                 <el-option v-for="item in positionArr" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
-            <!--  -->
-            <div class="btn"></div>
-
+            <!-- 邀请方式 -->
+            <p class="invitation-method mt-15">邀请方式</p>
+            <div class="invitation">
+                <input type="checkbox" checked disabled>
+                <p class="ml-15">应用内邀请&微信推送</p> 
+            </div>
+            <div class="invitation">
+                <input type="checkbox">
+                <p class="ml-15">短信同步提醒</p> 
+                <p class="cl-blue">触达率200%</p>
+            </div>
+            <p class="fs-12">本次邀请将扣除1个邀请点数</p>
+            <div class="invitation-btn mt-30">邀请投递</div>
         </el-dialog>
 
         <!-- 底部 -->
@@ -792,6 +802,20 @@ const dialogFormVisible = ref(true)
         }
         & .post-tips{
             padding:14px 0;
+        }
+        & .invitation-method{
+            padding:20px 0;
+        }
+        & .invitation{
+            display:flex;
+            padding:10px 0;
+            align-items:center;
+        }
+        & .invitation-btn{
+            background-color:#356ffa;
+            padding:10px 0;
+            color:#fff;
+            text-align:center;
         }
     }
 

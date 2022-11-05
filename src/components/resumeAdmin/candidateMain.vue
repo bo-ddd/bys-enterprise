@@ -19,9 +19,9 @@
                 <el-button type="primary" @click="fuzzyQuery()">确定</el-button>
             </div>
             <div class="candidate-header_bottom">
-                <el-checkbox :indeterminate="isIndeterminate" @change="handleCheckAllChange">全选</el-checkbox>
-                <el-button class="screen-btn" type="info" @click="batchPass()" plain>批量通过筛选</el-button>
-                <el-button class="screen-btn" type="info" plain>批量不合适</el-button>
+                <el-checkbox v-model="checkAll"  @change="handleCheckAllChange">全选</el-checkbox>
+                <el-button class="screen-btn" type="info" @click="batchbyFilter()" plain>批量通过筛选</el-button>
+                <el-button class="screen-btn" type="info" @click="batchInappropriate()" plain>批量不合适</el-button>
             </div>
         </div>
 
@@ -29,8 +29,8 @@
             <card.cardWrap class="mt-15" v-for="item in cardList" :key="item">
                 <template #header>
                     <card.cardHeader :time="item.modifyTime">
-                        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                            <el-checkbox :label="item">投递职位 | {{ item.positionName }}</el-checkbox>
+                        <el-checkbox-group v-model="checkedCities"  @change="handleCheckedCitiesChange">
+                            <el-checkbox :label="item.deliveryId">投递职位 | {{ item.positionName }}</el-checkbox>
                         </el-checkbox-group>
                     </card.cardHeader>
                 </template>
@@ -66,6 +66,55 @@ import { useEnterpriseStore } from "@/stores/enterprise"
 let enterprise = useEnterpriseStore();
 let userName = ref("");
 let invitationStatus = ref(false);
+
+/***
+ * 批量不合适
+ */
+let batchInappropriate = async ()=>{
+     console.log(checkedCities.value);
+     let deliveryId = checkedCities.value.toString();
+     let res = await enterprise.modifyResumeStatus({
+        deliveryId,
+        statusId: 6,
+        userId: 10000
+    })
+    if (res.code == 200) {
+        ElMessage({
+            message: 'success',
+            type: 'success',
+        })
+        getResume();
+        checkedCities.value = [];
+        checkAll.value = false;
+    } else {
+        ElMessage.error('this is a error message.')
+    }
+}
+
+/***
+ * 批量通过初筛
+ */
+ let batchbyFilter = async ()=>{
+     console.log(checkedCities.value);
+     let deliveryId = checkedCities.value.toString();
+     let res = await enterprise.modifyResumeStatus({
+        deliveryId,
+        statusId:3,
+        userId: 10000
+    })
+    if (res.code == 200) {
+        ElMessage({
+            message: 'success',
+            type: 'success',
+        })
+        getResume();
+        checkedCities.value = [];
+        checkAll.value = false;
+    } else {
+        ElMessage.error('this is a error message.')
+    }
+}
+
 
 /**\
  * 不合适
@@ -137,13 +186,6 @@ const handleCheckedCitiesChange = (value: any[]) => {
 }
 
 /**
- * 批量通过
- */
-let batchPass = () => {
-    console.log(checkedCities.value);
-}
-
-/**
  * 获取应聘阶段下拉框
  */
 let applicationStage: any = ref([]);
@@ -208,7 +250,7 @@ let getResume = async () => {
         total.value = res.data.maxCount;
         cardList.value = res.data.data;
         cities.value = cardList.value.map((item:any)=>{
-            return item.userId;
+            return item.deliveryId;
         })
     } else {
         ElMessage.error('this is a error message.')
@@ -238,7 +280,7 @@ let fuzzyQuery = async () => {
         })
         cardList.value = res.data.data;
         cities.value = cardList.value.map((item:any)=>{
-            return item.userId;
+            return item.deliveryId;
         })
     } else {
         ElMessage.error('this is a error message.')
@@ -251,7 +293,6 @@ let fuzzyQuery = async () => {
     .main {
         min-height: 50vh;
     }
-
     .pagination {
         display: flex;
         width: 100%;

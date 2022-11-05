@@ -109,7 +109,7 @@
                                     <Plus />
                                 </el-icon>
                                 <template #file="{ file }">
-                                    <div>
+                                    <div @click="add(file)">
                                         <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
                                         <span class="el-upload-list__item-actions">
                                             <span class="el-upload-list__item-preview"
@@ -200,10 +200,6 @@
 
                 <div>
                     <!-- 提交 -->
-                    <el-dialog v-model="dialogVisible">
-                        <img w-full :src="dialogImageUrl" alt="Preview Image" />
-                    </el-dialog>
-
                     <el-form-item>
                         <el-button type="primary" @click="onSubmit">提交</el-button>
                     </el-form-item>
@@ -253,6 +249,10 @@ const form = reactive({
     companyWishSchool: '',// 企业意向学校
 });
 
+function add(file: any) {
+    console.log(file)
+}
+
 // 点击提交按钮走的方法
 const onSubmit = () => {
     console.log(form)
@@ -263,41 +263,41 @@ let getEnterpriseData = reactive<any[]>([]);
 let getEnterprise = async function () {
     let res = await use.getEnterprise({ userId: 10000 });
     Object.assign(getEnterpriseData, res.data);
-    console.log('企业详细信息接口返回值', getEnterpriseData);
     Object.assign(form, res.data);
 }
 getEnterprise();
-console.log('form', form)
 
-
+// 获取职位列表
 let getPositionList = async function () {
     let res = await getPositionList()
     // console.log(res);
 }
-// 调用 修改企业详细信息接口 报错
-// let setModifyEnterpriseInfo = async function () {
-//     let res = await use.setModifyEnterpriseInfo(form);
-//     console.log(res);
-// }
-// setModifyEnterpriseInfo();
+
+/**
+ * 
+ * // 调用 修改企业详细信息接口 报错
+ * let setModifyEnterpriseInfo = async function () {
+ *  let res = await use.setModifyEnterpriseInfo(form);
+ *  console.log(res);
+ * }
+ * setModifyEnterpriseInfo();
+ */
 
 // 调用 获取所属行业下拉框接口 报错
 let getIndustryList = async function () {
     let res = await use.getIndustryList();
-    console.log('所属行业下拉框的返回值', res);
 }
 getIndustryList();
 
 
 // 上传企业LOGO的逻辑
-const dialogImageUrl = ref('');
 const dialogVisible = ref(false);
 const disabled = ref(false);
 const handleRemove = (file: UploadFile) => {
     console.log(file)
 };
 const handlePictureCardPreview = (file: UploadFile) => {
-    dialogImageUrl.value = file.url!
+    console.log('log ~ file', file);
     dialogVisible.value = true;
     console.log(1);
 

@@ -332,7 +332,8 @@ img {
 
     &>.btm {
         padding: 18px 0;
-
+        height: 160px;
+        box-sizing: border-box;
         &>.btm-item {
             width: 245px;
             height: 145px;

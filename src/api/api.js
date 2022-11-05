@@ -209,6 +209,13 @@ export default {
        * 获取VIP下拉框
        */
        getVip:(params)=>{
-        return axios.post('/dorp/getVip',params,postConfig)
+        return axios.post('/drop/getVip',params,postConfig)
       },
+
+      /**
+       * 获取职位类别下拉框
+       */
+      getPosition:(params)=>{
+        return axios.post('/drop/getPosition',params,postConfig);
+      }
 }

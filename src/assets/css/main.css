@@ -97,7 +97,43 @@ body {
 .flex {
     display: flex;
 }
+.c-ebab85 {
+    color: #ebab85;
+}
 
+.c-79593a {
+    color: #79593a;
+}
+
+.c-573617 {
+    color: #573617;
+}
+
+.fs-22 {
+    font-size: 22px;
+}
+
+.fw-400 {
+    font-weight: 400;
+}
+
+.fw-600 {
+    font-weight: 600;
+}
+
+.fw-700 {
+    font-weight: 700;
+}
+
+.pl-50 {
+    padding-left: 50px;
+}
+
+.flex-wrap{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .w-250 {
     width: 250px;
 }
@@ -263,6 +299,9 @@ body {
 .c-8d9ea7 {
     color: #8d9ea7;
 }
+.c-515a6e {
+    color: #515a6e;
+}
 
 .over-hidden {
     overflow: hidden;
@@ -270,6 +309,9 @@ body {
 
 .fs-20 {
     font-size: 20px;
+}
+.fs-28 {
+    font-size: 28px;
 }
 
 .fs-16 {

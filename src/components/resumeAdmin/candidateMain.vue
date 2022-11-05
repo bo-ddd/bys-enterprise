@@ -43,7 +43,7 @@
                     }">
                         <template #btn>
                             <el-button @click="inappropriate(item)">不合适</el-button>
-                            <el-button @click="byFilter(item)" type="primary">通过筛选</el-button>
+                            <el-button @click="byFilter(item)" type="primary">通过初筛</el-button>
                         </template>
                     </card.cardItem>
                 </template>
@@ -94,7 +94,7 @@ let inappropriate = async (item: any) => {
 }
 
 /***
- * 通过筛选
+ * 通过初筛
  */
 let byFilter = async (item: any) => {
     let res = await enterprise.modifyResume({
@@ -127,14 +127,10 @@ const isIndeterminate = ref(false);
 const checkedCities = ref([]); //选中的数组  选中几个就往里面放几个
 let cities = ref([]);
 const handleCheckAllChange = (val: boolean) => {
-    console.log(val);
     checkedCities.value = val ? cities.value : [];
-    console.log();
     isIndeterminate.value = false;
-    console.log(1);
 }
-const handleCheckedCitiesChange = (value: string[]) => {
-    console.log(2);
+const handleCheckedCitiesChange = (value: any[]) => {
     const checkedCount = value.length
     checkAll.value = checkedCount === cities.value.length;
     isIndeterminate.value = checkedCount > 0 && checkedCount < cities.value.length;
@@ -211,10 +207,9 @@ let getResume = async () => {
     if (res.code == 200) {
         total.value = res.data.maxCount;
         cardList.value = res.data.data;
-        // cities.value = cardList.value.map((item:any)=>{
-        //     return item.userId;
-        // })
-        cities.value = cardList.value;
+        cities.value = cardList.value.map((item:any)=>{
+            return item.userId;
+        })
     } else {
         ElMessage.error('this is a error message.')
     }
@@ -242,10 +237,9 @@ let fuzzyQuery = async () => {
             type: 'success',
         })
         cardList.value = res.data.data;
-        // cities.value = cardList.value.map((item:any)=>{
-        //     return item.userId;
-        // })
-        cities.value = cardList.value;
+        cities.value = cardList.value.map((item:any)=>{
+            return item.userId;
+        })
     } else {
         ElMessage.error('this is a error message.')
     }

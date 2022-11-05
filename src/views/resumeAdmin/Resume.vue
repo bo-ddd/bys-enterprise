@@ -7,9 +7,9 @@
                 <el-tab-pane label="不合适" name="third"></el-tab-pane>
             </el-tabs>
         </div>
-        <candidateMain v-show="activeName == 'first'"></candidateMain>
-        <interviewMain v-show="activeName == 'second'"></interviewMain>
-        <inappropriate v-show="activeName == 'third'"></inappropriate>
+        <candidateMain v-if="activeName == 'first'"></candidateMain>
+        <interviewMain v-if="activeName == 'second'"></interviewMain>
+        <inappropriate v-if="activeName == 'third'"></inappropriate>
     </div>
 </template>
 

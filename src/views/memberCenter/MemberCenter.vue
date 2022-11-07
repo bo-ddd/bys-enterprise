@@ -39,6 +39,13 @@
                     <ul class="">
                         <li class="flex-ja-center" v-for="item in ulList" :key="item.id">
                             {{ item.title }}
+                            <el-tooltip v-if="item.id==3" class="box-item ml-5" effect="light" 
+                                content="平台为会员企业不定期刷新其全部在招职位，不占用日常刷新点数和自动刷新卡。"
+                                placement="top-start">
+                                    <el-icon>
+                                        <Warning />
+                                    </el-icon>
+                            </el-tooltip>
                         </li>
                     </ul>
                 </div>
@@ -50,16 +57,28 @@
                     </div>
                     <ul class="">
                         <li class=" flex-ja-center fs-18">
-                            <el-icon color="#356ffa" size="22px" v-show="vipList[0].downloadCount"><CircleCheckFilled /></el-icon>
-                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[0].downloadCount)"><CircleCloseFilled /></el-icon>
+                            <el-icon color="#356ffa" size="22px" v-show="vipList[0].downloadCount">
+                                <CircleCheckFilled />
+                            </el-icon>
+                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[0].downloadCount)">
+                                <CircleCloseFilled />
+                            </el-icon>
                         </li>
                         <li class=" flex-ja-center fs-18">
-                            <el-icon color="#356ffa" size="22px" v-show="vipList[0].refreshPosition"><CircleCheckFilled /></el-icon>
-                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[0].refreshPosition)"><CircleCloseFilled /></el-icon>
+                            <el-icon color="#356ffa" size="22px" v-show="vipList[0].refreshPosition">
+                                <CircleCheckFilled />
+                            </el-icon>
+                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[0].refreshPosition)">
+                                <CircleCloseFilled />
+                            </el-icon>
                         </li>
                         <li class=" flex-ja-center fs-18">
-                            <el-icon color="#356ffa" size="22px" v-show="vipList[0].smsInvitation"><CircleCheckFilled /></el-icon>
-                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[0].smsInvitation)"><CircleCloseFilled /></el-icon>
+                            <el-icon color="#356ffa" size="22px" v-show="vipList[0].smsInvitation">
+                                <CircleCheckFilled />
+                            </el-icon>
+                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[0].smsInvitation)">
+                                <CircleCloseFilled />
+                            </el-icon>
                         </li>
                         <li class=" flex-ja-center fs-18">
                             {{ vipList[0].positionCount }}
@@ -88,16 +107,28 @@
                     <ul class="">
                         <li class=" flex-ja-center fs-18">
                             <!-- {{ vipList[1].downloadCount? }} -->
-                            <el-icon color="#356ffa" size="22px" v-show="vipList[1].downloadCount"><CircleCheckFilled /></el-icon>
-                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[1].downloadCount)"><CircleCloseFilled /></el-icon>
+                            <el-icon color="#356ffa" size="22px" v-show="vipList[1].downloadCount">
+                                <CircleCheckFilled />
+                            </el-icon>
+                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[1].downloadCount)">
+                                <CircleCloseFilled />
+                            </el-icon>
                         </li>
                         <li class=" flex-ja-center fs-18">
-                            <el-icon color="#356ffa" size="22px" v-show="vipList[1].refreshPosition"><CircleCheckFilled /></el-icon>
-                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[1].refreshPosition)"><CircleCloseFilled /></el-icon>
+                            <el-icon color="#356ffa" size="22px" v-show="vipList[1].refreshPosition">
+                                <CircleCheckFilled />
+                            </el-icon>
+                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[1].refreshPosition)">
+                                <CircleCloseFilled />
+                            </el-icon>
                         </li>
                         <li class=" flex-ja-center fs-18">
-                            <el-icon color="#356ffa" size="22px" v-show="vipList[1].smsInvitation"><CircleCheckFilled /></el-icon>
-                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[1].smsInvitation)"><CircleCloseFilled /></el-icon>
+                            <el-icon color="#356ffa" size="22px" v-show="vipList[1].smsInvitation">
+                                <CircleCheckFilled />
+                            </el-icon>
+                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[1].smsInvitation)">
+                                <CircleCloseFilled />
+                            </el-icon>
                         </li>
                         <li class=" flex-ja-center fs-18">
                             {{ vipList[1].positionCount }}
@@ -244,7 +275,9 @@ let handle = function (index: number): void {
     .vip-type {
         border-radius: 2px;
         background-color: #ffffff;
-
+        .box-item{
+            
+        }
         .vip-wrap {
             .cate {
                 width: 100%;
@@ -263,7 +296,7 @@ let handle = function (index: number): void {
 
                 ul {
                     li {
-                        $height:60px;
+                        $height: 60px;
                         height: $height;
                         line-height: $height;
                         border-top: 1px solid #ededed;

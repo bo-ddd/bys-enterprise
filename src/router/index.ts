@@ -61,6 +61,12 @@ const router = createRouter({
       name: 'Login',
       component: Login
     },  
+    // 支付
+    {
+      path: '/payment',
+      name: 'payment',
+      component: ()=>import('@/views/payment/paymentView.vue')
+    },  
     {
       path: '/enterpriseRegistra',
       name: 'EnterpriseRegistra',

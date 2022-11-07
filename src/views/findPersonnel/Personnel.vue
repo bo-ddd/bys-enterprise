@@ -77,11 +77,14 @@ let wishMoneyLeftList = reactive<any[]>([]);//这个是期望薪资左边的列�
 let wishMoneyRightList = reactive<any[]>([]);//这个是期望薪资右边的列表
 let talentList = reactive<any[]>([]);//这个是人才列表
 let positionCategoryList = reactive<any[]>([]);//这个是获取职位类别的数组
+let invitationList = reactive<any[]>([]);//这个是邀请人才的列表
 //这个是学历的列表
 let getEducationList = async () => {
     let res = await PersonStore.getEducation();
     if (res.code !== 200) return;
     let resData = (res.data).reverse();//获取学历数据
+    console.log('学历列表');
+    console.log(resData);
     educationArr.push(...resData);
 }
 getEducationList();//调用获取学历列表
@@ -148,14 +151,15 @@ let getTalentList = async () => {
     talentList.length = 0;
     talentList.push(...(res.data).talentList);
     paging.total = res.data.totalCount;
-    console.log(res);
+    console.log(res.data.talentList);
 }
 getTalentList();
 
 //邀请人才的方法;
 let inviteTalent = async () => {
+    console.log(invitationUserId);
     let res = await PersonStore.inviteTalent({
-        inviteUserId: invitationUserId,
+        inviteUserId: invitationUserId.value,
         userId: 10000,
     });
     dialogFormVisible.value = false;
@@ -171,6 +175,11 @@ let inviteTalentList = async ()=>{
     let res = await PersonStore.getInviteList({
         userId:10000,
     })
+    if(res.code !== 200) return;
+    invitationList.length = 0;
+    invitationList.push(...(res.data.talentList));
+    pagingInvite.total = res.data.totalCount;
+    console.log('邀请人才的列表');
     console.log(res);
 }
 inviteTalentList();
@@ -204,6 +213,11 @@ let getPositionCategory = async ()=>{
     positionCategoryList.push(...(data));
 }
 getPositionCategory();
+let getMoney = (data:string)=>{
+    if(!data) return '';
+    let res = data.split(",").sort((a,b)=>{ return a - b});
+    return `${res[0]}-${res[1]}k`
+}
 </script>
 <template>
     <div class="personnel">
@@ -213,7 +227,7 @@ getPositionCategory();
                     <p :class="[checkItem == 0 ? 'span-check' : '']">人才库</p>
                     <div :class="[checkItem == 0 ? 'btm-check' : '']"></div>
                 </div>
-                <div class="operation-item" @click="handleItemChange(1)">
+                <div class="operation-item" @click="handleItemChange(1),inviteTalentList()">
                     <p :class="[checkItem == 1 ? 'span-check' : '']">我邀请的</p>
                     <div :class="[checkItem == 1 ? 'btm-check' : '']"></div>
                 </div>
@@ -296,7 +310,7 @@ getPositionCategory();
 
                     <!-- 人名与最高学历 -->
                     <div class="cbleft2 ml-16">
-                        <p class="name fs-18">费小姐</p>
+                        <p class="name fs-18">{{item.userName ? item.userName : '费小姐'}}</p>
                         <div class="description mt-16 cl-ccc">
                             <p class="fs-12">{{ item.userAge ? item.userAge : '24' }}岁</p>
                             <div class="line"></div>
@@ -335,7 +349,7 @@ getPositionCategory();
                         </div>
                         <div class="occupation-item mt-16">
                             <img src="@/assets/images/icon-qianbi.png" class="icon">
-                            <p class="description fs-14 ml-12">{{ item.wishMoney ? item.wishMoney : '3-50k' }}</p>
+                            <p class="description fs-14 ml-12">{{ item.wishMoney ? getMoney(item.wishMoney) : '3-50k' }}</p>
                         </div>
                     </div>
 
@@ -384,7 +398,7 @@ getPositionCategory();
 
                 <!--邀请的列表-->
                 <div class="list">
-                    <div class="item">
+                    <div class="item" v-for="item in invitationList" :key="item.id">
                         <div class="top">
                             <div class="left">
                                 <p>投递职位</p>
@@ -406,9 +420,9 @@ getPositionCategory();
 
                             <!-- 人名与最高学历 -->
                             <div class="cbleft2 ml-16">
-                                <p class="name fs-18">费小姐</p>
+                                <p class="name fs-18">{{item.userName ? item.userName : '费小姐'}}</p>
                                 <div class="description mt-16 cl-ccc">
-                                    <p class="fs-12">{{ '24' }}岁</p>
+                                    <p class="fs-12">{{ item.userAge ? item.userAge:'24' }}岁</p>
                                     <div class="line"></div>
                                     <p class="fs-12">{{ '硕士' }}</p>
                                 </div>
@@ -437,11 +451,11 @@ getPositionCategory();
                                 </div>
                                 <div class="occupation-item mt-12">
                                     <img src="@/assets/images/icon-bangong.png" class="icon">
-                                    <p class="description fs-14 ml-12">{{ '审计专员/助理、物流专员/经理、人事专员/助理、市场营销、行政专员/助理' }}</p>
+                                    <p class="description fs-14 ml-12">{{item.wishPosition ? item.wishPosition : '审计专员/助理、物流专员/经理、人事专员/助理、市场营销、行政专员/助理' }}</p>
                                 </div>
                                 <div class="occupation-item mt-16">
                                     <img src="@/assets/images/icon-qianbi.png" class="icon">
-                                    <p class="description fs-14 ml-12">{{ '3-50k' }}</p>
+                                    <p class="description fs-14 ml-12">{{ getMoney(item.wishMoney) }}</p>
                                 </div>
                             </div>
 

@@ -9,9 +9,7 @@
             <slot name="details"></slot>
         </div>
         <div class="btn mt-20 just-center">
-            <el-button class="" type="success" color="#53afff">
-                {{ title }}
-            </el-button>
+            <slot name="btn"></slot>
         </div>
     </div>
 </template>
@@ -21,9 +19,8 @@ import { toRefs, inject, } from 'vue';
 import type { Ref } from 'vue';
 const props = defineProps<{
     name: number,
-    title: string
 }>()
-const { name, title } = toRefs(props);
+const { name } = toRefs(props);
 
 let selected = inject('selected') as Ref<number>;
 let handleTabClick = inject('handleTabClick') as (name: number) => void;

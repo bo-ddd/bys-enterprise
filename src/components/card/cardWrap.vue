@@ -16,4 +16,8 @@
     padding: 12px;
     border-radius: 5px;
 }
+.crad-wrap:hover{
+    box-shadow:4px 4px 4px 6px rgb(228, 228, 228);
+    color: rgb(85, 85, 245);
+}
 </style>

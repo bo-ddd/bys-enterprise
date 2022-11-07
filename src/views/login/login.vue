@@ -470,6 +470,7 @@ const submitFormForgotPw = async (formEl: FormInstance | undefined) => {
     await formEl.validate((valid, fields) => {
         if (valid) {
             localStorage.setItem('phone',ruleFormForgotPw.phone)
+            localStorage.setItem('smsCode',ruleFormForgotPw.validate)
             next();
         } else {
             console.log('error submit!', fields)
@@ -527,6 +528,7 @@ const submitFormResetPw = async (formEl: FormInstance | undefined) => {
             register({
                 phone:localStorage.getItem('phone'),
                 password: ruleFormResetPw.password,
+                smsCode:localStorage.getItem('smsCode'),
                 loginType: 3,
                 inviteCode: 0,
             })

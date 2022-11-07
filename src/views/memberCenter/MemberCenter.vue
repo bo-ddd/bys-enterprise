@@ -42,34 +42,35 @@
                         </li>
                     </ul>
                 </div>
-                <div class="cate ordinary" >
+                <div class="cate ordinary">
                     <div class="title flex-ja-center fs-24">
                         <p>{{ vipList[0].vipName }}</p>
                     </div>
                     <div class="subheading  flex-wrap">
-                      
-
                     </div>
                     <ul class="">
-                        <li class=" flex-ja-center">
-                            {{ vipList[0].downloadCount }}
+                        <li class=" flex-ja-center fs-18">
+                            <el-icon color="#356ffa" size="22px" v-show="vipList[0].downloadCount"><CircleCheckFilled /></el-icon>
+                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[0].downloadCount)"><CircleCloseFilled /></el-icon>
                         </li>
-                        <li class=" flex-ja-center">
-                            {{ vipList[0].refreshPosition }}
+                        <li class=" flex-ja-center fs-18">
+                            <el-icon color="#356ffa" size="22px" v-show="vipList[0].refreshPosition"><CircleCheckFilled /></el-icon>
+                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[0].refreshPosition)"><CircleCloseFilled /></el-icon>
                         </li>
-                        <li class=" flex-ja-center">
-                            {{ 0 }}
+                        <li class=" flex-ja-center fs-18">
+                            <el-icon color="#356ffa" size="22px" v-show="vipList[0].smsInvitation"><CircleCheckFilled /></el-icon>
+                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[0].smsInvitation)"><CircleCloseFilled /></el-icon>
                         </li>
-                        <li class=" flex-ja-center">
+                        <li class=" flex-ja-center fs-18">
                             {{ vipList[0].positionCount }}
                         </li>
                         <li class=" flex-ja-center">
-                            {{ vipList[0].refreshPositionCount }}
+                            <span class="fs-18">{{ vipList[0].refreshPositionCount }}</span>/日
                         </li>
                         <li class=" flex-ja-center">
-                            {{ vipList[0].invitationTalentCount }}
+                            <span class="fs-18">{{ vipList[0].invitationTalentCount }}</span> /日
                         </li>
-                        <li class=" flex-ja-center">
+                        <li class=" flex-ja-center fs-18">
                             {{ vipList[0].refreshPositionCardCount }}
                         </li>
                     </ul>
@@ -82,43 +83,49 @@
                     <div class="subheading flex-wrap">
                         <p class="fs-12 mt-35"><i class="fs-14">￥</i><span class="fs-24">{{ vipList[1].vipPrice
                         }}</span>/月</p>
-                         <van-button class="btn">立即开通</van-button>
+                        <van-button class="btn">立即开通</van-button>
                     </div>
                     <ul class="">
-                        <li class=" flex-ja-center">
-                            {{ vipList[1].downloadCount }}
+                        <li class=" flex-ja-center fs-18">
+                            <!-- {{ vipList[1].downloadCount? }} -->
+                            <el-icon color="#356ffa" size="22px" v-show="vipList[1].downloadCount"><CircleCheckFilled /></el-icon>
+                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[1].downloadCount)"><CircleCloseFilled /></el-icon>
                         </li>
-                        <li class=" flex-ja-center">
-                            {{ vipList[1].refreshPosition }}
+                        <li class=" flex-ja-center fs-18">
+                            <el-icon color="#356ffa" size="22px" v-show="vipList[1].refreshPosition"><CircleCheckFilled /></el-icon>
+                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[1].refreshPosition)"><CircleCloseFilled /></el-icon>
                         </li>
-                        <li class=" flex-ja-center">
-                            {{ 0 }}
+                        <li class=" flex-ja-center fs-18">
+                            <el-icon color="#356ffa" size="22px" v-show="vipList[1].smsInvitation"><CircleCheckFilled /></el-icon>
+                            <el-icon color="#cfd1d5" size="22px" v-show="!(vipList[1].smsInvitation)"><CircleCloseFilled /></el-icon>
                         </li>
-                        <li class=" flex-ja-center">
+                        <li class=" flex-ja-center fs-18">
                             {{ vipList[1].positionCount }}
                         </li>
                         <li class=" flex-ja-center">
-                            {{ vipList[1].refreshPositionCount }}
+                            <span class="fs-18">{{ vipList[1].refreshPositionCount }}</span> /日
                         </li>
                         <li class=" flex-ja-center">
-                            {{ vipList[1].invitationTalentCount }}
+                            <span class="fs-18">{{ vipList[1].invitationTalentCount }}</span> /日
                         </li>
-                        <li class=" flex-ja-center">
+                        <li class=" flex-ja-center fs-18">
                             {{ vipList[1].refreshPositionCardCount }}
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
+        <FooterBar class="mt-60"></FooterBar>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useVipStore } from "@/stores/vip";
-import { reactive,} from "vue";
+import { reactive, } from "vue";
 import { useRouter } from 'vue-router';
+import FooterBar from '@/components/footer/footerBar.vue'
 let router = useRouter();
-let vipList:any = reactive([]);
+let vipList: any = reactive([]);
 let useVip = useVipStore();
 let getVip = async () => {
     let res = await useVip.getVip({});
@@ -159,8 +166,8 @@ let ulList = [
         title: '职位自动刷新卡'
     },
 ]
-let handle = function(index:number):void{
-    router.push({ path: '/MemberDetails', query:vipList[index]})
+let handle = function (index: number): void {
+    router.push({ path: '/MemberDetails', query: vipList[index] })
 }
 
 </script>
@@ -256,7 +263,9 @@ let handle = function(index:number):void{
 
                 ul {
                     li {
-                        line-height: 60px;
+                        $height:60px;
+                        height: $height;
+                        line-height: $height;
                         border-top: 1px solid #ededed;
                     }
                 }
@@ -266,7 +275,7 @@ let handle = function(index:number):void{
                 .title {
                     background-color: rgb(248, 252, 255);
                 }
-                
+
             }
 
             .ordinary:hover {
@@ -281,14 +290,14 @@ let handle = function(index:number):void{
                 .title {
                     background-color: rgb(245, 245, 245);
                 }
-                .btn{
+
+                .btn {
                     padding: 6px 40px;
-                    border-radius:4px ;
-                    background: linear-gradient(146deg,#ffe7cc,#e2ad7d);
+                    border-radius: 4px;
+                    background: linear-gradient(146deg, #ffe7cc, #e2ad7d);
                 }
             }
         }
     }
 }
-
 </style>

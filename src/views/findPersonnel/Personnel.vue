@@ -140,6 +140,9 @@ let getTalentList = async () => {
     }
     obj['pageIndex'] = paging.pageIndex;
     obj['pageSize'] = 10;
+    console.log('-------这个是获取人才------');
+    console.log(obj);
+    console.log(form);
     let res = await PersonStore.getTalentList(obj);
     if (res.code != 200) return;
     talentList.length = 0;
@@ -198,7 +201,6 @@ let getPositionCategory = async ()=>{
             child['positionTypeName'] = child['positionName'];
         })
     });
-    console.log(data);
     positionCategoryList.push(...(data));
 }
 getPositionCategory();

@@ -217,5 +217,12 @@ export default {
        */
       getPosition:(params)=>{
         return axios.post('/drop/getPosition',params,postConfig);
-      }
+      },
+
+      /**
+       *批量修改状态
+       */
+     modifyResumeStatus:(params)=>{
+        return axios.post('/company/modifyResumeStatus',params,postConfig)
+     }
 }

@@ -25,6 +25,7 @@ let inviationNumber = ref(0);//这个是当日邀请次数
 
 let invitationUserId = ref();//邀请的人才id；
 
+let checkPosition = ref();//邀请人才干什么活
 let paging = reactive({
     total: 100,
     pageSize: 10,
@@ -139,6 +140,9 @@ let getTalentList = async () => {
     }
     obj['pageIndex'] = paging.pageIndex;
     obj['pageSize'] = 10;
+    console.log('-------这个是获取人才------');
+    console.log(obj);
+    console.log(form);
     let res = await PersonStore.getTalentList(obj);
     if (res.code != 200) return;
     talentList.length = 0;
@@ -191,8 +195,13 @@ let getPositionCategory = async ()=>{
     // positionTypeId: "1"
     // positionTypeName: "互联网"
     // sortId: 1
-    console.log(res.data);
-    positionCategoryList.push(...(res.data));
+    let data = res.data;
+    data.forEach(item => {
+        item.positionDownList.forEach(child=>{
+            child['positionTypeName'] = child['positionName'];
+        })
+    });
+    positionCategoryList.push(...(data));
 }
 getPositionCategory();
 </script>
@@ -244,7 +253,7 @@ getPositionCategory();
                         <el-option v-for="item in majorArr" :key="item.sortId" :label="item.professionalName"
                             :value="item.sortId" />
                     </el-select>
-                    <el-cascader v-model="form.industry" :props="{'children':'positionDownList','label':'positionTypeName','value':'positionTypeId'}"	 class="check-education mr-30" :options="positionCategoryList" clearable />
+                    <el-cascader v-model="form.industry" placeholder="意向职位" :props="{'children':'positionDownList','label':'positionTypeName','value':'positionTypeId'}"	 class="check-education mr-30" :options="positionCategoryList" clearable />
                 </div>
                 <div class="filter-wrap-btm">
                     <div class="check">
@@ -472,7 +481,7 @@ getPositionCategory();
             </div>
             <p class="fs-12 mt-10 post-tips">投递岗位</p>
             <!-- 投递的岗位 -->
-            <el-select v-model="form.checkPosition" class="m-2 check-position mr-30" placeholder="意向职位选择" size="large">
+            <el-select v-model="checkPosition" class="m-2 check-position mr-30" placeholder="意向职位选择" size="large">
                 <el-option v-for="item in positionArr" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
             <!-- 邀请方式 -->

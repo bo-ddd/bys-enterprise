@@ -26,15 +26,17 @@
                 <span class="count mr-15 fs-18"> {{ list.refreshPositionCardCount * count }}</span>
             </li>
         </ul>
-        <div class="buy c-ff4400 fs-14">
+        <div class="buy align-center c-ff4400 fs-14">
             <span class=" fs-28 fw-700"> {{ Number(list.vipPrice) * count }}</span>
             元
+            <p v-if="list.vipDiscountPrice != null" class="fs-12 c-8d9ea7 buy-discount">{{list.vipDiscountPrice }}折</p>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { toRefs, inject, type Ref, } from 'vue';
+import { toRefs, inject, } from 'vue';
+import type {Ref} from 'vue'
 
 const props = defineProps<{
     list: any,
@@ -103,6 +105,11 @@ let handleTabItemClick = function () {
 
     .buy {
         margin: 16px 0 32px 4px;
+        gap: 5px;
+        .buy-discount{
+            width: 30px;
+            border: 1px solid #8d9ea7;
+        }
     }
 }
 </style>

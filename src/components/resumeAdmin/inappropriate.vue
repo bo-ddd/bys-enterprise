@@ -33,6 +33,7 @@ import footerBar from "@/components/footer/footerBar.vue";
 import { useEnterpriseStore } from "@/stores/enterprise"
 let enterprise = useEnterpriseStore();
 let resumeList:any = ref([]);
+
 let getResume = async () => {
     let res = await enterprise.getResume({
         userId: 10000,
@@ -45,7 +46,7 @@ let getResume = async () => {
         console.log("error");
     }
 }
-// getResume();
+getResume();
 
 /**
  * 恢复为候选人
@@ -77,5 +78,6 @@ let getResume = async () => {
 <style lang="scss" scoped>
 .inappropriate {
     padding: 30px 150px;
+    min-height: calc(100vh - 260px);
 }
 </style>

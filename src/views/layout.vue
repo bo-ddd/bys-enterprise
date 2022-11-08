@@ -49,6 +49,10 @@ const outLogin = () => {
   router.push({ path: '/' })
 }
 
+
+const dialogFormVisible = ref(false)
+
+
 </script>
 
 <template>
@@ -75,20 +79,43 @@ const outLogin = () => {
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item >修改密码</el-dropdown-item>
+              <el-dropdown-item @click="dialogFormVisible = true">修改密码</el-dropdown-item>
               <el-dropdown-item >联系客服</el-dropdown-item>
               <el-dropdown-item @click="outLogin" >退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
       </div>
+
+      <el-dialog width="400px" v-model="dialogFormVisible" title="修改密码"  align-center>
+    <el-form>
+      <el-steps :active="1" align-center>
+    <el-step title="验证手机号"/>
+    <el-step title="重置密码"/>
+  </el-steps>
+
+  
+
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">
+          Confirm
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
     </div>
   </header>
   <RouterView />
 </template>
 
+
 <style lang="scss" scoped>
-// main
+:deep(.el-dialog__header){
+  text-align: center;
+}
 .c-dadada {
   color: #dadada;
 }

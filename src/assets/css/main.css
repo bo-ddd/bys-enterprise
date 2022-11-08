@@ -307,6 +307,9 @@ body {
 .c-515a6e {
     color: #515a6e;
 }
+.cursor-p{
+    cursor: pointer;
+}
 
 .over-hidden {
     overflow: hidden;

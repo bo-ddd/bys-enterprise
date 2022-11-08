@@ -224,5 +224,11 @@ export default {
        */
      modifyResumeStatus:(params)=>{
         return axios.post('/company/modifyResumeStatus',params,postConfig)
+     },
+     /**
+       *支付宝支付
+       */
+     modifyResumeStatus:(params)=>{
+        return axios.post('/pay',params,postConfig)
      }
 }

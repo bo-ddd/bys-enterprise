@@ -13,10 +13,5 @@ export const useUserStore = defineStore("user", () => {
   function login(payload: Login) {
     return Api.login(payload);
   }
-
-  let getCompanyCommon = (payload:Number) =>{
-    return Api.getCompanyCommon(payload);
-  }
-
-  return { login ,getCompanyCommon};
+  return { login };
 });

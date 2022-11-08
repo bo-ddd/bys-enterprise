@@ -28,14 +28,14 @@ let invitationUserId = ref();//邀请的人才id；
 let checkPosition = ref();//邀请人才干什么活
 let paging = reactive({
     total: 100,
-    pageSize: 10,
+    pageSize: 3,
     pageIndex: 1,
 });//邀请人员分页
 
 //邀请人员后一个页面的分页
 let pagingInvite = reactive({
     total: 100,
-    pageSize: 10,
+    pageSize: 3,
     pageIndex: 1,
 })
 
@@ -142,7 +142,7 @@ let getTalentList = async () => {
         }
     }
     obj['pageIndex'] = paging.pageIndex;
-    obj['pageSize'] = 10;
+    obj['pageSize'] = paging.pageSize;
     console.log('-------这个是获取人才------');
     console.log(obj);
     console.log(form);
@@ -151,6 +151,7 @@ let getTalentList = async () => {
     talentList.length = 0;
     talentList.push(...(res.data).talentList);
     paging.total = res.data.totalCount;
+    console.log(paging);
     console.log(res.data.talentList);
 }
 getTalentList();
@@ -365,7 +366,7 @@ let getMoney = (data:string)=>{
             <div class="page-wrap wrap mt-48">
                 <div class="page-content">
                     <el-pagination v-model:current-page="paging.pageIndex" :background="true" :pager-count="7"
-                        layout="prev, pager, next" :total="paging.total" />
+                      v-model:page-size="paging.pageSize"  layout="prev, pager, next" :total="paging.total" />
                 </div>
             </div>
         </div>
@@ -470,7 +471,7 @@ let getMoney = (data:string)=>{
                 <div class="page-wrap wrap mt-48">
                     <div class="page-content">
                         <el-pagination v-model:current-page="pagingInvite.pageIndex" :background="true" :pager-count="7"
-                            layout="prev, pager, next" :total="pagingInvite.total" />
+                        v-model:page-size="pagingInvite.pageSize" layout="prev, pager, next" :total="pagingInvite.total" />
                     </div>
                 </div>
             </div>

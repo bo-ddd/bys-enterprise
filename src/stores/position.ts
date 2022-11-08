@@ -9,7 +9,8 @@ export interface PositionParam {
 };
 interface Res{
     code:number,
-    data:any
+    data:any,
+    msg:string
 }
 export const usePositionStore = defineStore("position", () => {
 

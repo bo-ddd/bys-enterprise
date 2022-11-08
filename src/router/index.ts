@@ -21,6 +21,11 @@ const router = createRouter({
           component: () => import('@/views/positionAdmin/PositionInfo.vue')
         },
         {
+          path: '/positionDetails',
+          name: 'positionDetails',
+          component: ()=> import('@/views/positionAdmin/positionDetails.vue')
+        },
+        {
           path: '/memberCenter',
           name: 'MemberCenter',
           component: () => import('@/views/memberCenter/MemberCenter.vue')
@@ -67,11 +72,6 @@ const router = createRouter({
       name: 'EnterpriseRegistra',
       component: ()=> import('@/views/enterpriseRegistra/enterpriseRegistra.vue')
     },
-    {
-      path: '/positionDetails',
-      name: 'positionDetails',
-      component: ()=> import('@/views/positionAdmin/positionDetails.vue')
-    }
   ]
 })
 

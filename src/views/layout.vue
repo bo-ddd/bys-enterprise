@@ -204,6 +204,7 @@ const dialogFormVisible = ref(false)
 
   &>.seek-advice {
     padding: 10px 10px 6px;
+    background: #fff;
 
     &>img {
       width: 38px;

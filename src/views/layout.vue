@@ -2,9 +2,9 @@
 import { ref, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import type { TabsPaneContext } from 'element-plus'
-const activeName = ref('home');
 let route = useRoute();
 let router = useRouter();
+const activeName = ref(route.path);
 let showGuid = ref(false);//展示导航
 //是否展开导航
 let handleGuideChange = (bool: boolean) => {
@@ -38,11 +38,11 @@ let list = reactive([
   },
 ])
 
-const activeIndex = ref(1);
+const activeIndex = ref(route.path);
 
 const handleSelect = (key: any) => {
   activeName.value = key.url;
-  activeIndex.value = key.id;
+  activeIndex.value = key.url;
   if (route.name != key.url) {
     router.push({
       path: key.url
@@ -70,7 +70,7 @@ const dialogFormVisible = ref(false)
         </div>
         <!-- 菜单 -->
         <el-menu :ellipsis="false" :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
-          <el-menu-item v-for="item in list" :key="item.id" :index="item.id" @click="handleSelect(item)">{{ item.title
+          <el-menu-item v-for="item in list" :key="item.url" :index="item.url" @click="handleSelect(item)">{{ item.title
           }}</el-menu-item>
         </el-menu>
       </div>

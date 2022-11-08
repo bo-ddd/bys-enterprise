@@ -1,5 +1,21 @@
 <template>
   <div class="position-info position-wrap">
+    <div class="head-tip">
+      <div class="tip-box warning">
+        <!-- <div> -->
+        <!-- <el-icon size="28" color="#19be6b"><CircleCheck /></el-icon> -->
+        <el-icon size="28px" color="#f90">
+          <Warning />
+        </el-icon>
+        <!-- </div> -->
+        <div>
+          <!-- <div class="title">审核状态：已通过</div>
+          <div class="text">该职位已通过审核，该职业会在招聘会上展示。</div>-->
+          <div class="title">审核状态：审核中</div>
+          <div class="text">您的信息已提交，平台将在当天完成审核，请注意刷新页面。关注最新动态，反馈招聘需求和问题，请扫右方二位码入群或添加下方小助理微信。</div>
+        </div>
+      </div>
+    </div>
     <div class="title mb-40 mt-65">职位信息</div>
     <el-form
       ref="ruleFormRef"
@@ -27,6 +43,7 @@
             :options="industryArr"
             @change="handleChange"
             placeholder="请选择职业类别"
+            disabled
           />
         </el-form-item>
       </div>
@@ -34,22 +51,22 @@
         <span class="mr-10">工作性质</span>
 
         <el-form-item prop="positionNature">
-          <el-radio-group v-model="ruleForm.data.positionNature">
+          <el-radio-group :v-model="1">
             <el-radio
-              @click="select(0)"
               :class="{'active':activeNum==0||activeNum==-1}"
               class="select-btn"
               label="0"
               size="large"
               border
+              disabled
             >全职</el-radio>
             <el-radio
-              @click="select(1)"
               :class="{'active':activeNum==1}"
               class="select-btn"
               label="1"
               size="large"
               border
+              disabled
             >实习</el-radio>
           </el-radio-group>
         </el-form-item>
@@ -268,7 +285,7 @@
           />
         </el-form-item>
       </div>
-      <div class="submit-btn mtb-65" @click="submitForm(ruleFormRef)">发布</div>
+      <div class="submit-btn mtb-65" @click="submitForm(ruleFormRef)">保存</div>
     </el-form>
   </div>
   <FooterBar></FooterBar>
@@ -276,12 +293,17 @@
 <script lang="ts" setup>
 import { ElMessage } from "element-plus";
 import FooterBar from "@/components/footer/footerBar.vue";
-import { computed, reactive, ref } from "vue";
+import { onMounted, computed, reactive, ref, inject } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
 import { usePositionStore } from "@/stores/position.js";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import cityData from "@/assets/json/citydata.json";
+
 const router = useRouter();
+const route = useRoute();
+onMounted(() => {
+  console.log(route.query);
+});
 let use = usePositionStore();
 interface Res {
   code: number;
@@ -310,7 +332,7 @@ const dayArr = ref([]);
 const monthArr = ref([]);
 const ruleForm = reactive({
   data: {
-    positionNature: 0, //工作性质
+    positionNature: 1, //工作性质
     positionName: "", //职位名称
     positionPositive: "", //是否转正
     salaryStart: "", //薪资始
@@ -643,7 +665,7 @@ const addPosition = async function (params: any) {
   } else {
     ElMessage({
       type: "warning",
-      message: "新增失败"+res.msg,
+      message: "新增失败" + res.msg,
     });
   }
 };
@@ -680,6 +702,37 @@ const to = function (path: string) {
   font-size: 14px;
   box-sizing: border-box;
   color: #515a6e;
+  .head-tip {
+    padding-left: 20px;
+    .tip-box {
+      width: 70%;
+      border-radius: 4px;
+      color: #515a6e;
+      display: flex;
+      gap: 0 20px;
+      align-items: center;
+      margin-top: 20px;
+      box-sizing: border-box;
+      padding: 18px 16px 18px 25px;
+      .title {
+        font-size: 14px;
+        color: #17233d;
+        font-weight: 400;
+      }
+      .text {
+        margin-top: 4px;
+        font-size: 12px;
+      }
+    }
+    .success {
+      border: 1px solid #8ce6b0;
+      background-color: #edfff3;
+    }
+    .warning {
+      border: 1px solid #ffd77a;
+      background-color: #fff9e6;
+    }
+  }
   :deep(input) {
     height: 38px;
     box-sizing: border-box;
@@ -709,8 +762,6 @@ const to = function (path: string) {
     border-radius: 4px;
   }
   .select-btn {
-    // display: flex;
-    // justify-content: center;
     width: 124px;
     height: 40px;
     text-align: center;

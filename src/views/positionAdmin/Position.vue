@@ -74,8 +74,10 @@
                 </div>
               </div>
               <div class="refresh-info align-center">
-                <el-button color="#356ffa" plain>自动刷新</el-button>
-                <el-button color="#356ffa">刷新</el-button>
+                <el-button v-if="item.positionStatus==1" color="#a8abb2" plain disabled>自动刷新</el-button>
+                <el-button v-else color="#356ffa" plain>自动刷新</el-button>
+                <el-button v-if="item.positionStatus==1" color="#a8abb2" plain disabled>刷新</el-button>
+                <el-button v-else color="#356ffa">刷新</el-button>
               </div>
             </div>
             <div class="edit-job just-between fs-14">
@@ -84,7 +86,7 @@
                 <span>&nbsp; {{item.createTime}}</span>
               </div>
               <div class="align-center">
-                <div class="cur-po" @click="setPosition(item)">编辑</div>
+                <div class="cur-po" @click="setPosition(item.positionId)">编辑</div>
                 <div class="bor"></div>
                 <div class="cur-po" @click="setPositionStatus(item.positionId,3)">停止招聘</div>
                 <div class="bor"></div>
@@ -189,8 +191,9 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import { usePositionStore } from "@/stores/position";
 import { useHomeStore } from "@/stores/home";
 import FooterBar from "@/components/footer/footerBar.vue";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, provide } from "vue";
 import { useRouter } from "vue-router";
+import { Position } from "@element-plus/icons-vue";
 let use = usePositionStore();
 let { getEnterprise } = useHomeStore();
 const recruitNum = ref(0);
@@ -260,11 +263,11 @@ let getPositionList = async function () {
   });
 
   if (res.code == 200) {
-    positionList.value = res.data?res.data.data:[];
-    recruitNum.value = res.data?res.data.maxCount:0;;
+    positionList.value = res.data ? res.data.data : [];
+    recruitNum.value = res.data ? res.data.maxCount : 0;
   }
   if (res2.data.sevenRefreshPositionCount) {
-    orderNum.value = res2.data?res2.data.sevenRefreshPositionCount:0;
+    orderNum.value = res2.data ? res2.data.sevenRefreshPositionCount : 0;
   }
 };
 //获取下线分页数据
@@ -276,8 +279,8 @@ const getDownList = async function () {
     positionStatus: 3,
   });
   if (res.code == 200) {
-    downNum.value = res.data?res.data.maxCount:0;
-    downPositionList.value = res.data?res.data.data:[];
+    downNum.value = res.data ? res.data.maxCount : 0;
+    downPositionList.value = res.data ? res.data.data : [];
     console.log(res);
     console.log(downPositionList);
   }
@@ -334,11 +337,12 @@ const to = function (path: string) {
     path,
   });
 };
-const setPosition = function (info: any) {
+// provide('positionDetail',666);
+const setPosition = function (id: any) {
   router.push({
-    path: "/postionDetails",
+    path: "/positionDetails",
     query: {
-      // info: info,
+      positionId:id
     },
   });
 };

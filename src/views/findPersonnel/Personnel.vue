@@ -236,18 +236,18 @@ let getMoney = (data:string)=>{
         </div>
 
         <!-- 这个是疑问咨询的图片 -->
-        <div :class="['consulting-service', 'absolute-wrap', showGuid ? 'close-animate' : 'show-animate']">
+        <!-- <div :class="['consulting-service', 'absolute-wrap', showGuid ? 'close-animate' : 'show-animate']">
             <div class="top">
                 <img src="@/assets/images/company_fanjia_3.png" class="or-code">
                 <p class="tip fs-12">如有任何疑问请咨询</p>
             </div>
             <img src="@/assets/images/icon-close.png" @click="handleGuideChange(true)">
-        </div>
+        </div> -->
 
         <!-- 这个是点击弹出咨询的容器 -->
-        <div class="seek-advice absolute-wrap box-shadow" v-show="showGuid" @click="handleGuideChange(false)">
+        <!-- <div class="seek-advice absolute-wrap box-shadow" v-show="showGuid" @click="handleGuideChange(false)">
             <img src="@/assets/images/icon-kefu.png">
-        </div>
+        </div> -->
 
         <!-- 人才数据的页面 -->
         <div class="talent-pool-wrap" v-show="checkItem == 0">

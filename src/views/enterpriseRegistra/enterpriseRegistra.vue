@@ -62,13 +62,14 @@
                         <el-input class="el-input_560-40" v-model="form.companyAddr" />
                     </el-form-item>
 
-                    <!-- 禁用状态的选择器 disabled -->
-                    <el-form-item label="所属行业">
+                    <!-- <el-form-item label="所属行业">
                         <el-select v-model="forbidden" placeholder="Select">
                             <el-option v-for="item in BelongingToIndustry" :key="item.value" :label="item.label"
                                 :value="item.value" />
                         </el-select>
-                    </el-form-item>
+                    </el-form-item> -->
+                    <!-- 禁用状态的选择器 disabled -->
+                    
 
                     <!-- 正常状态的选择器 -->
                     <el-form-item label="企业性质">
@@ -188,7 +189,8 @@
 
                         <div class="align-center">
                             <el-form-item label="学校">
-                                <el-select size="large" class="school-input" v-model="schoolListVal" multiple placeholder="Select">
+                                <el-select size="large" class="school-input" v-model="schoolListVal" multiple
+                                    placeholder="Select">
                                     <el-option v-for="item in schoolList" :key="item.sortId" :label="item.schoolName"
                                         :value="item.schoolId" />
                                 </el-select>
@@ -286,9 +288,15 @@ let getPositionList = async function () {
  * setModifyEnterpriseInfo();
  */
 
+// 所属行业
+const BelongingToIndustry = ref([]);
+
 // 调用 获取所属行业下拉框接口 报错
 let getIndustryList = async function () {
     let res = await use.getIndustryList();
+    console.log('所属行业的数据', res.data)
+    Object.assign(BelongingToIndustry, res.data)
+
 }
 getIndustryList();
 
@@ -313,13 +321,13 @@ const handleDownload = (file: UploadFile) => {
 
 
 // 所属行业
-const forbidden = ref('Option1');
+const forbidden = ref('');
 // 企业性质
 const enterpriseNatureVal = ref('其他')
 // 企业规模
-const enterpriseScaleVal = ref('')
+const enterpriseScaleVal = ref('100-499人')
 // 企业标签
-const enterpriseLabelVal = ref('')
+const enterpriseLabelVal = ref('其他')
 
 // 企业性质
 interface EnterpriseNature {
@@ -366,29 +374,6 @@ let getEnterpriseTagList = async function () {
 }
 getEnterpriseTagList();
 
-// 所属行业
-const BelongingToIndustry = [
-    {
-        value: 'Option1',
-        label: 'Option1',
-    },
-    {
-        value: 'Option2',
-        label: 'Option2',
-    },
-    {
-        value: 'Option3',
-        label: 'Option3',
-    },
-    {
-        value: 'Option4',
-        label: 'Option4',
-    },
-    {
-        value: 'Option5',
-        label: 'Option5',
-    },
-]
 
 const schoolListVal = ref([]);
 // 学校列表
@@ -422,6 +407,7 @@ getSchoolList();
     width: 240px;
     height: 40px;
 }
+
 :deep(.school-input) {
     max-width: 240px !important;
 }

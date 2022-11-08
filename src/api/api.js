@@ -230,5 +230,11 @@ export default {
        */
      modifyResumeStatus:(params)=>{
         return axios.post('/pay',params,postConfig)
-     }
+     },
+     /**
+       * 修改职位状态
+       */
+      modifyPositionStatus:(params)=>{
+        return axios.post('/company/modifyPositionStatus',params,postConfig)
+      },
 }

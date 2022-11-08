@@ -237,4 +237,10 @@ export default {
       modifyPositionStatus:(params)=>{
         return axios.post('/company/modifyPositionStatus',params,postConfig)
       },
+      /**
+        * 获取职位信息
+        */
+       getPositionDetail:(params)=>{
+         return axios.post('/company/getPositionById',params,postConfig)
+       },
 }

@@ -21,18 +21,18 @@
         <div class="mt-20">
             <PaymentSwitch.Wrap v-model="selectPayment" @handPaymentClick="isPaymentActive">
                 <!-- 1 支付宝  2 对公转账 -->
-                <PaymentSwitch.Item :name="1" >
+                <PaymentSwitch.Item :name="1">
                     <template #logo>
                         <img class="icon-alipay" src="@/assets/images/alipay.png" alt="">
                     </template>
                     <template #btn>
-                        <el-button @click="toPayment" :disabled="selectPayment == 1? false : true" class="" type="success"
-                            color="#53afff">
+                        <el-button @click="toPayment" :disabled="selectPayment == 1 ? false : true" class=""
+                            type="success" color="#53afff">
                             支付宝支付
                         </el-button>
                     </template>
                 </PaymentSwitch.Item>
-                <PaymentSwitch.Item :name="2" >
+                <PaymentSwitch.Item :name="2">
                     <template #logo>
                         <div v-if="selectPayment == 2">
                             <img class="icon-company" src="@/assets/images/company_fanjia_3.png" alt="">
@@ -46,12 +46,14 @@
                         <p v-if="selectPayment == 2" class="public-details fs-14 c-8d9ea7">对公转账的细节请询问您的专属客服</p>
                     </template>
                     <template #btn>
-                       <span class="fs-14 c-515a6e cursor-p">对公转账</span>
+                        <span class="fs-14 c-515a6e cursor-p">对公转账</span>
                     </template>
                 </PaymentSwitch.Item>
             </PaymentSwitch.Wrap>
-            <p class="mt-30 fs-12 flex-ja-center c-8d9ea7"> <span class="agreement cursor-p">毕业申增值服务协议</span>》 </p>
+            <p class="mt-30 fs-12 flex-ja-center c-8d9ea7"> 付费即表示同意《 <span class="agreement cursor-p">毕业申增值服务协议</span>》
+            </p>
         </div>
+        <div class="div" v-html="params"></div>
         <FooterBar class="mt-60"></FooterBar>
     </div>
 </template>
@@ -61,7 +63,11 @@ import VipSwitch from '@/components/vipSwitch'
 import PaymentSwitch from '@/components/paymentSwitch'
 import FooterBar from '@/components/footer/footerBar.vue'
 import { ref } from '@vue/reactivity';
-import { useRouter,useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+import { usePaymentStore } from '@/stores/payment'
+// 支付接口
+let payment = usePaymentStore();
+// 路由
 let router = useRouter();
 let route = useRoute();
 // vip
@@ -76,12 +82,34 @@ let selectPayment = ref(1);
 let isPaymentActive = function (name: number): void {
     selectPayment.value = name
 }
-
-let toPayment = function(){
-    router.push({path:'/payment'})
-}
 let data = route.query as any;
 console.log(data);
+let order = {
+    orderPrice: selectPayment.value * data.vipPrice,
+    vipName: data.vipName,
+    vipCount: selectPayment.value,
+    vipLevel:Number(data.vipLevel)
+}
+let params =ref('');
+let toPayment = function () {
+    let usePayment = async(options:any)=>{
+        let res = await payment.payment(options);
+        console.log(res);
+        if(res.code==200){
+            // router.push({ path: '/payment', query: { ...order } })
+            params = res.data
+        }
+    }
+    console.log('--------params----------------')
+    console.log(params)
+    usePayment({
+        userId:10000,
+        companyId:10000,
+        month:selectPayment.value,
+        vipId:Number(data.vipLevel) 
+})
+}
+
 </script>
 
 <style lang="scss" scoped>

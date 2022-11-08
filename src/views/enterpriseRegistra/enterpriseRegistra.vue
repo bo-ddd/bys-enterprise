@@ -2,7 +2,7 @@
     <div class="enterprise-registra">
         <div class="wrap container">
             <div class="title-wrap">
-                <h2>企业信息编辑</h2>
+                <h2>注册企业信息编辑</h2>
             </div>
             <el-form :model="form" label-width="120px">
                 <div class="form">
@@ -54,7 +54,7 @@
 
                     <!-- 企业注册地区 -->
                     <el-form-item label="企业注册地区">
-                        <el-cascader :options="RegisteredArea" clearable />
+                        <el-cascader class="el-input_240" :options="RegisteredArea" clearable />
                     </el-form-item>
 
                     <!-- 详细注册地址 -->
@@ -62,31 +62,32 @@
                         <el-input class="el-input_560-40" v-model="form.companyAddr" />
                     </el-form-item>
 
-                    <!-- 禁用状态的选择器 disabled -->
-                    <el-form-item label="所属行业">
-                        <el-select class="el" v-model="forbidden" placeholder="Select">
+                    <!-- <el-form-item label="所属行业">
+                        <el-select v-model="forbidden" placeholder="Select">
                             <el-option v-for="item in BelongingToIndustry" :key="item.value" :label="item.label"
                                 :value="item.value" />
                         </el-select>
-                    </el-form-item>
+                    </el-form-item> -->
+                    <!-- 禁用状态的选择器 disabled -->
+                    
 
                     <!-- 正常状态的选择器 -->
                     <el-form-item label="企业性质">
-                        <el-select v-model="enterpriseNatureVal" class="m-2" placeholder="Select" size="large">
+                        <el-select v-model="enterpriseNatureVal" placeholder="Select" size="large">
                             <el-option v-for="item in enterpriseNature" :key="item.value" :label="item.label"
                                 :value="item.value" />
                         </el-select>
                     </el-form-item>
 
                     <el-form-item label="企业规模">
-                        <el-select v-model="enterpriseScaleVal" class="m-2" placeholder="Select" size="large">
+                        <el-select v-model="enterpriseScaleVal" placeholder="Select" size="large">
                             <el-option v-for="item in enterpriseScale" :key="item.value" :label="item.label"
                                 :value="item.value" />
                         </el-select>
                     </el-form-item>
 
                     <el-form-item label="企业标签">
-                        <el-select v-model="enterpriseLabelVal" class="m-2" placeholder="Select" size="large">
+                        <el-select v-model="enterpriseLabelVal" placeholder="Select" size="large">
                             <el-option v-for="item in enterpriseLabel" :key="item.value" :label="item.label"
                                 :value="item.value" />
                         </el-select>
@@ -104,7 +105,7 @@
                     <div class="align-center">
                         <el-form-item label="营业执照"></el-form-item>
                         <div>
-                            <el-upload action="#" list-type="picture-card" :auto-upload="false">
+                            <el-upload action="#" :on-success="abc" list-type="picture-card" :auto-upload="false">
                                 <el-icon>
                                     <Plus />
                                 </el-icon>
@@ -134,11 +135,11 @@
                                     </div>
                                 </template>
                             </el-upload>
-                            <div>
+                            <div class="business-license_test mt-10">
                                 <p>
-                                    请上传清晰的营业执照, 执照中的<span>社会信用代码、企业名称</span>需与上方填写的一致。
+                                    请上传清晰的营业执照, 执照中的<b>社会信用代码、企业名称</b>需与上方填写的一致。
                                 </p>
-                                <p>图片大小不可超过<span>2M</span>, 格式为jpg,jpeg或png</p>
+                                <p>图片大小不可超过<b>2M</b>, 格式为jpg,jpeg或png</p>
                             </div>
                         </div>
                     </div>
@@ -188,7 +189,8 @@
 
                         <div class="align-center">
                             <el-form-item label="学校">
-                                <el-select v-model="schoolListVal" multiple placeholder="Select">
+                                <el-select size="large" class="school-input" v-model="schoolListVal" multiple
+                                    placeholder="Select">
                                     <el-option v-for="item in schoolList" :key="item.sortId" :label="item.schoolName"
                                         :value="item.schoolId" />
                                 </el-select>
@@ -253,6 +255,9 @@ function add(file: any) {
     console.log(file)
 }
 
+function abc(value: any) {
+    console.log(value)
+}
 // 点击提交按钮走的方法
 const onSubmit = () => {
     console.log(form)
@@ -283,9 +288,15 @@ let getPositionList = async function () {
  * setModifyEnterpriseInfo();
  */
 
+// 所属行业
+const BelongingToIndustry = ref([]);
+
 // 调用 获取所属行业下拉框接口 报错
 let getIndustryList = async function () {
     let res = await use.getIndustryList();
+    console.log('所属行业的数据', res.data)
+    Object.assign(BelongingToIndustry, res.data)
+
 }
 getIndustryList();
 
@@ -310,13 +321,13 @@ const handleDownload = (file: UploadFile) => {
 
 
 // 所属行业
-const forbidden = ref('Option1');
+const forbidden = ref('');
 // 企业性质
 const enterpriseNatureVal = ref('其他')
 // 企业规模
-const enterpriseScaleVal = ref('')
+const enterpriseScaleVal = ref('100-499人')
 // 企业标签
-const enterpriseLabelVal = ref('')
+const enterpriseLabelVal = ref('其他')
 
 // 企业性质
 interface EnterpriseNature {
@@ -363,29 +374,6 @@ let getEnterpriseTagList = async function () {
 }
 getEnterpriseTagList();
 
-// 所属行业
-const BelongingToIndustry = [
-    {
-        value: 'Option1',
-        label: 'Option1',
-    },
-    {
-        value: 'Option2',
-        label: 'Option2',
-    },
-    {
-        value: 'Option3',
-        label: 'Option3',
-    },
-    {
-        value: 'Option4',
-        label: 'Option4',
-    },
-    {
-        value: 'Option5',
-        label: 'Option5',
-    },
-]
 
 const schoolListVal = ref([]);
 // 学校列表
@@ -403,8 +391,25 @@ getSchoolList();
 </script>
 
 <style lang="scss" scoped>
+.business-license_test {
+    color: #808695;
+}
+
 .ml-16 {
     margin-left: 16px;
+}
+
+:deep(.el-input__inner) {
+    height: 40px;
+}
+
+:deep(.el-input_240) {
+    width: 240px;
+    height: 40px;
+}
+
+:deep(.school-input) {
+    max-width: 240px !important;
 }
 
 :deep(.el-select) {

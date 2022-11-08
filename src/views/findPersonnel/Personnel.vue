@@ -28,14 +28,14 @@ let invitationUserId = ref();//邀请的人才id；
 let checkPosition = ref();//邀请人才干什么活
 let paging = reactive({
     total: 100,
-    pageSize: 10,
+    pageSize: 3,
     pageIndex: 1,
 });//邀请人员分页
 
 //邀请人员后一个页面的分页
 let pagingInvite = reactive({
     total: 100,
-    pageSize: 10,
+    pageSize: 3,
     pageIndex: 1,
 })
 
@@ -77,11 +77,14 @@ let wishMoneyLeftList = reactive<any[]>([]);//这个是期望薪资左边的列�
 let wishMoneyRightList = reactive<any[]>([]);//这个是期望薪资右边的列表
 let talentList = reactive<any[]>([]);//这个是人才列表
 let positionCategoryList = reactive<any[]>([]);//这个是获取职位类别的数组
+let invitationList = reactive<any[]>([]);//这个是邀请人才的列表
 //这个是学历的列表
 let getEducationList = async () => {
     let res = await PersonStore.getEducation();
     if (res.code !== 200) return;
     let resData = (res.data).reverse();//获取学历数据
+    console.log('学历列表');
+    console.log(resData);
     educationArr.push(...resData);
 }
 getEducationList();//调用获取学历列表
@@ -139,20 +142,25 @@ let getTalentList = async () => {
         }
     }
     obj['pageIndex'] = paging.pageIndex;
-    obj['pageSize'] = 10;
+    obj['pageSize'] = paging.pageSize;
+    console.log('-------这个是获取人才------');
+    console.log(obj);
+    console.log(form);
     let res = await PersonStore.getTalentList(obj);
     if (res.code != 200) return;
     talentList.length = 0;
     talentList.push(...(res.data).talentList);
     paging.total = res.data.totalCount;
-    console.log(res);
+    console.log(paging);
+    console.log(res.data.talentList);
 }
 getTalentList();
 
 //邀请人才的方法;
 let inviteTalent = async () => {
+    console.log(invitationUserId);
     let res = await PersonStore.inviteTalent({
-        inviteUserId: invitationUserId,
+        inviteUserId: invitationUserId.value,
         userId: 10000,
     });
     dialogFormVisible.value = false;
@@ -168,6 +176,11 @@ let inviteTalentList = async ()=>{
     let res = await PersonStore.getInviteList({
         userId:10000,
     })
+    if(res.code !== 200) return;
+    invitationList.length = 0;
+    invitationList.push(...(res.data.talentList));
+    pagingInvite.total = res.data.totalCount;
+    console.log('邀请人才的列表');
     console.log(res);
 }
 inviteTalentList();
@@ -198,10 +211,14 @@ let getPositionCategory = async ()=>{
             child['positionTypeName'] = child['positionName'];
         })
     });
-    console.log(data);
     positionCategoryList.push(...(data));
 }
 getPositionCategory();
+let getMoney = (data:string)=>{
+    if(!data) return '';
+    let res = data.split(",").sort((a,b)=>{ return a - b});
+    return `${res[0]}-${res[1]}k`
+}
 </script>
 <template>
     <div class="personnel">
@@ -211,7 +228,7 @@ getPositionCategory();
                     <p :class="[checkItem == 0 ? 'span-check' : '']">人才库</p>
                     <div :class="[checkItem == 0 ? 'btm-check' : '']"></div>
                 </div>
-                <div class="operation-item" @click="handleItemChange(1)">
+                <div class="operation-item" @click="handleItemChange(1),inviteTalentList()">
                     <p :class="[checkItem == 1 ? 'span-check' : '']">我邀请的</p>
                     <div :class="[checkItem == 1 ? 'btm-check' : '']"></div>
                 </div>
@@ -219,18 +236,18 @@ getPositionCategory();
         </div>
 
         <!-- 这个是疑问咨询的图片 -->
-        <div :class="['consulting-service', 'absolute-wrap', showGuid ? 'close-animate' : 'show-animate']">
+        <!-- <div :class="['consulting-service', 'absolute-wrap', showGuid ? 'close-animate' : 'show-animate']">
             <div class="top">
                 <img src="@/assets/images/company_fanjia_3.png" class="or-code">
                 <p class="tip fs-12">如有任何疑问请咨询</p>
             </div>
             <img src="@/assets/images/icon-close.png" @click="handleGuideChange(true)">
-        </div>
+        </div> -->
 
         <!-- 这个是点击弹出咨询的容器 -->
-        <div class="seek-advice absolute-wrap box-shadow" v-show="showGuid" @click="handleGuideChange(false)">
+        <!-- <div class="seek-advice absolute-wrap box-shadow" v-show="showGuid" @click="handleGuideChange(false)">
             <img src="@/assets/images/icon-kefu.png">
-        </div>
+        </div> -->
 
         <!-- 人才数据的页面 -->
         <div class="talent-pool-wrap" v-show="checkItem == 0">
@@ -294,7 +311,7 @@ getPositionCategory();
 
                     <!-- 人名与最高学历 -->
                     <div class="cbleft2 ml-16">
-                        <p class="name fs-18">费小姐</p>
+                        <p class="name fs-18">{{item.userName ? item.userName : '费小姐'}}</p>
                         <div class="description mt-16 cl-ccc">
                             <p class="fs-12">{{ item.userAge ? item.userAge : '24' }}岁</p>
                             <div class="line"></div>
@@ -333,7 +350,7 @@ getPositionCategory();
                         </div>
                         <div class="occupation-item mt-16">
                             <img src="@/assets/images/icon-qianbi.png" class="icon">
-                            <p class="description fs-14 ml-12">{{ item.wishMoney ? item.wishMoney : '3-50k' }}</p>
+                            <p class="description fs-14 ml-12">{{ item.wishMoney ? getMoney(item.wishMoney) : '3-50k' }}</p>
                         </div>
                     </div>
 
@@ -349,7 +366,7 @@ getPositionCategory();
             <div class="page-wrap wrap mt-48">
                 <div class="page-content">
                     <el-pagination v-model:current-page="paging.pageIndex" :background="true" :pager-count="7"
-                        layout="prev, pager, next" :total="paging.total" />
+                      v-model:page-size="paging.pageSize"  layout="prev, pager, next" :total="paging.total" />
                 </div>
             </div>
         </div>
@@ -382,7 +399,7 @@ getPositionCategory();
 
                 <!--邀请的列表-->
                 <div class="list">
-                    <div class="item">
+                    <div class="item" v-for="item in invitationList" :key="item.id">
                         <div class="top">
                             <div class="left">
                                 <p>投递职位</p>
@@ -404,9 +421,9 @@ getPositionCategory();
 
                             <!-- 人名与最高学历 -->
                             <div class="cbleft2 ml-16">
-                                <p class="name fs-18">费小姐</p>
+                                <p class="name fs-18">{{item.userName ? item.userName : '费小姐'}}</p>
                                 <div class="description mt-16 cl-ccc">
-                                    <p class="fs-12">{{ '24' }}岁</p>
+                                    <p class="fs-12">{{ item.userAge ? item.userAge:'24' }}岁</p>
                                     <div class="line"></div>
                                     <p class="fs-12">{{ '硕士' }}</p>
                                 </div>
@@ -435,11 +452,11 @@ getPositionCategory();
                                 </div>
                                 <div class="occupation-item mt-12">
                                     <img src="@/assets/images/icon-bangong.png" class="icon">
-                                    <p class="description fs-14 ml-12">{{ '审计专员/助理、物流专员/经理、人事专员/助理、市场营销、行政专员/助理' }}</p>
+                                    <p class="description fs-14 ml-12">{{item.wishPosition ? item.wishPosition : '审计专员/助理、物流专员/经理、人事专员/助理、市场营销、行政专员/助理' }}</p>
                                 </div>
                                 <div class="occupation-item mt-16">
                                     <img src="@/assets/images/icon-qianbi.png" class="icon">
-                                    <p class="description fs-14 ml-12">{{ '3-50k' }}</p>
+                                    <p class="description fs-14 ml-12">{{ getMoney(item.wishMoney) }}</p>
                                 </div>
                             </div>
 
@@ -454,7 +471,7 @@ getPositionCategory();
                 <div class="page-wrap wrap mt-48">
                     <div class="page-content">
                         <el-pagination v-model:current-page="pagingInvite.pageIndex" :background="true" :pager-count="7"
-                            layout="prev, pager, next" :total="pagingInvite.total" />
+                        v-model:page-size="pagingInvite.pageSize" layout="prev, pager, next" :total="pagingInvite.total" />
                     </div>
                 </div>
             </div>

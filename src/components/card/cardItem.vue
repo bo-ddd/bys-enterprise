@@ -46,7 +46,6 @@ let { userinfo } = toRefs(props);
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
-
     .candidate-item_avatorBox {
         display: flex;
         align-items: center;

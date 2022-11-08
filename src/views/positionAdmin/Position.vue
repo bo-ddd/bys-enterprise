@@ -31,7 +31,7 @@
             <div>
               <div class="fs-14">
                 职位刷新点数
-                <span class="point-num">1</span>
+                <span class="point-num">{{orderNum}}</span>
               </div>
               <div class="fs-12 mt-10">若当日点数用尽，次日凌晨会自动补充新点数</div>
             </div>
@@ -45,11 +45,15 @@
           <div class="job-box mb-15" v-for="item in positionList" :key="item.userId">
             <div class="info-job just-between">
               <div class="job-title fs-18">
-                <div class="mb-15">{{item.positionName}}&nbsp;</div>
+                <div class="mb-15 align-center">
+                  <span>{{item.positionName}}</span>
+                  <span v-if="item.positionStatus==1" class="tip-span">审核中</span>
+                  <span v-if="item.positionStatus==4" class="tip-span warning">审核未通过</span>
+                </div>
                 <div class="info-list align-center">
                   <div class="money-num mr-15">10-15k</div>
                   <div class="align-center fs-14">
-                    <div>全职</div>
+                    <div>{{item.positionNature==0?'全职':'实习'}}</div>
                     <div class="bor"></div>
                     <div>大专</div>
                     <div class="bor"></div>
@@ -62,20 +66,18 @@
               <div class="resume-info flex-ja-center">
                 <div class="resume-box cur-po">
                   <div class="resume-num">0</div>
-                  <div class="mt-15 fs-14">新简历</div>
+                  <div class="mt-10 fs-14">新简历</div>
                 </div>
                 <div class="resume-box cur-po">
                   <div class="resume-num">0</div>
-                  <div class="mt-15 fs-14">新简历</div>
+                  <div class="mt-10 fs-14">新简历</div>
                 </div>
               </div>
               <div class="refresh-info align-center">
-                <div class="autorefresh-btn cur-po">
-                  <span class="plr-5">自动刷新</span>
-                </div>
-                <div class="refresh-btn cur-po">
-                  <span class="plr-5">刷新</span>
-                </div>
+                <el-button v-if="item.positionStatus==1" color="#a8abb2" plain disabled>自动刷新</el-button>
+                <el-button v-else color="#356ffa" plain>自动刷新</el-button>
+                <el-button v-if="item.positionStatus==1" color="#a8abb2" plain disabled>刷新</el-button>
+                <el-button v-else color="#356ffa">刷新</el-button>
               </div>
             </div>
             <div class="edit-job just-between fs-14">
@@ -84,15 +86,15 @@
                 <span>&nbsp; {{item.createTime}}</span>
               </div>
               <div class="align-center">
-                <div class="cur-po" @click="setPosition(item)">编辑</div>
+                <div class="cur-po" @click="setPosition(item.positionId)">编辑</div>
                 <div class="bor"></div>
-                <div class="cur-po">停止招聘</div>
+                <div class="cur-po" @click="setPositionStatus(item.positionId,3)">停止招聘</div>
                 <div class="bor"></div>
-                <div class="cur-po" @click="deleteClick(item.positionId,item.positionStatus )">删除</div>
+                <div class="cur-po" @click="deleteClick(item.positionId,item.positionStatus)">删除</div>
               </div>
             </div>
           </div>
-          <div class="just-center mb-20" v-if="total>10">
+          <div class="just-center mt-20 mb-20" v-if="recruitNum>10">
             <el-pagination
               :background="true"
               v-model:currentPage="pageNum"
@@ -107,10 +109,76 @@
         </div>
       </div>
       <div class="tab2" v-show="currentIndex==1">
-        <div class="void-box flex-ja-center">
-          <div>
+        <div class="void-box void-title flex-ja-center" v-show="downNum==0">
+          <div class>
             <img src="@/assets/images/img-no_position.png" alt />
             <div class="mt-15">暂无已下线职位</div>
+          </div>
+        </div>
+        <div class="void-box" v-show="downNum!=0">
+          <div class="pb-30 wrap">
+            <div class="job-head2 just-between">
+              <div></div>
+              <div>
+                <div class="release-btn align-center cur-po" @click="to('/positionInfo')">
+                  <span class="fs-30">+</span>
+                  <span>发布职位</span>
+                </div>
+              </div>
+            </div>
+            <div class="job-box" v-for="item in downPositionList" :key="item.userId">
+              <div class="info-job just-between">
+                <div class="job-title fs-18">
+                  <div class="mb-15 align-center">
+                    <span>{{item.positionName}}</span>
+                    <span v-if="item.positionStatus==1" class="tip-span">审核中</span>
+                    <span v-if="item.positionStatus==4" class="tip-span warning">审核未通过</span>
+                  </div>
+                  <div class="info-list align-center">
+                    <div class="money-num mr-15">10-15k</div>
+                    <div class="align-center fs-14">
+                      <div>{{item.positionNature==0?'全职':'实习'}}</div>
+                      <div class="bor"></div>
+                      <div>大专</div>
+                      <div class="bor"></div>
+                      <div>北京</div>
+                      <div class="bor"></div>
+                      <div>{{item.positionType}}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="resume-info flex-ja-center">
+                  <div class="resume-box cur-po">
+                    <div class="resume-num">0</div>
+                    <div class="mt-10 fs-14">新简历</div>
+                  </div>
+                  <div class="resume-box cur-po">
+                    <div class="resume-num">0</div>
+                    <div class="mt-10 fs-14">新简历</div>
+                  </div>
+                </div>
+                <div class="refresh-info align-center">
+                  <div class="cur-po" @click="setPosition(item)">编辑</div>
+                  <div class="bor"></div>
+                  <div class="cur-po" @click="setPositionStatus(item.positionId,1)">开始招聘</div>
+                  <div class="bor"></div>
+                  <div class="cur-po" @click="deleteClick(item.positionId,item.positionStatus)">删除</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="just-center mt-20" v-if="downNum>10">
+              <el-pagination
+                :background="true"
+                v-model:currentPage="pageNum2"
+                v-model:page-size="pageSize2"
+                layout="prev, pager, next"
+                :total="downNum"
+                @next-click="next2"
+                @prev-click="prev2"
+                @current-change="handleCurrentChange2"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -121,44 +189,107 @@
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from "element-plus";
 import { usePositionStore } from "@/stores/position";
+import { useHomeStore } from "@/stores/home";
 import FooterBar from "@/components/footer/footerBar.vue";
-import { ref } from "vue";
+import { onMounted, ref, provide } from "vue";
 import { useRouter } from "vue-router";
+import { Position } from "@element-plus/icons-vue";
 let use = usePositionStore();
+let { getEnterprise } = useHomeStore();
 const recruitNum = ref(0);
+const orderNum = ref(0);
 const downNum = ref(0);
 const total = ref(0);
 const pageNum = ref(1);
 const pageSize = ref(10);
+const pageNum2 = ref(1);
+const pageSize2 = ref(10);
 const positionList = ref([]);
-const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`);
+const downPositionList = ref([]);
+const setPositionStatus = async function (
+  positionId: any,
+  setStatusNum: number
+) {
+  let res = await use.updatePositionStatus({
+    positionId,
+    positionStatus: setStatusNum,
+    userId: 10000,
+  });
+  if (res.code == 200) {
+    if (setStatusNum == 3) {
+      ElMessage({
+        type: "success",
+        message: "已下线",
+      });
+    } else if (setStatusNum == 1 || setStatusNum == 2) {
+      ElMessage({
+        type: "success",
+        message: "已上线",
+      });
+    }
+    getPositionList();
+    getDownList();
+  } else {
+    ElMessage({
+      type: "warning",
+      message: "操作失败",
+    });
+  }
 };
+onMounted(() => {
+  getPositionList();
+  getDownList();
+});
+//在招分页：
 const handleCurrentChange = async (val: number) => {
-  console.log(`current page: ${val}`);
   pageNum.value = val;
-  let res = await getPositionList();
-  console.log(res);
+  getPositionList();
 };
-let getPositionList =async function () {
-  let res =await use.getPosition({
+//下线分页：
+const handleCurrentChange2 = async (val: number) => {
+  pageNum2.value = val;
+  getDownList();
+};
+//获取在招分页页面的数据
+let getPositionList = async function () {
+  let res = await use.getPosition({
     pageIndex: pageNum.value,
     userId: 10000,
     pageSize: pageSize.value,
-    positionStatus: 2,
+    positionStatus: 5,
   });
-  console.log(res);
-  
-  if (res.code == 200&&res.data) {
-    positionList.value=res.data.data;
-    recruitNum.value = res.data.maxCount;
+  let res2 = await getEnterprise({
+    userId: 10000,
+  });
+
+  if (res.code == 200) {
+    positionList.value = res.data ? res.data.data : [];
+    recruitNum.value = res.data ? res.data.maxCount : 0;
+  }
+  if (res2.data.sevenRefreshPositionCount) {
+    orderNum.value = res2.data ? res2.data.sevenRefreshPositionCount : 0;
+  }
+};
+//获取下线分页数据
+const getDownList = async function () {
+  let res = await use.getPosition({
+    pageIndex: pageNum2.value,
+    userId: 10000,
+    pageSize: pageSize2.value,
+    positionStatus: 3,
+  });
+  if (res.code == 200) {
+    downNum.value = res.data ? res.data.maxCount : 0;
+    downPositionList.value = res.data ? res.data.data : [];
+    console.log(res);
+    console.log(downPositionList);
   }
 };
 let deletePosition = function (params: any) {
   return use.deletePosition(params);
 };
 const deleteClick = function (positionId: any, positionStatus: any) {
-  ElMessageBox.confirm("是否确认删除该职位?", "Warning", {
+  ElMessageBox.confirm("删除后将无法恢复", "是否确认删除该职位?", {
     confirmButtonText: "确认删除",
     cancelButtonText: "取消",
     type: "warning",
@@ -180,7 +311,8 @@ const deleteClick = function (positionId: any, positionStatus: any) {
           type: "success",
           message: "删除成功",
         });
-        let res2 = getPositionList();
+        getPositionList();
+        getDownList();
       } else {
         ElMessage({
           type: "warning",
@@ -195,31 +327,24 @@ const deleteClick = function (positionId: any, positionStatus: any) {
       });
     });
 };
-let getList = async function () {
-  let res1 = await getPositionList();
-  let res2 = await use.getPosition({
-    pageIndex: 1,
-    userId: 10000,
-    pageSize: 10,
-    positionStatus: 3,
-  });
-  if (res2.code == 200 && res2.data) {
-    downNum.value = res2.data.data.length;
-  }
-};
-getList();
 const router = useRouter();
 const currentIndex = ref(0);
 const tab = function (num: number) {
   currentIndex.value = num;
 };
-const to = function (path: string,) {
-router.push({
-  path,
-  query:{
-
-  }
-});
+const to = function (path: string) {
+  router.push({
+    path,
+  });
+};
+// provide('positionDetail',666);
+const setPosition = function (id: any) {
+  router.push({
+    path: "/positionDetails",
+    query: {
+      positionId:id
+    },
+  });
 };
 </script>
 <style lang="scss" scoped>
@@ -263,13 +388,47 @@ router.push({
   background-color: #f6f7f9;
   .tab2 {
     background-color: white;
+    overflow: hidden;
+    color: black;
     .void-box {
-      height: calc(100vh - 55px);
+      min-height: calc(100vh - 55px);
+
       text-align: center;
-      color: #515a6e;
       img {
         width: 240px;
         height: 210px;
+      }
+    }
+    .void-title {
+      color: #515a6e;
+    }
+    .job-head2 {
+      margin: 35px 0;
+      .release-btn {
+        gap: 10px;
+        font-size: 16px;
+        padding: 4px 20px;
+        background-color: #356ffa;
+        color: white;
+        border-radius: 2px;
+      }
+    }
+    .info-job {
+      padding: 25px 0 !important;
+    }
+    .bor {
+      height: 9px;
+      border-left: 2px solid rgb(197, 200, 206);
+      margin: 0 6px;
+    }
+
+    .refresh-info {
+      font-size: 14px;
+      .cur-po {
+        color: #515a6e;
+      }
+      .cur-po:hover {
+        color: #356ffa;
       }
     }
   }
@@ -301,6 +460,24 @@ router.push({
       border-bottom: 2px solid #f6f7f9;
       .job-title {
         width: 400px;
+        .tip-span {
+          // min-width: 50px;
+          // height: 20px;
+          box-sizing: border-box;
+          border-radius: 2px;
+          border: 1px solid #445e9b;
+          margin-left: 12px;
+          font-size: 12px;
+          font-family: MicrosoftYaHei;
+          color: #445e9b;
+          line-height: 18px;
+          text-align: center;
+          padding: 0 4px;
+        }
+        .warning {
+          color: #ed4112;
+          border: 1px solid #ed4112;
+        }
       }
       .info-list {
         color: rgb(81, 90, 110);
@@ -331,6 +508,15 @@ router.push({
 
       .refresh-info {
         gap: 0 12px;
+        :deep(.el-button) {
+          font-size: 16px;
+          box-sizing: border-box;
+          padding: 17px 15px;
+        }
+        :deep(.el-button + .el-button) {
+          margin-left: 0;
+          padding: 17px 20px;
+        }
         .autorefresh-btn {
           box-sizing: border-box;
           padding: 7px 12px;
@@ -339,8 +525,8 @@ router.push({
           border-radius: 4px;
           transition: all 0.3s;
         }
-        .autorefresh-btn:hover{
-            background-color: #356ffa;
+        .autorefresh-btn:hover {
+          background-color: #356ffa;
           color: white;
         }
         .refresh-btn {
@@ -355,7 +541,9 @@ router.push({
     .edit-job {
       color: #515a6e;
       padding: 18px 25px;
-
+      .cur-po:hover {
+        color: #356ffa;
+      }
       .bor {
         height: 10px;
         border-left: 2px solid rgb(197, 200, 206);
@@ -381,5 +569,8 @@ router.push({
 }
 .fs-30 {
   font-size: 28px;
+}
+.pb-30 {
+  padding-bottom: 120px;
 }
 </style>

@@ -9,7 +9,8 @@ export interface PositionParam {
 };
 interface Res{
     code:number,
-    data:any
+    data:any,
+    msg:string
 }
 export const usePositionStore = defineStore("position", () => {
 
@@ -43,6 +44,9 @@ export const usePositionStore = defineStore("position", () => {
     function updatePosition(params:any){
         return Api.modifyPosition(params) as Res
     }
+    function updatePositionStatus(params:any){
+        return Api.modifyPositionStatus(params) as Res
+    }
 
-    return { getPosition, getProfessional, getMonthDay, getEducation, getCompanyIndustry, getWishMoney,getInternshipMoney,addPosition,deletePosition,updatePosition };
+    return { getPosition, getProfessional, getMonthDay, getEducation, getCompanyIndustry, getWishMoney,getInternshipMoney,addPosition,deletePosition,updatePosition,updatePositionStatus };
 });

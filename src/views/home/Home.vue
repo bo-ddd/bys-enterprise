@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="btm justify-content">
-                    <div class="btm-item hand" @click="nav('position')">
+                    <div class="btm-item  btm-item_hover hand" @click="nav('position')">
                         <div class="just-between">
                             <div class="left">
                                 <h3 class="fs-22 h3">2</h3>
@@ -53,7 +53,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="btm-item hand" @click="nav('resume')">
+                    <div class="btm-item btm-item_hover hand" @click="nav('resume')">
                         <div class="just-between">
                             <div class="left">
                                 <h3 class="fs-22 h3">0</h3>
@@ -76,7 +76,7 @@
                     </div>
                     <div class="btm-item">
                         <div class="just-between">
-                            <div class="left">
+                            <div class="left btm-item_hover">
                                 <h3 class="fs-22 h3">147</h3>
                                 <div class="test">在职招聘会</div>
                             </div>
@@ -177,8 +177,8 @@ img {
     border-style: none;
 }
 
-.btm-item:hover {
-    color: #356ffb;
+.btm-item_hover:hover {
+    color: #356ffb !important;
 }
 
 .fs-22 {
@@ -334,6 +334,7 @@ img {
         padding: 18px 0;
         height: 160px;
         box-sizing: border-box;
+
         &>.btm-item {
             width: 245px;
             height: 145px;

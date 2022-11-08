@@ -235,4 +235,19 @@ export default {
         };
         return axios.get(`/pay${towParams}`,getConfig)
      }
+     modifyResumeStatus:(params)=>{
+        return axios.post('/pay',params,postConfig)
+     },
+     /**
+       * 修改职位状态
+       */
+      modifyPositionStatus:(params)=>{
+        return axios.post('/company/modifyPositionStatus',params,postConfig)
+      },
+      /**
+        * 获取职位信息
+        */
+       getPositionDetail:(params)=>{
+         return axios.post('/company/getPositionById',params,postConfig)
+       },
 }

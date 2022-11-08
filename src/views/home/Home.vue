@@ -171,10 +171,7 @@ let router = useRouter();
 let nav = (name: string) => {
     router.push(name);
 }
-for (let i = 0; i < 50; i++) {
-    console.error(`What are you looking at? Can't I just make a mistake and scare you?`);
-    console.warn(`What are you looking at? Can't I just make a mistake and scare you?`);
-}
+
 </script>
 
 <style lang="scss" scoped>

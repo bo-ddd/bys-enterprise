@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="inappropriate">
+            <el-empty class="mt-20"  v-if="!resumeList.length" image-size="260" description="暂无数据"/>
             <card.cardWrap v-for="item in resumeList" class="mt-15">
                 <template #header>
                     <card.cardHeader :time="item.interviewTime || '2022-09-21 18:25:48' ">投递职位&nbsp;|&nbsp;{{ item.positionName }}</card.cardHeader>
@@ -31,8 +32,7 @@ import card from "@/components/card/index";
 import footerBar from "@/components/footer/footerBar.vue";
 import { useEnterpriseStore } from "@/stores/enterprise"
 let enterprise = useEnterpriseStore();
-let resumeList = ref();
-
+let resumeList:any = ref([]);
 let getResume = async () => {
     let res = await enterprise.getResume({
         userId: 10000,
@@ -45,7 +45,7 @@ let getResume = async () => {
         console.log("error");
     }
 }
-getResume();
+// getResume();
 
 /**
  * 恢复为候选人
@@ -77,6 +77,5 @@ getResume();
 <style lang="scss" scoped>
 .inappropriate {
     padding: 30px 150px;
-    min-height: calc(100vh - 200px);
 }
 </style>

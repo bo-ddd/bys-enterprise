@@ -234,9 +234,6 @@ export default {
             towParams += `${key}=${params[key]}&`
         };
         return axios.get(`/pay${towParams}`,getConfig)
-     }
-     modifyResumeStatus:(params)=>{
-        return axios.post('/pay',params,postConfig)
      },
      /**
        * 修改职位状态

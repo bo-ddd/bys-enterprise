@@ -48,6 +48,7 @@
                 <div class="mb-15 align-center">
                   <span>{{item.positionName}}</span>
                   <span v-if="item.positionStatus==1" class="tip-span">审核中</span>
+                  <span v-if="item.positionStatus==4" class="tip-span warning">审核未通过</span>
                 </div>
                 <div class="info-list align-center">
                   <div class="money-num mr-15">10-15k</div>
@@ -85,7 +86,7 @@
               <div class="align-center">
                 <div class="cur-po" @click="setPosition(item)">编辑</div>
                 <div class="bor"></div>
-                <div class="cur-po" @click="stopRecruit(item.positionId,item.positionStatus)">停止招聘</div>
+                <div class="cur-po" @click="setPositionStatus(item.positionId,3)">停止招聘</div>
                 <div class="bor"></div>
                 <div class="cur-po" @click="deleteClick(item.positionId,item.positionStatus)">删除</div>
               </div>
@@ -106,13 +107,13 @@
         </div>
       </div>
       <div class="tab2" v-show="currentIndex==1">
-        <div class="void-box flex-ja-center" v-show="downNum!=0">
+        <div class="void-box void-title flex-ja-center" v-show="downNum==0">
           <div class>
             <img src="@/assets/images/img-no_position.png" alt />
             <div class="mt-15">暂无已下线职位</div>
           </div>
         </div>
-        <div class="void-box" v-show="downNum==0">
+        <div class="void-box" v-show="downNum!=0">
           <div class="pb-30 wrap">
             <div class="job-head2 just-between">
               <div></div>
@@ -123,12 +124,13 @@
                 </div>
               </div>
             </div>
-            <div class="job-box" v-for="item in positionList" :key="item.userId">
+            <div class="job-box" v-for="item in downPositionList" :key="item.userId">
               <div class="info-job just-between">
                 <div class="job-title fs-18">
                   <div class="mb-15 align-center">
                     <span>{{item.positionName}}</span>
                     <span v-if="item.positionStatus==1" class="tip-span">审核中</span>
+                    <span v-if="item.positionStatus==4" class="tip-span warning">审核未通过</span>
                   </div>
                   <div class="info-list align-center">
                     <div class="money-num mr-15">10-15k</div>
@@ -156,9 +158,9 @@
                 <div class="refresh-info align-center">
                   <div class="cur-po" @click="setPosition(item)">编辑</div>
                   <div class="bor"></div>
-                  <div class="cur-po">开始招聘</div>
+                  <div class="cur-po" @click="setPositionStatus(item.positionId,1)">开始招聘</div>
                   <div class="bor"></div>
-                  <div class="cur-po" @click="deleteClick(item.positionId,item.positionStatus )">删除</div>
+                  <div class="cur-po" @click="deleteClick(item.positionId,item.positionStatus)">删除</div>
                 </div>
               </div>
             </div>
@@ -192,7 +194,6 @@ import { useRouter } from "vue-router";
 let use = usePositionStore();
 let { getEnterprise } = useHomeStore();
 const recruitNum = ref(0);
-
 const orderNum = ref(0);
 const downNum = ref(0);
 const total = ref(0);
@@ -202,6 +203,36 @@ const pageNum2 = ref(1);
 const pageSize2 = ref(10);
 const positionList = ref([]);
 const downPositionList = ref([]);
+const setPositionStatus = async function (
+  positionId: any,
+  setStatusNum: number
+) {
+  let res = await use.updatePositionStatus({
+    positionId,
+    positionStatus: setStatusNum,
+    userId: 10000,
+  });
+  if (res.code == 200) {
+    if (setStatusNum == 3) {
+      ElMessage({
+        type: "success",
+        message: "已下线",
+      });
+    } else if (setStatusNum == 1 || setStatusNum == 2) {
+      ElMessage({
+        type: "success",
+        message: "已上线",
+      });
+    }
+    getPositionList();
+    getDownList();
+  } else {
+    ElMessage({
+      type: "warning",
+      message: "操作失败",
+    });
+  }
+};
 onMounted(() => {
   getPositionList();
   getDownList();
@@ -228,12 +259,12 @@ let getPositionList = async function () {
     userId: 10000,
   });
 
-  if (res.code == 200 && res.data) {
-    positionList.value = res.data.data;
-    recruitNum.value = res.data.maxCount;
+  if (res.code == 200) {
+    positionList.value = res.data?res.data.data:[];
+    recruitNum.value = res.data?res.data.maxCount:0;;
   }
   if (res2.data.sevenRefreshPositionCount) {
-    orderNum.value = res2.data.sevenRefreshPositionCount;
+    orderNum.value = res2.data?res2.data.sevenRefreshPositionCount:0;
   }
 };
 //获取下线分页数据
@@ -244,16 +275,18 @@ const getDownList = async function () {
     pageSize: pageSize2.value,
     positionStatus: 3,
   });
-  if (res.code == 200 && res.data) {
-    downNum.value = res.data.maxCount;
-    downPositionList.value = res.data.data;
+  if (res.code == 200) {
+    downNum.value = res.data?res.data.maxCount:0;
+    downPositionList.value = res.data?res.data.data:[];
+    console.log(res);
+    console.log(downPositionList);
   }
 };
 let deletePosition = function (params: any) {
   return use.deletePosition(params);
 };
 const deleteClick = function (positionId: any, positionStatus: any) {
-  ElMessageBox.confirm("是否确认删除该职位?", "Warning", {
+  ElMessageBox.confirm("删除后将无法恢复", "是否确认删除该职位?", {
     confirmButtonText: "确认删除",
     cancelButtonText: "取消",
     type: "warning",
@@ -305,7 +338,7 @@ const setPosition = function (info: any) {
   router.push({
     path: "/postionDetails",
     query: {
-      info: info,
+      // info: info,
     },
   });
 };
@@ -352,15 +385,18 @@ const setPosition = function (info: any) {
   .tab2 {
     background-color: white;
     overflow: hidden;
+    color: black;
     .void-box {
       min-height: calc(100vh - 55px);
 
       text-align: center;
-      color: #515a6e;
       img {
         width: 240px;
         height: 210px;
       }
+    }
+    .void-title {
+      color: #515a6e;
     }
     .job-head2 {
       margin: 35px 0;
@@ -384,6 +420,12 @@ const setPosition = function (info: any) {
 
     .refresh-info {
       font-size: 14px;
+      .cur-po {
+        color: #515a6e;
+      }
+      .cur-po:hover {
+        color: #356ffa;
+      }
     }
   }
   .job {
@@ -427,6 +469,10 @@ const setPosition = function (info: any) {
           line-height: 18px;
           text-align: center;
           padding: 0 4px;
+        }
+        .warning {
+          color: #ed4112;
+          border: 1px solid #ed4112;
         }
       }
       .info-list {

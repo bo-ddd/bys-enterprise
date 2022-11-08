@@ -2,7 +2,7 @@
 import { ref, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import type { TabsPaneContext } from 'element-plus'
-const activeName = ref('1');
+const activeName = ref('home');
 let route = useRoute();
 let router = useRouter();
 let showGuid = ref(false);//展示导航
@@ -65,7 +65,7 @@ const dialogFormVisible = ref(false)
     <div class="wrap just-between">
       <div class="just-between titlt-menu">
         <div class="title">
-          <p class="fs-14">毕业申</p>
+          <p class="fs-14">榕树云</p>
           <span class="fs-12 c-dadada">校园招聘平台</span>
         </div>
         <!-- 菜单 -->

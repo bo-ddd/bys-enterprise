@@ -19,17 +19,18 @@
                 <el-button type="primary" @click="fuzzyQuery()">确定</el-button>
             </div>
             <div class="candidate-header_bottom">
-                <el-checkbox v-model="checkAll"  @change="handleCheckAllChange">全选</el-checkbox>
+                <el-checkbox v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
                 <el-button class="screen-btn" type="info" @click="batchbyFilter()" plain>批量通过筛选</el-button>
                 <el-button class="screen-btn" type="info" @click="batchInappropriate()" plain>批量不合适</el-button>
             </div>
         </div>
 
         <div class="main">
+                <el-empty class="mt-20"  v-if="!cardList.length" image-size="260" description="暂无简历数据"/>
             <card.cardWrap class="mt-15" v-for="item in cardList" :key="item">
                 <template #header>
                     <card.cardHeader :time="item.modifyTime">
-                        <el-checkbox-group v-model="checkedCities"  @change="handleCheckedCitiesChange">
+                        <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
                             <el-checkbox :label="item.deliveryId">投递职位 | {{ item.positionName }}</el-checkbox>
                         </el-checkbox-group>
                     </card.cardHeader>
@@ -70,10 +71,10 @@ let invitationStatus = ref(false);
 /***
  * 批量不合适
  */
-let batchInappropriate = async ()=>{
-     console.log(checkedCities.value);
-     let deliveryId = checkedCities.value.toString();
-     let res = await enterprise.modifyResumeStatus({
+let batchInappropriate = async () => {
+    console.log(checkedCities.value);
+    let deliveryId = checkedCities.value.toString();
+    let res = await enterprise.modifyResumeStatus({
         deliveryId,
         statusId: 6,
         userId: 10000
@@ -94,12 +95,12 @@ let batchInappropriate = async ()=>{
 /***
  * 批量通过初筛
  */
- let batchbyFilter = async ()=>{
-     console.log(checkedCities.value);
-     let deliveryId = checkedCities.value.toString();
-     let res = await enterprise.modifyResumeStatus({
+let batchbyFilter = async () => {
+    console.log(checkedCities.value);
+    let deliveryId = checkedCities.value.toString();
+    let res = await enterprise.modifyResumeStatus({
         deliveryId,
-        statusId:3,
+        statusId: 3,
         userId: 10000
     })
     if (res.code == 200) {
@@ -249,7 +250,7 @@ let getResume = async () => {
     if (res.code == 200) {
         total.value = res.data.maxCount;
         cardList.value = res.data.data;
-        cities.value = cardList.value.map((item:any)=>{
+        cities.value = cardList.value.map((item: any) => {
             return item.deliveryId;
         })
     } else {
@@ -279,7 +280,7 @@ let fuzzyQuery = async () => {
             type: 'success',
         })
         cardList.value = res.data.data;
-        cities.value = cardList.value.map((item:any)=>{
+        cities.value = cardList.value.map((item: any) => {
             return item.deliveryId;
         })
     } else {
@@ -293,6 +294,7 @@ let fuzzyQuery = async () => {
     .main {
         min-height: 50vh;
     }
+
     .pagination {
         display: flex;
         width: 100%;

@@ -14,7 +14,7 @@ export const getConfig = {
     url: "",
     baseURL: serveUrl,
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "text/plain",
       "X-Requested-With": "XMLHttpRequest"
     },
     timeout: 5000

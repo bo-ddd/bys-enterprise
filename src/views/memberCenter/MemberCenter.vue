@@ -275,9 +275,7 @@ let handle = function (index: number): void {
     .vip-type {
         border-radius: 2px;
         background-color: #ffffff;
-        .box-item{
-            
-        }
+        
         .vip-wrap {
             .cate {
                 width: 100%;

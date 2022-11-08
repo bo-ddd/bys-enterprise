@@ -175,14 +175,13 @@ const dialogFormVisible = ref(false)
 }
 
 .container {
-  position: relative;
 
   &>.consulting-service {
     text-align: center;
-
     &>.top {
       padding: 12px 12px 0;
       box-shadow: 2px 3px 0 rgb(215 214 214 / 50%);
+      background: #ffffff;
 
       &>.or-code {
         width: 88px;
@@ -217,7 +216,7 @@ const dialogFormVisible = ref(false)
 }
 
 .absolute-wrap {
-  position: absolute;
+  position: fixed !important;
   right: 20px;
   top: 90px;
   z-index: 2;

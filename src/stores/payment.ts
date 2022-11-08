@@ -8,9 +8,9 @@ interface Payment {
     vipId:number,
 }
 
-export const useUserStore = defineStore("payment", () => {
+export const usePaymentStore = defineStore("payment", () => {
   function payment(payload: Payment) {
-    return Api.login(payload);
+    return Api.payment(payload);
   }
 
   return { payment };

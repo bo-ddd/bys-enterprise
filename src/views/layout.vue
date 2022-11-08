@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { useRoute,useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import type { TabsPaneContext } from 'element-plus'
-const activeName = ref('1');
+const activeName = ref('home');
 let route = useRoute();
 let router = useRouter();
+let showGuid = ref(false);//展示导航
+//是否展开导航
+let handleGuideChange = (bool: boolean) => {
+  showGuid.value = bool;
+}
 let list = reactive([
   {
     id: 1,
@@ -36,11 +41,11 @@ let list = reactive([
 const activeIndex = ref(1);
 
 const handleSelect = (key: any) => {
-  activeName.value=key.url;
+  activeName.value = key.url;
   activeIndex.value = key.id;
-  if(route.name != key.url){
+  if (route.name != key.url) {
     router.push({
-      path:key.url
+      path: key.url
     })
   }
 }
@@ -60,12 +65,13 @@ const dialogFormVisible = ref(false)
     <div class="wrap just-between">
       <div class="just-between titlt-menu">
         <div class="title">
-          <p class="fs-14">毕业申</p>
+          <p class="fs-14">榕树云</p>
           <span class="fs-12 c-dadada">校园招聘平台</span>
         </div>
         <!-- 菜单 -->
         <el-menu :ellipsis="false" :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
-          <el-menu-item v-for="item in list" :key="item.id" :index="item.id" @click="handleSelect(item)">{{ item.title }}</el-menu-item>
+          <el-menu-item v-for="item in list" :key="item.id" :index="item.id" @click="handleSelect(item)">{{ item.title
+          }}</el-menu-item>
         </el-menu>
       </div>
       <div class="user align-center">
@@ -80,55 +86,75 @@ const dialogFormVisible = ref(false)
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="dialogFormVisible = true">修改密码</el-dropdown-item>
-              <el-dropdown-item >联系客服</el-dropdown-item>
-              <el-dropdown-item @click="outLogin" >退出登录</el-dropdown-item>
+              <el-dropdown-item>联系客服</el-dropdown-item>
+              <el-dropdown-item @click="outLogin">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
       </div>
 
-      <el-dialog width="400px" v-model="dialogFormVisible" title="修改密码"  align-center>
-    <el-form>
-      <el-steps :active="1" align-center>
-    <el-step title="验证手机号"/>
-    <el-step title="重置密码"/>
-  </el-steps>
+      <el-dialog width="400px" v-model="dialogFormVisible" title="修改密码" align-center>
+        <el-form>
+          <el-steps :active="1" align-center>
+            <el-step title="验证手机号" />
+            <el-step title="重置密码" />
+          </el-steps>
 
-  
 
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">
-          Confirm
-        </el-button>
-      </span>
-    </template>
-  </el-dialog>
+
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="dialogFormVisible = false">
+              Confirm
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
     </div>
   </header>
-  <RouterView />
+  <div class="container">
+      <div :class="['consulting-service', 'absolute-wrap', showGuid ? 'close-animate' : 'show-animate']">
+        <div class="top">
+          <img src="@/assets/images/company_fanjia_3.png" class="or-code">
+          <p class="tip fs-12">如有任何疑问请咨询</p>
+        </div>
+        <img src="@/assets/images/icon-close.png" @click="handleGuideChange(true)">
+      </div>
+
+      <!-- 这个是点击弹出咨询的容器 -->
+      <div class="seek-advice absolute-wrap box-shadow" v-show="showGuid" @click="handleGuideChange(false)">
+        <img src="@/assets/images/icon-kefu.png">
+      </div>
+    </div>
+    <RouterView />
+    <!-- 这个是疑问咨询的图片 -->
 </template>
 
 
 <style lang="scss" scoped>
-:deep(.el-dialog__header){
+:deep(.el-dialog__header) {
   text-align: center;
 }
+
 .c-dadada {
   color: #dadada;
 }
+
 :deep(.el-menu) {
   background-color: #2a2d34;
 }
+
 :deep(.el-menu-item) {
   width: 120px;
   box-sizing: border-box;
 }
+
 :deep(.el-menu--horizontal) {
   border: 0;
 }
+
 :deep(.el-menu--horizontal>.el-menu-item.is-active) {
   border-bottom: 2px solid #2a2d34;
   background: #21242c !important;
@@ -146,6 +172,55 @@ const dialogFormVisible = ref(false)
 
 :deep(.el-dropdown-link .el-icon) {
   display: none;
+}
+
+.container {
+  position: relative;
+
+  &>.consulting-service {
+    text-align: center;
+
+    &>.top {
+      padding: 12px 12px 0;
+      box-shadow: 2px 3px 0 rgb(215 214 214 / 50%);
+
+      &>.or-code {
+        width: 88px;
+      }
+
+      &>.tip {
+        width: 72px;
+        margin: 0 auto;
+        padding-top: 5px;
+        padding-bottom: 12px;
+        line-height: 16px;
+        text-align: center;
+      }
+    }
+
+    &>img:hover {
+      cursor: pointer;
+    }
+  }
+
+  &>.seek-advice {
+    padding: 10px 10px 6px;
+
+    &>img {
+      width: 38px;
+    }
+  }
+
+  &>.seek-advice:hover {
+    cursor: pointer;
+  }
+}
+
+.absolute-wrap {
+  position: absolute;
+  right: 20px;
+  top: 90px;
+  z-index: 2;
 }
 
 
@@ -166,5 +241,54 @@ const dialogFormVisible = ref(false)
       border-radius: $size;
     }
   }
+}
+
+.close-animate {
+  animation-name: closeAnimate; //动画名称
+  animation-duration: 2s; //动画持续时间
+  animation-timing-function: ease; //动画播放速度
+  animation-fill-mode: forwards; //动画完毕后停留在那里
+}
+
+.show-animate {
+  animation-name: showAnimate; //动画名称
+  animation-duration: 2s; //动画持续时间
+  animation-timing-function: ease; //动画播放速度
+  animation-fill-mode: forwards; //动画完毕后停留在那里
+}
+
+@keyframes showAnimate {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes closeAnimate {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.box-shadow {
+  box-shadow: 0 2px 6px 0 #edeff3;
+}
+
+.absolute-wrap {
+  position: absolute;
+  right: 20px;
+  top: 90px;
+  z-index: 2;
 }
 </style>

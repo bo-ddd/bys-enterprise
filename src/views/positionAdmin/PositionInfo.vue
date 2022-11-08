@@ -385,7 +385,7 @@ const salaryStart1 = function (rule: any, value: any, callback: any) {
       return callback(new Error("请选择"));
     } else if (
       ruleForm.data.salaryEnd1 &&
-      ruleForm.data.salaryStart1 >= ruleForm.data.salaryEnd1
+      (ruleForm.data.salaryStart1 >= ruleForm.data.salaryEnd1)
     ) {
       return callback(new Error("请选择正确薪资范围"));
     } else {
@@ -400,8 +400,8 @@ const salaryStart2 = function (rule: any, value: any, callback: any) {
     if (!value) {
       return callback(new Error("请选择"));
     } else if (
-      ruleForm.data.salaryEnd1 &&
-      ruleForm.data.salaryStart2 >= ruleForm.data.salaryEnd2
+      ruleForm.data.salaryEnd2 &&
+      (ruleForm.data.salaryStart2 >= ruleForm.data.salaryEnd2)
     ) {
       return callback(new Error("请选择正确薪资范围"));
     } else {
@@ -417,7 +417,7 @@ const salaryEnd1 = function (rule: any, value: any, callback: any) {
       return callback(new Error("请选择"));
     } else if (
       ruleForm.data.salaryEnd1 &&
-      ruleForm.data.salaryStart1 >= ruleForm.data.salaryEnd1
+      (ruleForm.data.salaryStart1 >= ruleForm.data.salaryEnd1)
     ) {
       return callback(new Error("请选择正确薪资范围"));
     } else {
@@ -434,8 +434,8 @@ const salaryEnd2 = function (rule: any, value: any, callback: any) {
     if (!value) {
       return callback(new Error("请选择"));
     } else if (
-      ruleForm.data.salaryEnd1 &&
-      ruleForm.data.salaryStart2 >= ruleForm.data.salaryEnd2
+      ruleForm.data.salaryEnd2 &&
+      (ruleForm.data.salaryStart2 >= ruleForm.data.salaryEnd2)
     ) {
       return callback(new Error("请选择正确薪资范围"));
     } else {
@@ -446,8 +446,12 @@ const salaryEnd2 = function (rule: any, value: any, callback: any) {
   }
 };
 const positiveChange = function (rule: any, value: any, callback: any) {
+  console.log('---------');
+  console.log(value);
+  
+  
   if (ruleForm.data.positionNature == 1) {
-    if (!value) {
+    if (value==='') {
       return callback(new Error("请选择转正机会"));
     } else {
       callback();
@@ -615,8 +619,8 @@ const addPosition = async function (params: any) {
     positionDetailedAddr, //详细地址
     positionDes, //职位描述
     positionSize, //招聘人数
-    internshipDay, //每周天数
-    internshipMonth, //实习月数
+    internshipDay:positionNature==1?internshipDay:'', //每周天数
+    internshipMonth:positionNature==1?internshipMonth:'', //实习月数
     positionProfessional: positionProfessional.join(","), //专业
     internshipMoney:positionNature==1?salaryStart2 + "," + salaryEnd2:'', //实习日薪范围id
     positionMoney:positionNature==0? salaryStart1 + "," + salaryEnd1:'', //职业薪资范围id
@@ -634,7 +638,7 @@ const addPosition = async function (params: any) {
       type: "success",
       message: "新增成功",
     });
-    to("/position");
+    // to("/position");
   }
 };
 const to = function (path: string) {

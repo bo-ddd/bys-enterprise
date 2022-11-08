@@ -69,7 +69,14 @@
                         </el-select>
                     </el-form-item> -->
                     <!-- 禁用状态的选择器 disabled -->
-                    
+                    <el-form-item label="所属行业">
+                        <el-cascader v-model="forbidden" :options="options" @change="handleChange">
+                            <template #value>
+                                <span>{{ options[0] }}</span>
+                            </template>
+                        </el-cascader>
+                    </el-form-item>
+
 
                     <!-- 正常状态的选择器 -->
                     <el-form-item label="企业性质">
@@ -207,6 +214,7 @@
                     </el-form-item>
                 </div>
             </el-form>
+
         </div>
         <footer-bar></footer-bar>
     </div>
@@ -272,34 +280,31 @@ let getEnterprise = async function () {
 }
 getEnterprise();
 
-// 获取职位列表
-let getPositionList = async function () {
-    let res = await getPositionList()
-    // console.log(res);
-}
+// 调用 修改企业详细信息接口 报错
+// let setModifyEnterpriseInfo = async function () {
+//     let res = await use.setModifyEnterpriseInfo({
+//         companyAddr: '山西',
+//         userId: 10000
+//     });
+//     console.log(res);
+// }
+// setModifyEnterpriseInfo();
 
-/**
- * 
- * // 调用 修改企业详细信息接口 报错
- * let setModifyEnterpriseInfo = async function () {
- *  let res = await use.setModifyEnterpriseInfo(form);
- *  console.log(res);
- * }
- * setModifyEnterpriseInfo();
- */
 
 // 所属行业
-const BelongingToIndustry = ref([]);
+const forbidden = ref('');
+const options = ref(<any>[]);
+const handleChange = (value: any) => {
+    console.log(value)
+}
 
 // 调用 获取所属行业下拉框接口 报错
 let getIndustryList = async function () {
     let res = await use.getIndustryList();
     console.log('所属行业的数据', res.data)
-    Object.assign(BelongingToIndustry, res.data)
-
+    Object.assign(options, res.data)
 }
 getIndustryList();
-
 
 // 上传企业LOGO的逻辑
 const dialogVisible = ref(false);
@@ -318,10 +323,6 @@ const handleDownload = (file: UploadFile) => {
     console.log('log ~ file.url', file.url);
 };
 
-
-
-// 所属行业
-const forbidden = ref('');
 // 企业性质
 const enterpriseNatureVal = ref('其他')
 // 企业规模

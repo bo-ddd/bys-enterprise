@@ -247,4 +247,10 @@ export default {
        getPositionDetail:(params)=>{
          return axios.post('/company/getPositionById',params,postConfig)
        },
+      /**
+        * 获取职位信息
+        */
+       getPositionDetail:(params)=>{
+         return axios.post('/company/getPositionById',params,postConfig)
+       },
 }

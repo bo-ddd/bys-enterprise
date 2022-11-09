@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
     <div class="payment">
         <div class="topbar">
             <div class="wrap container align-center">
@@ -17,7 +17,7 @@
             </div>
         </header>
         <main class="mt-15">
-            <div class="wrap container">
+            <div class="container-order wrap ">
                 <div class="order ">
                     <div class="order-extand-explain flex fs-12">
                         <p class="">正在使用即时到账交易</p>
@@ -59,7 +59,42 @@
                             <button class="detailt c-ffffff fs-12" href="" @click="isShow = !isShow">订单详情</button>
                         </div>
                     </div>
-                    
+
+                </div>
+            </div>
+            <div class="container-main wrap flex">
+                <!-- 扫码 -->
+                <div class="container-main_wrap">
+                    <div class="operation-area">
+                        <div class="header">
+                            <p class="fs-12">扫一扫付款（元）</p>
+                            <p class="c-ff4400 fs-26 fw-700">{{ price }}</p>
+                        </div>
+                        <div class="qrcode-img-wrap">
+                            <img class="company_fanjia" src="@/assets/images/company_fanjia_3.png" alt="">
+                            <div class="flex-ja-center">
+                                <img class="s-code" src="@/assets/images/s-code.png" alt="">
+                                <div>
+                                    <p class="fs-12 custom-i18n">打开手机支付宝</p>
+                                    <p class="fs-12 custom-i18n">扫一扫继续付款</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="qrcode-foot mt-10">
+                            <span class="fs-12 c-bababa ">首次使用请下载手机支付宝</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="qrguide-area">
+                    <!-- 切换 -->
+                    <div class="icon">
+                        <img class="monitor" src="@/assets/images/monitor.png" alt="">
+                        <img class="anlipay" src="@/assets/images/anlipay_.png" alt="">
+                    </div>
+                    <div>
+                        <el-button class="btn" type="primary">{{ '<登录账户付款' }}</el-button>
+                    </div>
                 </div>
             </div>
         </main>
@@ -148,9 +183,10 @@ header {
 }
 
 main {
-    &>.container {
-        padding: 16px 0 0 16px;
+    &>.container-order {
+        padding: 16px 23px;
         box-sizing: border-box;
+        border-bottom: 3px solid #b3b3b3;
 
         .order {
             position: relative;
@@ -163,8 +199,7 @@ main {
                 padding-top: 15px;
 
                 .container {
-                    border-bottom: 3px solid #b3b3b3;
-                    padding-bottom: 16px;
+
 
                     .order-detailt {
                         line-height: 22px;
@@ -190,23 +225,105 @@ main {
             .price {
                 position: absolute;
                 right: 0;
-                bottom: 35px;
+                bottom: 20px;
             }
 
             .detailt {
                 background-color: #b3b3b3;
                 position: absolute;
-                bottom: 0;
+                bottom: -18px;
                 right: 0;
                 padding: 4px;
             }
         }
     }
-}
-</style> -->
 
-<form name="punchout_form" method="post" action="https://openapi.alipaydev.com/gateway.do?charset=utf-8&method=alipay.trade.page.pay&sign=XFGpR38TPwZmAJm%2BXKmft3IQHsAAOxoPsEnxI8k%2BKMoCnlO6G5BSmAN5biv2Qmad69pyJ%2FyIXpoX6gv1tN%2BITs0mP6%2BFP6wVQjdGU2r06JjAS7u%2BG6aiuOKQuqF%2B28yWlC002SuhTryTET3tXKXZMWodZEuqp7Fttyfi6m0kKZqFRQMVQOJvg%2BeAGhNTOyJfr2p%2FuGOv%2BB5NMlfovMOmu9g2ZU4dn6ZYxvEyFmk%2BPHj34R%2FQRadCAJeFJag2fKskGNBBANaSJYW35jmZv4zL9Uqh2Mm9w57J2rPj%2FzQ621r4fp5%2F7wKtJkOFfFGp00GswY89Ae2WXxc4RuCQEahyjA%3D%3D&return_url=http%3A%2F%2Fytz79y.natappfree.cc%2Falipay&notify_url=http%3A%2F%2Fytz79y.natappfree.cc%2Fnotify&version=1.0&app_id=2021000121661323&sign_type=RSA2&timestamp=2022-11-08+19%3A56%3A18&alipay_sdk=alipay-sdk-java-dynamicVersionNo&format=json">
-    <input type="hidden" name="biz_content" value="{&quot;out_trade_no&quot;:&quot;20221108195618110000&quot;,&quot;total_amount&quot;:&quot;233&quot;,&quot;subject&quot;:&quot;白银会员|1个月&quot;,&quot;body&quot;:&quot;白银会员|1个月&quot;,&quot;timeout_express&quot;:&quot;1h&quot;,&quot;product_code&quot;:&quot;FAST_INSTANT_TRADE_PAY&quot;}">
-    <input type="submit" value="立即支付" style="display:none" >
-    </form>
-    <script>document.forms[0].submit();</script>
+    .container-main {
+
+        border-bottom: 3px solid #b3b3b3;
+        background-color: #ffffff;
+        position: relative;
+
+        .container-main_wrap {
+            padding: 75px 0;
+
+            .operation-area {
+                width: 800px;
+
+                &>.header {
+                    width: 300px;
+                    margin: 0 auto;
+                    text-align: center;
+                    box-sizing: border-box;
+                    line-height: 30px;
+                }
+
+                &>.qrcode-img-wrap {
+                    width: 168px;
+                    padding: 6px;
+                    margin: 0 auto;
+                    border: 1px solid #d3d3d3;
+                    -webkit-box-shadow: 1px 1px 1px #ccc;
+                    box-shadow: 1px 1px 1px #ccc;
+
+                    &>div {
+                        gap: 10px;
+                    }
+
+                    .company_fanjia {
+                        width: 168px;
+                    }
+
+                    .s-code {
+                        width: 28px;
+                        height: 28px;
+                    }
+
+                    .custom-i18n {
+                        line-height: 18px;
+                    }
+                }
+
+                .qrcode-foot {
+                    text-align: center;
+
+                    &>span {
+                        text-decoration: underline;
+                    }
+                }
+            }
+
+        }
+
+        .qrguide-area {
+            width: 148px;
+            border: 1px solid #d9d9d9;
+            background-color: #e6e6e6;
+
+            .icon {
+                position: relative;
+                top: 140px;
+                .monitor {
+                    width: 100px;
+                    position: absolute;
+                    left: 24px;
+                }
+
+                .anlipay {
+                    width: 60px;
+                    position: absolute;
+                    left: 44px;
+                    top: 31px;
+                }
+            }
+
+            .btn {
+                position: relative;
+                top: 260px;
+                left: 12px;
+            }
+        }
+
+    }
+}
+</style>

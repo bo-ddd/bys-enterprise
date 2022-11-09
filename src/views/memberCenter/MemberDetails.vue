@@ -96,7 +96,7 @@ let toPayment = function () {
         let res = await payment.payment(options);
         console.log(res);
         if(res.code==200){
-            // router.push({ path: '/payment', query: { ...order } })
+            router.push({ path: '/payment', query: { ...order } })
             params = res.data
         }
     }

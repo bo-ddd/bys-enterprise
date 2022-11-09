@@ -2,9 +2,9 @@
 import { ref, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import type { TabsPaneContext } from 'element-plus'
-const activeName = ref('home');
 let route = useRoute();
 let router = useRouter();
+const activeName = ref(route.path);
 let showGuid = ref(false);//展示导航
 //是否展开导航
 let handleGuideChange = (bool: boolean) => {
@@ -38,11 +38,11 @@ let list = reactive([
   },
 ])
 
-const activeIndex = ref(1);
+const activeIndex = ref(route.path);
 
 const handleSelect = (key: any) => {
   activeName.value = key.url;
-  activeIndex.value = key.id;
+  activeIndex.value = key.url;
   if (route.name != key.url) {
     router.push({
       path: key.url
@@ -70,7 +70,7 @@ const dialogFormVisible = ref(false)
         </div>
         <!-- 菜单 -->
         <el-menu :ellipsis="false" :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
-          <el-menu-item v-for="item in list" :key="item.id" :index="item.id" @click="handleSelect(item)">{{ item.title
+          <el-menu-item v-for="item in list" :key="item.url" :index="item.url" @click="handleSelect(item)">{{ item.title
           }}</el-menu-item>
         </el-menu>
       </div>
@@ -175,14 +175,13 @@ const dialogFormVisible = ref(false)
 }
 
 .container {
-  position: relative;
 
   &>.consulting-service {
     text-align: center;
-
     &>.top {
       padding: 12px 12px 0;
       box-shadow: 2px 3px 0 rgb(215 214 214 / 50%);
+      background: #ffffff;
 
       &>.or-code {
         width: 88px;
@@ -205,6 +204,7 @@ const dialogFormVisible = ref(false)
 
   &>.seek-advice {
     padding: 10px 10px 6px;
+    background: #fff;
 
     &>img {
       width: 38px;
@@ -217,7 +217,7 @@ const dialogFormVisible = ref(false)
 }
 
 .absolute-wrap {
-  position: absolute;
+  position: fixed !important;
   right: 20px;
   top: 90px;
   z-index: 2;

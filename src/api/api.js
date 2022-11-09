@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { postConfig } from './config'
+import { postConfig,getConfig } from './config'
 
 
 axios.interceptors.request.use(function (config) {
@@ -228,8 +228,12 @@ export default {
      /**
        *支付宝支付
        */
-     modifyResumeStatus:(params)=>{
-        return axios.post('/pay',params,postConfig)
+     payment:(params)=>{
+        let towParams = '?';
+         for (let key in params) {
+            towParams += `${key}=${params[key]}&`
+        };
+        return axios.get(`/pay${towParams}`,getConfig)
      },
      /**
        * 修改职位状态

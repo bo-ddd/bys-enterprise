@@ -74,10 +74,10 @@
                 </div>
               </div>
               <div class="refresh-info align-center">
-                <el-button v-if="item.positionStatus==1" color="#a8abb2" plain disabled>自动刷新</el-button>
-                <el-button v-else color="#356ffa" plain>自动刷新</el-button>
-                <el-button v-if="item.positionStatus==1" color="#a8abb2" plain disabled>刷新</el-button>
-                <el-button v-else color="#356ffa">刷新</el-button>
+                <el-button v-if="item.positionStatus==0" color="#a8abb2" plain disabled>自动刷新</el-button>
+                <el-button v-else color="#356ffa" plain @click="centerDialogVisible = true">自动刷新</el-button>
+                <el-button v-if="item.positionStatus==0" color="#a8abb2" plain disabled>刷新</el-button>
+                <el-button @click="refresh" v-else color="#356ffa">刷新</el-button>
               </div>
             </div>
             <div class="edit-job just-between fs-14">
@@ -185,6 +185,48 @@
     </div>
   </div>
   <FooterBar></FooterBar>
+  <div class="dialog-box">
+    <el-dialog v-model="centerDialogVisible" title center>
+      <img class="back-img" src="@/assets/images/default_v.png" alt />
+      <div class="text">
+        <div class="text-black fs-16">您当前账户中暂无 &nbsp; "自动刷新卡"</div>
+        <div class="mt-25 text-gray">
+          现在升级会员即可
+          <span class="text-yellow">获赠 “自动刷新卡”</span>
+        </div>
+        <div class="mt-25 text-black">更多权益也可一起解锁</div>
+        <div class="list mt-15">
+          <div class="align-center">
+            <img src="@/assets/images/icon-home_vipbanner1.png" alt />
+            <span class="ml-10">在招职位数量解锁</span>
+          </div>
+          <div class="align-center ml-25">
+            <img src="@/assets/images/icon-home_vipbanner2.png" alt />
+            <span class="ml-10">更多职位刷新点数</span>
+          </div>
+          <div class="align-center mt-15">
+            <img src="@/assets/images/icon-home_vipbanner4.png" alt />
+            <span class="ml-10">更多主动下载简历点数</span>
+          </div>
+        </div>
+      </div>
+      <div class="foot">
+        <div class="btn" @click="to('/memberCenter')">查看会员权益</div>
+      </div>
+    </el-dialog>
+  </div>
+  <!-- <span>
+      It should be noted that the content will not be aligned in center by
+      default
+    </span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="centerDialogVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="centerDialogVisible = false">
+          Confirm
+        </el-button>
+      </span>
+  </template>-->
 </template>
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from "element-plus";
@@ -196,6 +238,7 @@ import { useRouter } from "vue-router";
 import { Position } from "@element-plus/icons-vue";
 let use = usePositionStore();
 let { getEnterprise } = useHomeStore();
+const centerDialogVisible = ref(false);
 const recruitNum = ref(0);
 const orderNum = ref(0);
 const downNum = ref(0);
@@ -206,34 +249,60 @@ const pageNum2 = ref(1);
 const pageSize2 = ref(10);
 const positionList = ref([]);
 const downPositionList = ref([]);
+const refresh = function () {
+  ElMessageBox.confirm(
+    `今日剩余刷新点数：${orderNum.value}，是否刷新该职位？`,
+    "确认刷新该职位吗",
+    {
+      confirmButtonText: "确认",
+      cancelButtonText: "取消",
+      type: "success",
+    }
+  ).then(() => {});
+};
 const setPositionStatus = async function (
   positionId: any,
   setStatusNum: number
 ) {
-  let res = await use.updatePositionStatus({
-    positionId,
-    positionStatus: setStatusNum,
-    userId: 10000,
-  });
-  if (res.code == 200) {
-    if (setStatusNum == 3) {
-      ElMessage({
-        type: "success",
-        message: "已下线",
+  if (setStatusNum == 3) {
+    ElMessageBox.confirm("是否确认停止该职业的招聘该职位?", "", {
+      confirmButtonText: "确认",
+      cancelButtonText: "取消",
+      type: "warning",
+    }).then(async () => {
+      let res = await use.updatePositionStatus({
+        positionId,
+        positionStatus: setStatusNum,
+        userId: 10000,
       });
-    } else if (setStatusNum == 1 || setStatusNum == 2) {
+      if (res.code == 200) {
+        ElMessage({
+          type: "success",
+          message: "已下线",
+        });
+        getPositionList();
+        getDownList();
+      } else {
+        ElMessage({
+          type: "warning",
+          message: "操作失败",
+        });
+      }
+    });
+  } else if (setStatusNum == 1) {
+    let res = await use.updatePositionStatus({
+      positionId,
+      positionStatus: setStatusNum,
+      userId: 10000,
+    });
+    if (res.code == 200) {
       ElMessage({
         type: "success",
         message: "已上线",
       });
+      getPositionList();
+      getDownList();
     }
-    getPositionList();
-    getDownList();
-  } else {
-    ElMessage({
-      type: "warning",
-      message: "操作失败",
-    });
   }
 };
 onMounted(() => {
@@ -342,12 +411,81 @@ const setPosition = function (id: any) {
   router.push({
     path: "/positionDetails",
     query: {
-      positionId:id
+      positionId: id,
     },
   });
 };
 </script>
 <style lang="scss" scoped>
+.dialog-box {
+  position: relative;
+  .back-img {
+    width: 150px;
+    height: 220px;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    right: 0;
+    opacity: 0.15;
+  }
+  .text {
+    padding: 40px 0 32px 50px;
+    .text-black {
+      color: #17233d;
+    }
+    .text-gray {
+      color: #515a6e;
+    }
+    .text-yellow {
+      color: #884900;
+    }
+  }
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+    img {
+      width: 28px;
+      height: 28px;
+    }
+  }
+  .foot {
+    padding: 0 60px 52px 0;
+    display: flex;
+    justify-content: flex-end; // justify-content: right;
+      .btn {
+      width: 156px;
+      text-align: center;
+      height: 44px;
+      line-height: 44px;
+      background: linear-gradient(128deg, #fee8cd, #e2ae7e);
+      border-radius: 2px;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      font-size: 18px;
+      font-family: MicrosoftYaHei;
+      color: #4c2c0e;
+      cursor: pointer;
+    }
+  }
+  :deep(.el-dialog) {
+    width: 505px;
+    min-height: 310px;
+    // height: 100%;
+    // box-sizing: border-box;
+  }
+  :deep(.el-dialog__header) {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  :deep(.el-dialog__body) {
+    // height: 100px;
+    padding: 0;
+  }
+  :deep(.el-dialog__headerbtn){
+    z-index: 2;
+  }
+}
 .position-page {
   min-width: 1200px;
 }
@@ -552,7 +690,6 @@ const setPosition = function (id: any) {
     }
   }
 }
-
 .pl-10 {
   padding-left: 10px;
 }
@@ -572,5 +709,23 @@ const setPosition = function (id: any) {
 }
 .pb-30 {
   padding-bottom: 120px;
+}
+.dialog-footer button:first-child {
+  margin-right: 10px;
+}
+.mt-25 {
+  margin-top: 15px;
+}
+.ml-25 {
+  margin-left: 25px;
+}
+.mt-15 {
+  margin-top: 15px;
+}
+.mt-18 {
+  margin-top: 18px;
+}
+.ml-10 {
+  margin-left: 10px;
 }
 </style>

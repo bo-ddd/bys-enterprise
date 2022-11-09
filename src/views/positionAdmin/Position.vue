@@ -258,7 +258,9 @@ const refresh = function () {
       cancelButtonText: "取消",
       type: "success",
     }
-  ).then(() => {});
+  ).then(() => {
+    
+  });
 };
 const setPositionStatus = async function (
   positionId: any,

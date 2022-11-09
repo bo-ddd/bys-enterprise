@@ -108,7 +108,7 @@
                         </div>
                     </div>
                     <div class="top-el-button">
-                        <el-button type="primary">选择意向学校</el-button>
+                        <el-button type="primary" @click="centerDialogVisible = true">选择意向学校</el-button>
                     </div>
                 </div>
                 <div class="mt-25 text">
@@ -158,13 +158,32 @@
                 </div>
             </div>
         </div>
-
+        
         <footer-bar></footer-bar>
+        
+        <!-- 弹层 -->
+        <el-dialog v-model="centerDialogVisible" :show-close="false" title="Warning" width="800px" center="header">
+            <template #header>
+                <h4 class="dialog_header-h4">请选择意向学校</h4>
+                <div class="dialog_header-test">每选择一所高校，您的招聘信息都会在该站点优先展示。建议将您想招的学生学校都选上</div>
+            </template>
+            <div class="dialog_body">
+                asdsa
+            </div>
+            <template #footer>
+                <div class="dialog-footer">
+                    <el-button @click="centerDialogVisible = false">取消</el-button>
+                    <el-button type="primary" @click="centerDialogVisible = false">
+                        确认
+                    </el-button>
+                </div>
+            </template>
+        </el-dialog>
     </div>
 </template>
 
 <script setup lang="ts">
-
+import { ref } from 'vue'
 import footerBar from '@/components/footer/footerBar.vue';
 import { useRouter } from 'vue-router';
 let router = useRouter();
@@ -172,9 +191,35 @@ let nav = (name: string) => {
     router.push(name);
 }
 
+const centerDialogVisible = ref(true)
 </script>
 
 <style lang="scss" scoped>
+.dialog-footer button:first-child {
+    margin-right: 10px;
+}
+:deep(.el-dialog__header){
+    margin: 0;
+    padding: 10px 0 10px 0;
+    .dialog_header-h4{
+        padding: 0 0 10px 0;
+        border-bottom: 1px solid #e8eaec;
+    }
+    .dialog_header-test{
+        background-color: #eaf8fe;
+        font-size: 13px;
+        color: #515a6e;
+        padding: 14px 0;
+    }
+}
+:deep(.el-dialog__body){
+    margin: 0;
+    padding: 0;
+}
+
+
+.dialog_body {}
+
 img {
     border-style: none;
 }
@@ -405,7 +450,6 @@ img {
         max-width: 12px;
     }
 }
-
 
 .vip {
     padding: 24px 32px 32px 32px;

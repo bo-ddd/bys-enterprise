@@ -274,9 +274,9 @@
   <FooterBar></FooterBar>
 </template>
 <script lang="ts" setup>
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import FooterBar from "@/components/footer/footerBar.vue";
-import { computed, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref, toRefs } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
 import { usePositionStore } from "@/stores/position.js";
 import { useRouter } from "vue-router";
@@ -289,6 +289,9 @@ interface Res {
 const props = {
   expandTrigger: "hover",
 };
+ onMounted(()=>{
+  //  to("/position");
+ })
 const value = ref("");
 const activeNum = ref(-1);
 const activeNum2 = ref(-1);
@@ -300,7 +303,7 @@ const formSize = ref("default");
 const ruleFormRef = ref<FormInstance>();
 
 const educationArr = ref([]);
-const industryArr = ref([]);
+const industryArr: any = ref([]);
 const professionalArr = ref([]);
 const moneyLeftArr1 = ref([]);
 const moneyRightArr1 = ref([]);
@@ -330,8 +333,6 @@ const ruleForm = reactive({
     positionAddr: "", //工作地点
   },
 });
-const radio1 = ref("1");
-const radio2 = ref("0");
 const getData = async function () {
   const res = await use.getEducation(); //学历
   const res2 = await use.getCompanyIndustry(); //行业
@@ -346,13 +347,13 @@ const getData = async function () {
   if (res2.code == 200) {
     let a = res2.data.map((item: any) => {
       return {
-        value: item.industryTypeId,
-        label: item.industryTypeName,
-        children: item.industyDownList.map((i: any) => {
+        value: item.value,
+        label: item.label,
+        children: item.children.map((i: any) => {
           return {
-            value: i.industryId,
-            label: i.industryName,
-            children: i.industyDownList,
+            value: i.value,
+            label: i.label,
+            // children: i.industyDownList,
           };
         }),
       };
@@ -570,7 +571,6 @@ const select2 = function (index: number) {
     activeNum2.value == 0) as any;
   console.log(ruleForm.data.positionPositive);
 };
-
 const submitForm = async (formEl: FormInstance | undefined) => {
   console.log(ruleForm.data);
   console.log(formEl);
@@ -581,10 +581,34 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
     console.log(ruleForm.data);
     if (valid) {
+      const positionType =
+        industryArr.value.find(
+          (item: any) => item.value == ruleForm.data.positionTypeArr[0]
+        ).label +
+        "-" +
+        industryArr.value
+          .find((item: any) => item.value == ruleForm.data.positionTypeArr[0])
+          .children.find(
+            (e: any) => e.value == ruleForm.data.positionTypeArr[1]
+          ).label;
+      const positionNature = ruleForm.data.positionNature;
+
       console.log("submit!");
       // console.log(positionTypeArr);
-
-      addPosition(ruleForm.data);
+      ElMessageBox.confirm(
+        `是否确认发布类别为${positionType}, 工作性质为${
+          positionNature == 0 ? "全职" : "实习"
+        }的职位`,
+        "提示",
+        {
+          confirmButtonText: "确认",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          addPosition(ruleForm.data);
+        })
     } else {
       console.log("error submit!", fields);
       ElMessage.error((<any>Object).values(fields)[0][0].message);
@@ -637,13 +661,13 @@ const addPosition = async function (params: any) {
   if (res.code == 200) {
     ElMessage({
       type: "success",
-      message: "新增成功",
+      message: "保存成功",
     });
     to("/position");
   } else {
     ElMessage({
       type: "warning",
-      message: "新增失败"+res.msg,
+      message: "保存失败" + res.msg,
     });
   }
 };

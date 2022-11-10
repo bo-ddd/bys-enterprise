@@ -171,7 +171,7 @@
             <div class="dialog_body">
                 <div class="dialog_body-header-r">
                     <div class="dialog_body-header-r_test">
-                        <b class="c356ffb">16</b>
+                        <b class="c356ffb">{{ selectValueLength}}</b>
                         <span>/50</span>
                     </div>
                 </div>
@@ -180,18 +180,18 @@
                     <el-select v-model="selectValue" size="large" multiple filterable allow-create default-first-option
                         :reserve-keyword="false" placeholder="请输入">
                         <el-option v-for="item in options" :key="item.schoolId" :label="item.schoolName"
-                            :value="item.schoolName" />
+                            :value="item.schoolId" />
                     </el-select>
                 </div>
                 <div class="ml-68">可搜索添加意向学校</div>
                 <div class="radioBox flex mt-40">
                     <label class="mr-12">展示范围</label>
-                    <el-radio-group v-model="radio" class="flex-direction-flex-start">
-                        <el-radio :label="1">
+                    <el-radio-group v-model="radioValue" class="flex-direction-flex-start">
+                        <el-radio :label="false">
                             <h5>所有学校</h5>
                             <div>招聘信息会在毕业申所有合作院校的站点展示</div>
                         </el-radio>
-                        <el-radio :label="2" class="mt-18">
+                        <el-radio :label="true" class="mt-18">
                             <h5>仅意向学校</h5>
                             <div>招聘信息只在“意向学校”站点展示，曝光度会大大降低</div>
                         </el-radio>
@@ -225,27 +225,52 @@ let nav = (name: string) => {
     router.push(name);
 }
 // 控制意向学校弹层的开关
-const centerDialogVisible = ref(false)
+const centerDialogVisible = ref(true)
 // 意向学校 多选框选择的值
-let selectValue = ref('');
+let selectValue = ref(<[]>[]);
+let selectValueLength = ref(0);
 // 意向学校 数据
 const options: Ref<Array<{
     schoolId: Number,
     sortId: Number,
     schoolName: string,
 }>> = ref([]);
-
-
+// 获取意向学校的数据
 let getSchoolList = async function () {
     let res = await use.getSchoolList()
+    console.log(res.data)
     Object.assign(options.value, res.data)
 }
 getSchoolList();
-// 单选框组
-const radio = ref(1)
+// 单选框组的值
+const radioValue = ref(false)
 // 提交意向学校弹层数据的方法
 const confirm = () => {
-    console.log(selectValue.value)
+    console.log('选中的意向学校的 ID：', selectValue.value)
+    console.log('单选框选择的是：', radioValue.value, radioValue.value == true ? '仅意向' : '所有学校')
+    console.log(selectValue.value.length);// 这个是选中了几个意向学校
+    selectValueLength.value = selectValue.value.length;
+    let options: any = [];
+    selectValue.value.forEach(element => {
+        console.log('选中意向学校的ID：', element)
+        options.push(element);
+    });
+    // 点击提交按钮的时候用  调接口传参
+    setEnterpriseSchoolOfIntention({
+        companyOnlyWishSchool: radioValue.value,
+        companyWishSchool: JSON.stringify(options),
+        userId: 10000,
+    })
+}
+interface setEnterpriseSchoolOfIntentionType {
+    companyOnlyWishSchool: boolean,// 企业仅向意向学校展示职位 
+    companyWishSchool: string,// 企业意向学校 多选格式1,2,3 ,
+    userId: Number,// 用户id
+}
+// 这是修改意向学校的接口
+let setEnterpriseSchoolOfIntention = async function (payload: setEnterpriseSchoolOfIntentionType) {
+    let res = await use.setEnterpriseSchoolOfIntention(payload);
+    console.log(res)
 }
 </script>
 

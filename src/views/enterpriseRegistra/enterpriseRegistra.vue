@@ -62,12 +62,6 @@
                         <el-input class="el-input_560-40" v-model="form.companyAddr" />
                     </el-form-item>
 
-                    <!-- <el-form-item label="所属行业">
-                        <el-select v-model="forbidden" placeholder="Select">
-                            <el-option v-for="item in BelongingToIndustry" :key="item.value" :label="item.label"
-                                :value="item.value" />
-                        </el-select>
-                    </el-form-item> -->
                     <!-- 禁用状态的选择器 disabled -->
                     <el-form-item label="所属行业">
                         <el-cascader v-model="forbidden" :options="options" @change="handleChange">
@@ -302,7 +296,8 @@ const handleChange = (value: any) => {
 let getIndustryList = async function () {
     let res = await use.getIndustryList();
     console.log('所属行业的数据', res.data)
-    Object.assign(options, res.data)
+    Object.assign(options.value, res.data)
+    console.log(options)
 }
 getIndustryList();
 

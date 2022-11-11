@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import Api from "@/api/api.js";
+import Api from "@/api/api";
 
 
 export const useHomeStore = defineStore("home", () => {
@@ -57,6 +57,19 @@ export const useHomeStore = defineStore("home", () => {
     function getSchoolList(payload = {}) {
         return Api.getSchoolList(payload);
     }
+    /**
+     * @describe 修改企业意向学校
+     * @param companyOnlyWishSchool 企业仅向意向学校展示职位 
+     * @param companyWishSchool 企业意向学校 多选格式1,2,3  
+     * @param userId 用户id  
+     */
+    function setEnterpriseSchoolOfIntention(payload:{
+        companyOnlyWishSchool: boolean,// 企业仅向意向学校展示职位 
+        companyWishSchool: string,// 企业意向学校 多选格式1,2,3 ,
+        userId:Number,// 用户id
+    }) {
+        return Api.setEnterpriseSchoolOfIntention(payload);
+    }
     // 获取职位列表
     function getPositionList(payload: {
         pageIndex: number,
@@ -75,6 +88,7 @@ export const useHomeStore = defineStore("home", () => {
         getEnterpriseSizeList,
         getEnterpriseTagList,
         getSchoolList,
-        getPositionList
+        getPositionList,
+        setEnterpriseSchoolOfIntention,
     };
 });

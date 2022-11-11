@@ -158,22 +158,50 @@
                 </div>
             </div>
         </div>
-        
+
         <footer-bar></footer-bar>
-        
+
         <!-- 弹层 -->
-        <el-dialog v-model="centerDialogVisible" :show-close="false" title="Warning" width="800px" center="header">
+        <el-dialog class="dialog" v-model="centerDialogVisible" align-center :show-close="false" title="Warning"
+            width="800px">
             <template #header>
                 <h4 class="dialog_header-h4">请选择意向学校</h4>
                 <div class="dialog_header-test">每选择一所高校，您的招聘信息都会在该站点优先展示。建议将您想招的学生学校都选上</div>
             </template>
             <div class="dialog_body">
-                asdsa
+                <div class="dialog_body-header-r">
+                    <div class="dialog_body-header-r_test">
+                        <b class="c356ffb"> {{ selectValue.length }} </b>
+                        <span>/50</span>
+                    </div>
+                </div>
+                <div class="mt-10 flex-ja-center">
+                    <label class="mr-12">意向学校</label>
+                    <el-select v-model="selectValue" size="large" multiple filterable allow-create default-first-option
+                        :reserve-keyword="false" placeholder="请输入">
+                        <el-option v-for="item in options" :key="item.schoolId" :label="item.schoolName"
+                            :value="item.schoolId" />
+                    </el-select>
+                </div>
+                <div class="ml-68">可搜索添加意向学校</div>
+                <div class="radioBox flex mt-40">
+                    <label class="mr-12">展示范围</label>
+                    <el-radio-group v-model="radioValue" class="flex-direction-flex-start">
+                        <el-radio :label="false">
+                            <h5>所有学校</h5>
+                            <div>招聘信息会在毕业申所有合作院校的站点展示</div>
+                        </el-radio>
+                        <el-radio :label="true" class="mt-18">
+                            <h5>仅意向学校</h5>
+                            <div>招聘信息只在“意向学校”站点展示，曝光度会大大降低</div>
+                        </el-radio>
+                    </el-radio-group>
+                </div>
             </div>
             <template #footer>
                 <div class="dialog-footer">
                     <el-button @click="centerDialogVisible = false">取消</el-button>
-                    <el-button type="primary" @click="centerDialogVisible = false">
+                    <el-button type="primary" @click="confirm">
                         确认
                     </el-button>
                 </div>
@@ -183,45 +211,157 @@
 </template>
 
 <script setup lang="ts">
+import { useHomeStore } from '@/stores/home';
 import { ref } from 'vue'
+import type { Ref } from "vue";
 import footerBar from '@/components/footer/footerBar.vue';
 import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus'
+// 路由
 let router = useRouter();
+// ajax
+const use = useHomeStore();
+// 跳转页面的方法
 let nav = (name: string) => {
     router.push(name);
 }
-
-const centerDialogVisible = ref(true)
+// 控制意向学校弹层的开关
+const centerDialogVisible = ref(false)
+// 意向学校 多选框选择的值
+let selectValue = ref([]);
+// 意向学校 数据
+const options: Ref<Array<{
+    schoolId: Number,
+    sortId: Number,
+    schoolName: string,
+}>> = ref([]);
+// 获取意向学校的数据
+let getSchoolList = async function () {
+    let res = await use.getSchoolList()
+    console.log(res.data)
+    Object.assign(options.value, res.data)
+}
+getSchoolList();
+// 单选框组的值
+const radioValue = ref(false)
+// 提交意向学校弹层数据的方法
+const confirm = () => {
+    console.log('选中的意向学校的 ID：', selectValue.value)
+    console.log('单选框选择的是：', radioValue.value, radioValue.value == true ? '仅意向' : '所有学校')
+    let options: any = [];
+    selectValue.value.forEach(element => {
+        options.push(element);
+    });
+    // 点击提交按钮的时候用  调接口传参
+    setEnterpriseSchoolOfIntention({
+        companyOnlyWishSchool: radioValue.value,
+        companyWishSchool: JSON.stringify(options),
+        userId: 10000,
+    })
+}
+interface setEnterpriseSchoolOfIntentionType {
+    companyOnlyWishSchool: boolean,// 企业仅向意向学校展示职位 
+    companyWishSchool: string,// 企业意向学校 多选格式1,2,3 ,
+    userId: Number,// 用户id
+}
+// 这是修改意向学校的接口
+let setEnterpriseSchoolOfIntention = async function (payload: setEnterpriseSchoolOfIntentionType) {
+    let res = await use.setEnterpriseSchoolOfIntention(payload);
+    console.log(res)
+    if (res.code == 200) {
+        ElMessage({
+            message:'修改成功！',
+            type: 'success',
+        })
+        centerDialogVisible.value = false;
+    }
+}
 </script>
 
 <style lang="scss" scoped>
 .dialog-footer button:first-child {
     margin-right: 10px;
 }
-:deep(.el-dialog__header){
+
+:deep(.dialog) {
+    border-radius: 10px;
+}
+
+:deep(.el-dialog__header) {
     margin: 0;
     padding: 10px 0 10px 0;
-    .dialog_header-h4{
+
+    .dialog_header-h4 {
         padding: 0 0 10px 0;
         border-bottom: 1px solid #e8eaec;
+        font-size: 16px;
     }
-    .dialog_header-test{
+
+    .dialog_header-test {
         background-color: #eaf8fe;
         font-size: 13px;
         color: #515a6e;
         padding: 14px 0;
     }
 }
-:deep(.el-dialog__body){
+
+:deep(.el-dialog__body) {
     margin: 0;
-    padding: 0;
+    padding: 0 40px;
+
+    .dialog_body-header-r {
+        padding: 8px 0 0 0;
+        height: 14px;
+        position: relative;
+
+        .dialog_body-header-r_test {
+            position: absolute;
+            right: 0;
+            display: inline-block;
+        }
+    }
+
+    .el-input__wrapper {
+        width: 620px;
+    }
 }
 
+.flex-direction-flex-start {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
 
-.dialog_body {}
+.radioBox {
+    box-sizing: border-box;
+}
+
+.ml-68 {
+    margin: 10px 0 0 68px;
+}
+
+.mt-18 {
+    margin-top: 18px;
+}
+
+.mt-12 {
+    margin-top: 12px;
+}
+
+.mt-40 {
+    margin-top: 40px;
+}
 
 img {
     border-style: none;
+}
+
+.mr-12 {
+    margin-right: 12px;
+}
+
+.c356ffb {
+    color: #356ffb;
 }
 
 .btm-item_hover:hover {

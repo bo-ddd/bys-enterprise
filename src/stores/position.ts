@@ -50,5 +50,8 @@ export const usePositionStore = defineStore("position", () => {
     function getPositionDetail(params:any){
         return Api.getPositionDetail(params) as Res
     }
-    return { getPosition, getProfessional, getMonthDay, getEducation, getCompanyIndustry, getWishMoney,getInternshipMoney,addPosition,deletePosition,updatePosition,updatePositionStatus,getPositionDetail };
+    function refreshPosition(params:any){
+        return Api.refreshPosition(params) as Res
+    }
+    return { getPosition, getProfessional, getMonthDay, getEducation, getCompanyIndustry, getWishMoney,getInternshipMoney,addPosition,deletePosition,updatePosition,updatePositionStatus,getPositionDetail,refreshPosition };
 });

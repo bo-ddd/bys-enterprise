@@ -143,13 +143,6 @@
                                     <img class="bg-v" src="@/assets/images/home-vip_V.png" alt="">
                                 </div>
                             </div>
-                            <!-- <div class="position-card">
-                                <div class="content">
-                                    <h5>招聘会抵用券<span>(优先入会权益)</span></h5>
-                                    <img class="bg-v" src="@/assets/images/home-vip_V.png" alt="">
-                                </div>
-                                <img class="tip" src="@/assets/images/limited-time-gift.png" alt="">
-                            </div> -->
                         </div>
                     </div>
                     <div class="right">

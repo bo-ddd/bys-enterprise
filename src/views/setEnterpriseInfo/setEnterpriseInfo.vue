@@ -2,26 +2,29 @@
     <div class="enterprise-registra">
         <div class="wrap container">
             <div class="title-wrap">
-                <h2>设置企业信息编辑</h2>
+                <h2>企业信息填写</h2>
             </div>
             <el-form :model="form" label-width="120px">
                 <div class="form">
                     <h3>基本信息</h3>
                     <!-- 企业全称 -->
                     <el-form-item label="企业全称">
-                        <el-input class="el-input_560-40" v-model="form.companyFullName" />
+                        <el-input class="el-input_560-40" placeholder="需与营业执照一致" v-model="form.companyFullName" />
                     </el-form-item>
 
                     <!-- 品牌全称 -->
                     <el-form-item label="品牌名称">
-                        <el-input class="brand-name" v-model="form.companyName" />
+                        <el-input class="brand-name" placeholder="品牌名称或企业简称,一般不超过6个字" v-model="form.companyName" />
                     </el-form-item>
 
                     <!-- 企业logo -->
                     <el-form-item label="企业logo">
                         <el-upload action="#" list-type="picture-card" :auto-upload="false">
-                            <el-icon>
-                                <Plus />
+                            <el-icon class="uplpoad-icon flex-column-center">
+                                <div>
+                                    <Plus />
+                                </div>
+                                <div class="fs-13">上传图片</div>
                             </el-icon>
 
                             <template #file="{ file }">
@@ -59,12 +62,12 @@
 
                     <!-- 详细注册地址 -->
                     <el-form-item label="详细注册地址">
-                        <el-input class="el-input_560-40" v-model="form.companyAddr" />
+                        <el-input placeholder="详细注册地址" class="el-input_560-40" v-model="form.companyAddr" />
                     </el-form-item>
 
                     <!-- 禁用状态的选择器 disabled -->
                     <el-form-item label="所属行业">
-                        <el-cascader class="el-input_240" v-model="forbidden" :options="forbiddenData"
+                        <el-cascader class="el-input_240" placeholder="请选择" v-model="forbidden" :options="forbiddenData"
                             @change="handleChange">
                             <template #value>
                                 <span>{{ forbiddenData[0] }}</span>
@@ -75,21 +78,21 @@
 
                     <!-- 正常状态的选择器 -->
                     <el-form-item label="企业性质">
-                        <el-select v-model="enterpriseNatureVal" placeholder="Select" size="large">
+                        <el-select v-model="enterpriseNatureVal" placeholder="请选择" size="large">
                             <el-option v-for="item in enterpriseNature" :key="item.value" :label="item.label"
                                 :value="item.value" />
                         </el-select>
                     </el-form-item>
 
                     <el-form-item label="企业规模">
-                        <el-select v-model="enterpriseScaleVal" placeholder="Select" size="large">
+                        <el-select v-model="enterpriseScaleVal" placeholder="请选择" size="large">
                             <el-option v-for="item in enterpriseScale" :key="item.value" :label="item.label"
                                 :value="item.value" />
                         </el-select>
                     </el-form-item>
 
                     <el-form-item label="企业标签">
-                        <el-select v-model="enterpriseLabelVal" placeholder="Select" size="large">
+                        <el-select v-model="enterpriseLabelVal" placeholder="请选择" size="large">
                             <el-option v-for="item in enterpriseLabel" :key="item.value" :label="item.label"
                                 :value="item.value" />
                         </el-select>
@@ -100,7 +103,7 @@
                     <h3>认证信息</h3>
                     <!-- 社会信用代码 -->
                     <el-form-item label="社会信用代码">
-                        <el-input class="input_280-40" v-model="form.companySocialCreditCode" />
+                        <el-input placeholder="社会信用代码" class="input_280-40" v-model="form.companySocialCreditCode" />
                     </el-form-item>
 
                     <!-- 营业执照 -->
@@ -108,9 +111,13 @@
                         <el-form-item label="营业执照"></el-form-item>
                         <div>
                             <el-upload action="#" :on-success="abc" list-type="picture-card" :auto-upload="false">
-                                <el-icon>
-                                    <Plus />
+                                <el-icon class="uplpoad-icon flex-column-center">
+                                    <div>
+                                        <Plus />
+                                    </div>
+                                    <div class="fs-13">上传图片</div>
                                 </el-icon>
+
                                 <template #file="{ file }">
                                     <div @click="add(file)">
                                         <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
@@ -152,17 +159,17 @@
                         <h3>联系信息</h3>
                         <!-- 联系人 -->
                         <el-form-item label="联系人">
-                            <el-input class="input_280-40" v-model="form.companyContactName" />
+                            <el-input placeholder="填写联系人" class="input_280-40" v-model="form.companyContactName" />
                         </el-form-item>
 
                         <!-- 联系方式 -->
                         <el-form-item label="联系方式">
-                            <el-input class="input_280-40" v-model="form.companyContactPhone" />
+                            <el-input placeholder="填写联系方式" class="input_280-40" v-model="form.companyContactPhone" />
                         </el-form-item>
 
                         <!-- 接受简历邮箱 -->
                         <el-form-item label="接受简历邮箱">
-                            <el-input class="input_280-40" v-model="form.companyContactEmail" />
+                            <el-input placeholder="填写接受简历邮箱" class="input_280-40" v-model="form.companyContactEmail" />
                         </el-form-item>
                     </div>
                 </div>
@@ -178,7 +185,7 @@
 
                     <!-- 企业官网 -->
                     <el-form-item label="企业官网">
-                        <el-input class="input_280-40" v-model="form.companyWebUrl" />
+                        <el-input placeholder="非必填" class="input_280-40" v-model="form.companyWebUrl" />
                     </el-form-item>
 
                     <div class="horizontal-line"></div>
@@ -192,7 +199,7 @@
                         <div class="align-center">
                             <el-form-item label="学校">
                                 <el-select size="large" class="school-input" v-model="schoolListVal" multiple
-                                    placeholder="Select">
+                                    placeholder="请输入">
                                     <el-option v-for="item in schoolList" :key="item.sortId" :label="item.schoolName"
                                         :value="item.schoolId" />
                                 </el-select>
@@ -205,7 +212,7 @@
                 <div>
                     <!-- 提交 -->
                     <el-form-item>
-                        <el-button type="primary" @click="onSubmit">提交</el-button>
+                        <el-button class="submit-button" type="primary" @click="onSubmit">提交</el-button>
                     </el-form-item>
                 </div>
             </el-form>
@@ -213,7 +220,58 @@
         </div>
         <footer-bar></footer-bar>
     </div>
+    <!-- 用户协议 弹窗 -->
+    <div>
+        <el-dialog v-model="centerDialogVisible" :align-center="true" :show-close="false" width="30%">
+            <template #header class="title-center">
+                用户服务协议
+            </template>
+            <div class="dialog__body">
+                <div>
+                    欢迎您注册由北京万德宏远教育科技有限公司提供技术支持的招聘企业账号并使用相关的服务。榕树云为该招聘系统的品牌名称。
+                </div>
+                <div>
+                    本《用户服务协议》是您与榕树云之间就注册榕树云企业账号及使用榕树云各项服务等相关事宜订立的协议。当您阅读并同意本协议且完成全部注册程序后，即表示您已充分阅读、理解并接受本协议的全部内容，并与榕树云达成一致，成为榕树云的用户。
+                </div>
+                <div>
+                    如您不同意本用户协议，请点击“我不同意”，请勿使用榕树云的服务。如您对本用户协议的内容（特别是涉及免除或者责任限制的条款）有任何疑惑或不满意，可随时按照本用户协议中列明的联系方式与我们联系，我们将及时处理您的请求或投诉，并针对您的需求进行解释
+                </div>
+                <div>
+                    联系方式：13810317852 邱老师
+                </div>
+                <h3>一、 用户协议的主体和范围</h3>
+                <h4>1. 协议主体</h4>
+                <div>
+                    与您签订本用户协议的主体视您所使用的具体服务而定。“榕树云”是北京万德宏远教育科技有限公司旗下运营或向您提供具体服务的相关主体的统称。“用户”是指使用”榕树云”服务进行招聘的企业及其负责人，在本用户协议中也称呼为“您”。
+                </div>
+                <h4>2. 服务</h4>
+                <div>
+                    欢迎您注册由北京万德宏远教育科技有限公司提供技术支持的招聘企业账号并使用相关的服务。榕树云为该招聘系统的品牌名称。
+                </div>
+                <div>
+                    本《用户服务协议》是您与榕树云之间就注册榕树云企业账号及使用榕树云各项服务等相关事宜订立的协议。当您阅读并同意本协议且完成全部注册程序后，即表示您已充分阅读、理解并接受本协议的全部内容，并与榕树云达成一致，成为榕树云的用户。
+                </div>
+                <div>
+                    如您不同意本用户协议，请点击“我不同意”，请勿使用榕树云的服务。如您对本用户协议的内容（特别是涉及免除或者责任限制的条款）有任何疑惑或不满意，可随时按照本用户协议中列明的联系方式与我们联系，我们将及时处理您的请求或投诉，并针对您的需求进行解释
+                </div>
+                <div>
+                    联系方式：13810317852 邱老师
+                </div>
+                <h3>一、 用户协议的主体和范围</h3>
+                <h4>1. 协议主体</h4>
+                <div>
+                    与您签订本用户协议的主体视您所使用的具体服务而定。“榕树云”是北京万德宏远教育科技有限公司旗下运营或向您提供具体服务的相关主体的统称。“用户”是指使用”榕树云”服务进行招聘的企业及其负责人，在本用户协议中也称呼为“您”。
+                </div>
+                <h4>2. 服务</h4>
+            </div>
+            <template #footer>
+                <el-button @click="centerDialogVisible = false">不同意</el-button>
+                <el-button type="primary" @click="centerDialogVisible = false">同意</el-button>
+            </template>
+        </el-dialog>
+    </div>
 </template>
+
 <script setup lang="ts">
 // 底部
 import footerBar from '@/components/footer/footerBar.vue';
@@ -228,6 +286,10 @@ import { useHomeStore } from '@/stores/home';
 import RegisteredArea from '@/views/enterpriseRegistra/registeredArea';
 // ajax
 const use = useHomeStore();
+
+// 用户协议 弹窗
+const centerDialogVisible = ref(true);
+
 
 // form 表单数据
 const form = reactive({
@@ -269,6 +331,7 @@ let getEnterpriseData = reactive<any[]>([]);
 // 调用 获取企业详细信息接口 报错
 let getEnterprise = async function () {
     let res = await use.getEnterprise({ userId: 10000 });
+    console.log('获取企业详细信息接口', res.data);
 }
 getEnterprise();
 
@@ -282,7 +345,6 @@ const handleChange = (value: any) => {
 // 调用 获取所属行业下拉框接口 报错
 let getIndustryList = async function () {
     let res = await use.getIndustryList();
-    console.log('所属行业的数据', res.data)
     Object.assign(forbiddenData.value, res.data)
 }
 getIndustryList();
@@ -371,9 +433,54 @@ let getSchoolList = async function () {
 }
 getSchoolList();
 </script>
+
 <style lang="scss" scoped>
+:deep(.el-dialog) {
+    min-width: 800px;
+    border-radius: 10px;
+    padding: 0;
+}
+
+:deep(.el-dialog__header) {
+    margin: 0;
+    text-align: center;
+    padding: 40px 0 36px 0;
+}
+
+:deep(.el-dialog__body) {
+    height: 402px;
+    padding: 0 46px 0 46px;
+    border-bottom: 1px solid #ccc;
+    overflow: scroll;
+}
+
+:deep(.el-dialog__footer) {
+    padding: 24px 20px 24px 0;
+    margin: 0;
+}
+
+.el-dialog__footer .el-button:nth-of-type(2) {
+    margin-left: 20px;
+}
+
+.fs-13 {
+    font-size: 13px;
+}
+
 .business-license_test {
     color: #808695;
+}
+
+.flex-column-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.uplpoad-icon {
+    width: 100%;
+    height: 100%;
 }
 
 .ml-16 {
@@ -398,7 +505,7 @@ getSchoolList();
     // height: 40px;
 }
 
-:deep(.el-button) {
+:deep(.submit-button) {
     width: 268px;
     height: 40px;
     margin: 32px 0 64px 156px;

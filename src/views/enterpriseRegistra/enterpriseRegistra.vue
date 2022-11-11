@@ -273,6 +273,27 @@ function abc(value: any) {
 const onSubmit = () => {
     console.log(form)
 };
+// companyWebUrl
+let getEnterpriseData = reactive<any[]>([]);
+// 调用 获取企业详细信息接口 报错
+let getEnterprise = async function () {
+    let res = await use.getEnterprise({ userId: 10000 });
+    Object.assign(getEnterpriseData, res.data);
+    console.log('获取企业详细信息接口', getEnterpriseData);
+    Object.assign(form, res.data);
+}
+getEnterprise();
+
+// 调用 修改企业详细信息接口 报错
+// let setModifyEnterpriseInfo = async function () {
+//     let res = await use.setModifyEnterpriseInfo({
+//         companyAddr: '山西',
+//         userId: 10000
+//     });
+//     console.log(res);
+// }
+// setModifyEnterpriseInfo();
+
 
 // 所属行业
 const forbidden = ref('');
@@ -284,9 +305,8 @@ const handleChange = (value: any) => {
 // 调用 获取所属行业下拉框接口 报错
 let getIndustryList = async function () {
     let res = await use.getIndustryList();
-    console.log('所属行业的数据', res.data)
     Object.assign(forbiddenData.value, res.data)
-    console.log(forbiddenData)
+    console.log(forbiddenData.value)
 }
 getIndustryList();
 

@@ -171,7 +171,7 @@
             <div class="dialog_body">
                 <div class="dialog_body-header-r">
                     <div class="dialog_body-header-r_test">
-                        <b class="c356ffb">{{ selectValueLength}}</b>
+                        <b class="c356ffb"> {{ selectValue.length }} </b>
                         <span>/50</span>
                     </div>
                 </div>
@@ -216,6 +216,7 @@ import { ref } from 'vue'
 import type { Ref } from "vue";
 import footerBar from '@/components/footer/footerBar.vue';
 import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus'
 // 路由
 let router = useRouter();
 // ajax
@@ -225,10 +226,9 @@ let nav = (name: string) => {
     router.push(name);
 }
 // 控制意向学校弹层的开关
-const centerDialogVisible = ref(true)
+const centerDialogVisible = ref(false)
 // 意向学校 多选框选择的值
-let selectValue = ref(<[]>[]);
-let selectValueLength = ref(0);
+let selectValue = ref([]);
 // 意向学校 数据
 const options: Ref<Array<{
     schoolId: Number,
@@ -248,11 +248,8 @@ const radioValue = ref(false)
 const confirm = () => {
     console.log('选中的意向学校的 ID：', selectValue.value)
     console.log('单选框选择的是：', radioValue.value, radioValue.value == true ? '仅意向' : '所有学校')
-    console.log(selectValue.value.length);// 这个是选中了几个意向学校
-    selectValueLength.value = selectValue.value.length;
     let options: any = [];
     selectValue.value.forEach(element => {
-        console.log('选中意向学校的ID：', element)
         options.push(element);
     });
     // 点击提交按钮的时候用  调接口传参
@@ -271,6 +268,13 @@ interface setEnterpriseSchoolOfIntentionType {
 let setEnterpriseSchoolOfIntention = async function (payload: setEnterpriseSchoolOfIntentionType) {
     let res = await use.setEnterpriseSchoolOfIntention(payload);
     console.log(res)
+    if (res.code == 200) {
+        ElMessage({
+            message:'修改成功！',
+            type: 'success',
+        })
+        centerDialogVisible.value = false;
+    }
 }
 </script>
 

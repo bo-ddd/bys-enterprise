@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import Api from "@/api/api.js";
+import Api from "@/api/api";
 
 
 export const useHomeStore = defineStore("home", () => {

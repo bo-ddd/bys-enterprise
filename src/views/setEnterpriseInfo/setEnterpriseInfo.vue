@@ -54,7 +54,7 @@
 
                     <!-- 企业注册地区 -->
                     <el-form-item label="企业注册地区">
-                        <el-cascader class="el-input_240" :options="RegisteredArea" clearable />
+                        <el-cascader placeholder="请输入" class="el-input_240" :options="RegisteredArea" clearable />
                     </el-form-item>
 
                     <!-- 详细注册地址 -->
@@ -62,17 +62,12 @@
                         <el-input class="el-input_560-40" v-model="form.companyAddr" />
                     </el-form-item>
 
-                    <!-- <el-form-item label="所属行业">
-                        <el-select v-model="forbidden" placeholder="Select">
-                            <el-option v-for="item in BelongingToIndustry" :key="item.value" :label="item.label"
-                                :value="item.value" />
-                        </el-select>
-                    </el-form-item> -->
                     <!-- 禁用状态的选择器 disabled -->
                     <el-form-item label="所属行业">
-                        <el-cascader v-model="forbidden" :options="options" @change="handleChange">
+                        <el-cascader class="el-input_240" v-model="forbidden" :options="forbiddenData"
+                            @change="handleChange">
                             <template #value>
-                                <span>{{ options[0] }}</span>
+                                <span>{{ forbiddenData[0] }}</span>
                             </template>
                         </el-cascader>
                     </el-form-item>
@@ -219,12 +214,10 @@
         <footer-bar></footer-bar>
     </div>
 </template>
-
 <script setup lang="ts">
 // 底部
 import footerBar from '@/components/footer/footerBar.vue';
 // 这个是企业注册地区的数据
-import RegisteredArea from './registeredArea';
 // 这个是form表单要用的
 import { reactive } from 'vue';
 // 这个是企业LOGO上传头像需要用到的
@@ -232,6 +225,7 @@ import { ref } from 'vue';
 import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue';
 import type { UploadFile } from 'element-plus';
 import { useHomeStore } from '@/stores/home';
+import RegisteredArea from '@/views/enterpriseRegistra/registeredArea';
 // ajax
 const use = useHomeStore();
 
@@ -275,25 +269,12 @@ let getEnterpriseData = reactive<any[]>([]);
 // 调用 获取企业详细信息接口 报错
 let getEnterprise = async function () {
     let res = await use.getEnterprise({ userId: 10000 });
-    Object.assign(getEnterpriseData, res.data);
-    Object.assign(form, res.data);
 }
 getEnterprise();
 
-// 调用 修改企业详细信息接口 报错
-// let setModifyEnterpriseInfo = async function () {
-//     let res = await use.setModifyEnterpriseInfo({
-//         companyAddr: '山西',
-//         userId: 10000
-//     });
-//     console.log(res);
-// }
-// setModifyEnterpriseInfo();
-
-
 // 所属行业
-const forbidden = ref('');
-const options = ref(<any>[]);
+const forbidden = ref('请选择');
+const forbiddenData = ref(<any>[]);
 const handleChange = (value: any) => {
     console.log(value)
 }
@@ -302,7 +283,7 @@ const handleChange = (value: any) => {
 let getIndustryList = async function () {
     let res = await use.getIndustryList();
     console.log('所属行业的数据', res.data)
-    Object.assign(options, res.data)
+    Object.assign(forbiddenData.value, res.data)
 }
 getIndustryList();
 
@@ -324,11 +305,11 @@ const handleDownload = (file: UploadFile) => {
 };
 
 // 企业性质
-const enterpriseNatureVal = ref('其他')
+const enterpriseNatureVal = ref('请选择')
 // 企业规模
-const enterpriseScaleVal = ref('100-499人')
+const enterpriseScaleVal = ref('请选择')
 // 企业标签
-const enterpriseLabelVal = ref('其他')
+const enterpriseLabelVal = ref('请选择')
 
 // 企业性质
 interface EnterpriseNature {
@@ -390,7 +371,6 @@ let getSchoolList = async function () {
 }
 getSchoolList();
 </script>
-
 <style lang="scss" scoped>
 .business-license_test {
     color: #808695;

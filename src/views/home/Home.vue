@@ -6,12 +6,13 @@
                     <div class="left major just-between-2">
                         <div class="flex">
                             <div class="img mr-16">
-                                <img class="icon-head-portrait" src="@/assets/images/icon-head_portrait.png" alt="">
+                                <img class="icon-head-portrait" src="@/assets/images/icon-head_portrait.png"
+                                    :alt="EnterpriseInfo.companyLogoUrl">
                             </div>
                             <div class="test">
-                                <h1>中科百谷</h1>
-                                <p>北京中科百谷科技有限公司</p>
-                                <p>互联网/IT - 计算机软件</p>
+                                <h1>{{ EnterpriseInfo.companyName }}</h1>
+                                <p>{{ EnterpriseInfo.companyFullName }}</p>
+                                <p>{{ EnterpriseInfo.companyIndustry }}</p>
                             </div>
                         </div>
                         <div class="major-right just-center">
@@ -35,7 +36,7 @@
                     <div class="btm-item  btm-item_hover hand" @click="nav('position')">
                         <div class="just-between">
                             <div class="left">
-                                <h3 class="fs-22 h3">2</h3>
+                                <h3 class="fs-22 h3">{{ EnterpriseInfo.onlinePositionCount }}</h3>
                                 <div class="test">在招职位</div>
                             </div>
                             <div class="right mr-14">
@@ -45,7 +46,7 @@
                         </div>
                         <div class="just-between">
                             <div class="bottom">
-                                <h3 class="fs-22 h3">1</h3>
+                                <h3 class="fs-22 h3">{{ EnterpriseInfo.sevenRefreshPositionCount }}</h3>
                                 <div class="test">七日内刷新过职位</div>
                             </div>
                             <div class="icon-img">
@@ -66,7 +67,7 @@
                         </div>
                         <div class="just-between">
                             <div class="bottom">
-                                <h3 class="fs-22 h3">18</h3>
+                                <h3 class="fs-22 h3">{{ EnterpriseInfo.resumeCount }}</h3>
                                 <div class="test">未查看简历</div>
                             </div>
                             <div class="icon-img">
@@ -101,7 +102,7 @@
             <div class="intention mt-16">
                 <div class="just-between">
                     <div class="top">
-                        <h3>意向学校 <span>16</span>/50</h3>
+                        <h3>意向学校 <span>0</span>/50</h3>
                         <div class="test">
                             <span class="mr-14 mt-17">请尽量选择更多的意向学校</span>
                             <span><img src="@/assets/images/icon-right.png" alt=""></span>
@@ -238,7 +239,6 @@ const options: Ref<Array<{
 // 获取意向学校的数据
 let getSchoolList = async function () {
     let res = await use.getSchoolList()
-    console.log(res.data)
     Object.assign(options.value, res.data)
 }
 getSchoolList();
@@ -270,12 +270,21 @@ let setEnterpriseSchoolOfIntention = async function (payload: setEnterpriseSchoo
     console.log(res)
     if (res.code == 200) {
         ElMessage({
-            message:'修改成功！',
+            message: '修改成功！',
             type: 'success',
         })
+        getEnterpriseInfo()
         centerDialogVisible.value = false;
     }
 }
+const EnterpriseInfo = ref([]);
+// 获取企业详细信息接口
+let getEnterpriseInfo = async () => {
+    let res = await use.getEnterprise({ userId: 10000 });
+    Object.assign(EnterpriseInfo.value, res.data)
+    console.log(EnterpriseInfo.value);
+}
+getEnterpriseInfo()
 </script>
 
 <style lang="scss" scoped>

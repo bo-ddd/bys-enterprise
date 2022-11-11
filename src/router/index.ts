@@ -72,6 +72,11 @@ const router = createRouter({
       name: 'EnterpriseRegistra',
       component: ()=> import('@/views/enterpriseRegistra/enterpriseRegistra.vue')
     },
+    {
+      path: '/setEnterpriseInfo',
+      name: 'setEnterpriseInfo',
+      component: ()=> import('@/views/setEnterpriseInfo/setEnterpriseInfo.vue')
+    },
   ]
 })
 

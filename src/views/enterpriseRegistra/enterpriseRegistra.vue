@@ -9,12 +9,12 @@
                     <h3>基本信息</h3>
                     <!-- 企业全称 -->
                     <el-form-item label="企业全称">
-                        <el-input class="el-input_560-40" v-model="form.companyFullName" />
+                        <el-input class="el-input_560-40" placeholder="需与营业执照一致" v-model="form.companyFullName" />
                     </el-form-item>
 
                     <!-- 品牌全称 -->
                     <el-form-item label="品牌名称">
-                        <el-input class="brand-name" v-model="form.companyName" />
+                        <el-input class="brand-name" placeholder="品牌名称或企业简称,一般不超过6个字" v-model="form.companyName" />
                     </el-form-item>
 
                     <!-- 企业logo -->
@@ -54,7 +54,9 @@
 
                     <!-- 企业注册地区 -->
                     <el-form-item label="企业注册地区">
-                        <el-cascader class="el-input_240" :options="RegisteredArea" clearable />
+                        <el-cascader placeholder="请输入" class="el-input_240" :options="RegisteredArea" clearable>
+
+                        </el-cascader>
                     </el-form-item>
 
                     <!-- 详细注册地址 -->
@@ -64,10 +66,11 @@
 
                     <!-- 禁用状态的选择器 disabled -->
                     <el-form-item label="所属行业">
-                        <el-cascader v-model="forbidden" :options="options" @change="handleChange">
-                            <template #value>
-                                <span>{{ options[0] }}</span>
-                            </template>
+                        <el-cascader class="el-input_240" v-model="forbidden" :options="forbiddenData"
+                            @change="handleChange">
+                            <!-- <template #value>
+                                <span>{{ forbiddenData[0] }}</span>
+                            </template> -->
                         </el-cascader>
                     </el-form-item>
 
@@ -264,30 +267,10 @@ function abc(value: any) {
 const onSubmit = () => {
     console.log(form)
 };
-// companyWebUrl
-let getEnterpriseData = reactive<any[]>([]);
-// 调用 获取企业详细信息接口 报错
-let getEnterprise = async function () {
-    let res = await use.getEnterprise({ userId: 10000 });
-    Object.assign(getEnterpriseData, res.data);
-    Object.assign(form, res.data);
-}
-getEnterprise();
-
-// 调用 修改企业详细信息接口 报错
-// let setModifyEnterpriseInfo = async function () {
-//     let res = await use.setModifyEnterpriseInfo({
-//         companyAddr: '山西',
-//         userId: 10000
-//     });
-//     console.log(res);
-// }
-// setModifyEnterpriseInfo();
-
 
 // 所属行业
 const forbidden = ref('');
-const options = ref(<any>[]);
+const forbiddenData = ref(<any>[]);
 const handleChange = (value: any) => {
     console.log(value)
 }

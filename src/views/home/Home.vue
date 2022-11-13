@@ -270,7 +270,38 @@ let setEnterpriseSchoolOfIntention = async function (payload: setEnterpriseSchoo
         centerDialogVisible.value = false;
     }
 }
-const EnterpriseInfo = ref([]);
+interface EnterpriseInfoType {
+    companyAddr: string,// 企业详细地址
+    companyContactEmail: string,// 企业接受简历邮箱
+    companyContactName: string,// 企业联系人
+    companyContactPhone: string | Number,// 企业联系电话
+    companyFullName: string,// 企业全称
+    companyId: Number | string,// 企业ID
+    companyIndustry: string,// 企业所属行业
+    companyIntroducation: string,// 企业简介
+    companyLicenseUrl: string,// 企业营业执照URL
+    companyLogoUrl: string,//企业LogoUrl
+    companyName: string,// 企业简称
+    companyNature: string,// 企业性质 
+    companyOnlyWishSchool: boolean | string | Number,// 企业仅向意向学校展示职位
+    companyRegisterAddr: string,// 企业地址
+    companySize: string,// 企业规模
+    companySocialCreditCode: string | Number,// 企业社会信用代码
+    companyStatus: string,// 企业状态
+    companyTag: string,// 企业标签
+    companyWebUrl: string,// 企业官网
+    companyWishSchool: string | any,// 企业意向学校 ,
+    invitationTalentCount: Number,// 邀请人才点数 ,
+    newResumeCount: Number,// 日内未查看简历数量 ,
+    onlinePositionCount: Number,// 在招职位数量 ,
+    refreshPositionCardCount: Number,// 职位刷新卡点数 ,
+    refreshPositionCount: Number,// 刷新职位点数 ,
+    resumeCount: Number,// 未查看简历数量
+    sevenRefreshPositionCount: Number,// 7日内刷新职位数量
+    smsInvitationCount: Number,// 短信邀请人才点数
+    userId: Number,// 用户ID
+}
+const EnterpriseInfo: EnterpriseInfoType | any = ref([]);
 // 获取企业详细信息接口
 let getEnterpriseInfo = async () => {
     let res = await use.getEnterprise({ userId: 10000 });

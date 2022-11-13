@@ -479,7 +479,7 @@
             </div>
             <template #footer>
                 <el-button @click="centerDialogVisible2 = false">取消</el-button>
-                <el-button type="primary" @click="centerDialogVisible = false">确定并退出登录</el-button>
+                <el-button type="primary" @click="nav('/')">确定并退出登录</el-button>
             </template>
         </el-dialog>
     </div>
@@ -496,12 +496,19 @@ import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue';
 import type { UploadFile } from 'element-plus';
 import { useHomeStore } from '@/stores/home';
 import RegisteredArea from '@/views/enterpriseRegistra/registeredArea';
+import { useRouter } from 'vue-router';
+// 路由
+let router = useRouter();
 // ajax
 const use = useHomeStore();
 // centerDialogVisible 控制用户协议弹窗打开与否
 const centerDialogVisible = ref(true);
 // centerDialogVisible2 控制用户协议中点击 不同意的时候弹的弹层
 const centerDialogVisible2 = ref(false);
+// 跳转页面的方法
+let nav = (name: string) => {
+    router.push(name);
+}
 // form 表单数据
 const form = reactive({
     companyFullName: '',// 企业全称

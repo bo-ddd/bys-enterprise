@@ -253,4 +253,11 @@ export default {
        refreshPosition:(params)=>{
          return axios.post('/company/refreshPosition',params,postConfig)
        },
+      /**
+        * @describe 修改企业意向学校
+        * @param 
+        */
+       setEnterpriseSchoolOfIntention:(params)=>{
+         return axios.post('/company/modifyCompanyWishSchool',params,postConfig)
+       },
 }

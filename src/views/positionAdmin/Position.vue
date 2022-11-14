@@ -75,13 +75,17 @@
               </div>
               <div class="refresh-info align-center">
                 <el-button v-if="item.positionStatus==0" color="#a8abb2" plain disabled>自动刷新</el-button>
-                <el-button v-else color="#356ffa" plain @click="centerDialogVisible = true">自动刷新</el-button>
+                <el-button v-else color="#356ffa" plain @click="autoRefrensh(item.positionId)">自动刷新</el-button>
                 <el-button v-if="item.positionStatus==0" color="#a8abb2" plain disabled>刷新</el-button>
-                <el-button @click="refresh" v-else color="#356ffa">刷新</el-button>
+                <el-button @click="refresh(item.positionId)" v-else color="#356ffa">刷新</el-button>
               </div>
             </div>
             <div class="edit-job just-between fs-14">
-              <div>
+              <div v-if="item.refreshTime">
+                刷新时间 :
+                <span>&nbsp; {{item.refreshTime}}</span>
+              </div>
+              <div v-else>
                 创建时间 :
                 <span>&nbsp; {{item.createTime}}</span>
               </div>
@@ -100,7 +104,7 @@
               v-model:currentPage="pageNum"
               v-model:page-size="pageSize"
               layout="prev, pager, next"
-              :total="total"
+              :total="recruitNum"
               @next-click="next"
               @prev-click="prev"
               @current-change="handleCurrentChange"
@@ -215,18 +219,28 @@
       </div>
     </el-dialog>
   </div>
-  <!-- <span>
-      It should be noted that the content will not be aligned in center by
-      default
-    </span>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="centerDialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="centerDialogVisible = false">
-          Confirm
-        </el-button>
-      </span>
-  </template>-->
+  <div class="dialog-box">
+    <el-dialog v-model="centerDialogVisible2" title center>
+      <img class="back-img" src="@/assets/images/default_v.png" alt />
+      <div class="text">
+        <div class="text-black fs-16">今日刷新点数已用完</div>
+        <div class="mt-25 text-black">
+          若需要更多刷新点数，请升级
+          <span class="text-yellow">VIP会员</span>
+        </div>
+        <div class="card">
+          <div class="center">
+            <img src="@/assets/images/icon-tag1.png" alt />
+            自动刷新卡
+          </div>
+        </div>
+      </div>
+
+      <div class="foot mt-30">
+        <div class="btn" @click="to('/memberCenter')">查看会员权益</div>
+      </div>
+    </el-dialog>
+  </div>
 </template>
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from "element-plus";
@@ -239,28 +253,53 @@ import { Position } from "@element-plus/icons-vue";
 let use = usePositionStore();
 let { getEnterprise } = useHomeStore();
 const centerDialogVisible = ref(false);
+const centerDialogVisible2 = ref(false);
 const recruitNum = ref(0);
 const orderNum = ref(0);
 const downNum = ref(0);
-const total = ref(0);
 const pageNum = ref(1);
 const pageSize = ref(10);
 const pageNum2 = ref(1);
 const pageSize2 = ref(10);
 const positionList = ref([]);
 const downPositionList = ref([]);
-const refresh = function () {
-  ElMessageBox.confirm(
-    `今日剩余刷新点数：${orderNum.value}，是否刷新该职位？`,
-    "确认刷新该职位吗",
-    {
-      confirmButtonText: "确认",
-      cancelButtonText: "取消",
-      type: "success",
-    }
-  ).then(() => {
-    
-  });
+const autoRefrensh=function(positionId:any){
+  centerDialogVisible.value = true
+}
+const refresh = function (positionId: any) {
+  if (orderNum.value > 0) {
+    ElMessageBox.confirm(
+      `今日剩余刷新点数：${orderNum.value}，是否刷新该职位？`,
+      "确认刷新该职位吗",
+      {
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        type: "success",
+      }
+    ).then(async () => {
+      let res = await use.refreshPosition({
+        positionId,
+        userId: 10000,
+      });
+      console.log(res);
+
+      if (res.code == 200) {
+        ElMessage({
+          type: "success",
+          message: "刷新成功",
+        });
+        getPositionList();
+        getDownList();
+      } else {
+        ElMessage({
+          type: "warning",
+          message: "刷新失败",
+        });
+      }
+    });
+  } else {
+    centerDialogVisible2.value = true;
+  }
 };
 const setPositionStatus = async function (
   positionId: any,
@@ -408,7 +447,6 @@ const to = function (path: string) {
     path,
   });
 };
-// provide('positionDetail',666);
 const setPosition = function (id: any) {
   router.push({
     path: "/positionDetails",
@@ -421,6 +459,44 @@ const setPosition = function (id: any) {
 <style lang="scss" scoped>
 .dialog-box {
   position: relative;
+  border-radius: 20px;
+  .card {
+    background: linear-gradient(143deg, #2d2d2d, #000);
+    margin-top: 32px;
+    height: 46px;
+    width: 132px;
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    box-sizing: border-box;
+    .center {
+      width: 126px;
+      height: 40px;
+      box-sizing: border-box;
+      border-radius: 1px;
+      border: 1px solid #6d6d6d;
+      font-size: 16px;
+      text-align: center;
+      line-height: 40px;
+      background: linear-gradient(143deg, #2d2d2d, #000);
+      position: relative;
+      color: rgb(255, 228, 203);
+      background-image: url('@/assets/images/icon-back1_img.png');
+      background-repeat: no-repeat;
+      background-size: 47px 40px;
+      background-position: right top;
+      img {
+        position: absolute;
+        height: 25px;
+        position: absolute;
+        left: -1px;
+        top: -18px;
+        z-index: 99;
+      }
+    }
+  }
   .back-img {
     width: 150px;
     height: 220px;
@@ -454,7 +530,7 @@ const setPosition = function (id: any) {
     padding: 0 60px 52px 0;
     display: flex;
     justify-content: flex-end; // justify-content: right;
-      .btn {
+    .btn {
       width: 156px;
       text-align: center;
       height: 44px;
@@ -474,6 +550,7 @@ const setPosition = function (id: any) {
     width: 505px;
     min-height: 310px;
     // height: 100%;
+    border-radius: 4px;
     // box-sizing: border-box;
   }
   :deep(.el-dialog__header) {
@@ -484,7 +561,7 @@ const setPosition = function (id: any) {
     // height: 100px;
     padding: 0;
   }
-  :deep(.el-dialog__headerbtn){
+  :deep(.el-dialog__headerbtn) {
     z-index: 2;
   }
 }
@@ -729,5 +806,8 @@ const setPosition = function (id: any) {
 }
 .ml-10 {
   margin-left: 10px;
+}
+.mt-30{
+margin-top: 30px;
 }
 </style>

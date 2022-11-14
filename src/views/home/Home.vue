@@ -6,12 +6,13 @@
                     <div class="left major just-between-2">
                         <div class="flex">
                             <div class="img mr-16">
-                                <img class="icon-head-portrait" src="@/assets/images/icon-head_portrait.png" alt="">
+                                <img class="icon-head-portrait" src="@/assets/images/icon-head_portrait.png"
+                                    :alt="EnterpriseInfo.companyLogoUrl">
                             </div>
                             <div class="test">
-                                <h1>中科百谷</h1>
-                                <p>北京中科百谷科技有限公司</p>
-                                <p>互联网/IT - 计算机软件</p>
+                                <h1>{{ EnterpriseInfo.companyName }}</h1>
+                                <p>{{ EnterpriseInfo.companyFullName }}</p>
+                                <p>{{ EnterpriseInfo.companyIndustry }}</p>
                             </div>
                         </div>
                         <div class="major-right just-center">
@@ -35,7 +36,7 @@
                     <div class="btm-item  btm-item_hover hand" @click="nav('position')">
                         <div class="just-between">
                             <div class="left">
-                                <h3 class="fs-22 h3">2</h3>
+                                <h3 class="fs-22 h3">{{ EnterpriseInfo.onlinePositionCount }}</h3>
                                 <div class="test">在招职位</div>
                             </div>
                             <div class="right mr-14">
@@ -45,7 +46,7 @@
                         </div>
                         <div class="just-between">
                             <div class="bottom">
-                                <h3 class="fs-22 h3">1</h3>
+                                <h3 class="fs-22 h3">{{ EnterpriseInfo.sevenRefreshPositionCount }}</h3>
                                 <div class="test">七日内刷新过职位</div>
                             </div>
                             <div class="icon-img">
@@ -66,7 +67,7 @@
                         </div>
                         <div class="just-between">
                             <div class="bottom">
-                                <h3 class="fs-22 h3">18</h3>
+                                <h3 class="fs-22 h3">{{ EnterpriseInfo.resumeCount }}</h3>
                                 <div class="test">未查看简历</div>
                             </div>
                             <div class="icon-img">
@@ -101,7 +102,7 @@
             <div class="intention mt-16">
                 <div class="just-between">
                     <div class="top">
-                        <h3>意向学校 <span>16</span>/50</h3>
+                        <h3>意向学校 <span>0</span>/50</h3>
                         <div class="test">
                             <span class="mr-14 mt-17">请尽量选择更多的意向学校</span>
                             <span><img src="@/assets/images/icon-right.png" alt=""></span>
@@ -142,13 +143,6 @@
                                     <img class="bg-v" src="@/assets/images/home-vip_V.png" alt="">
                                 </div>
                             </div>
-                            <!-- <div class="position-card">
-                                <div class="content">
-                                    <h5>招聘会抵用券<span>(优先入会权益)</span></h5>
-                                    <img class="bg-v" src="@/assets/images/home-vip_V.png" alt="">
-                                </div>
-                                <img class="tip" src="@/assets/images/limited-time-gift.png" alt="">
-                            </div> -->
                         </div>
                     </div>
                     <div class="right">
@@ -171,7 +165,7 @@
             <div class="dialog_body">
                 <div class="dialog_body-header-r">
                     <div class="dialog_body-header-r_test">
-                        <b class="c356ffb">16</b>
+                        <b class="c356ffb"> {{ selectValue.length }} </b>
                         <span>/50</span>
                     </div>
                 </div>
@@ -180,18 +174,18 @@
                     <el-select v-model="selectValue" size="large" multiple filterable allow-create default-first-option
                         :reserve-keyword="false" placeholder="请输入">
                         <el-option v-for="item in options" :key="item.schoolId" :label="item.schoolName"
-                            :value="item.schoolName" />
+                            :value="item.schoolId" />
                     </el-select>
                 </div>
                 <div class="ml-68">可搜索添加意向学校</div>
                 <div class="radioBox flex mt-40">
                     <label class="mr-12">展示范围</label>
-                    <el-radio-group v-model="radio" class="flex-direction-flex-start">
-                        <el-radio :label="1">
+                    <el-radio-group v-model="radioValue" class="flex-direction-flex-start">
+                        <el-radio :label="false">
                             <h5>所有学校</h5>
                             <div>招聘信息会在毕业申所有合作院校的站点展示</div>
                         </el-radio>
-                        <el-radio :label="2" class="mt-18">
+                        <el-radio :label="true" class="mt-18">
                             <h5>仅意向学校</h5>
                             <div>招聘信息只在“意向学校”站点展示，曝光度会大大降低</div>
                         </el-radio>
@@ -216,6 +210,7 @@ import { ref } from 'vue'
 import type { Ref } from "vue";
 import footerBar from '@/components/footer/footerBar.vue';
 import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus'
 // 路由
 let router = useRouter();
 // ajax
@@ -227,26 +222,93 @@ let nav = (name: string) => {
 // 控制意向学校弹层的开关
 const centerDialogVisible = ref(false)
 // 意向学校 多选框选择的值
-let selectValue = ref('');
+let selectValue = ref([]);
 // 意向学校 数据
 const options: Ref<Array<{
     schoolId: Number,
     sortId: Number,
     schoolName: string,
 }>> = ref([]);
-
-
+// 获取意向学校的数据
 let getSchoolList = async function () {
     let res = await use.getSchoolList()
     Object.assign(options.value, res.data)
 }
 getSchoolList();
-// 单选框组
-const radio = ref(1)
+// 单选框组的值
+const radioValue = ref(false)
 // 提交意向学校弹层数据的方法
 const confirm = () => {
-    console.log(selectValue.value)
+    console.log('选中的意向学校的 ID：', selectValue.value)
+    console.log('单选框选择的是：', radioValue.value, radioValue.value == true ? '仅意向' : '所有学校')
+    let options: any = [];
+    selectValue.value.forEach(element => {
+        options.push(element);
+    });
+    // 点击提交按钮的时候用  调接口传参
+    setEnterpriseSchoolOfIntention({
+        companyOnlyWishSchool: radioValue.value,
+        companyWishSchool: JSON.stringify(options),
+        userId: 10000,
+    })
 }
+interface setEnterpriseSchoolOfIntentionType {
+    companyOnlyWishSchool: boolean,// 企业仅向意向学校展示职位 
+    companyWishSchool: string,// 企业意向学校 多选格式1,2,3 ,
+    userId: Number,// 用户id
+}
+// 这是修改意向学校的接口
+let setEnterpriseSchoolOfIntention = async function (payload: setEnterpriseSchoolOfIntentionType) {
+    let res = await use.setEnterpriseSchoolOfIntention(payload);
+    console.log(res)
+    if (res.code == 200) {
+        ElMessage({
+            message: '修改成功！',
+            type: 'success',
+        })
+        getEnterpriseInfo()
+        centerDialogVisible.value = false;
+    }
+}
+interface EnterpriseInfoType {
+    companyAddr: string,// 企业详细地址
+    companyContactEmail: string,// 企业接受简历邮箱
+    companyContactName: string,// 企业联系人
+    companyContactPhone: string | Number,// 企业联系电话
+    companyFullName: string,// 企业全称
+    companyId: Number | string,// 企业ID
+    companyIndustry: string,// 企业所属行业
+    companyIntroducation: string,// 企业简介
+    companyLicenseUrl: string,// 企业营业执照URL
+    companyLogoUrl: string,//企业LogoUrl
+    companyName: string,// 企业简称
+    companyNature: string,// 企业性质 
+    companyOnlyWishSchool: boolean | string | Number,// 企业仅向意向学校展示职位
+    companyRegisterAddr: string,// 企业地址
+    companySize: string,// 企业规模
+    companySocialCreditCode: string | Number,// 企业社会信用代码
+    companyStatus: string,// 企业状态
+    companyTag: string,// 企业标签
+    companyWebUrl: string,// 企业官网
+    companyWishSchool: string | any,// 企业意向学校 ,
+    invitationTalentCount: Number,// 邀请人才点数 ,
+    newResumeCount: Number,// 日内未查看简历数量 ,
+    onlinePositionCount: Number,// 在招职位数量 ,
+    refreshPositionCardCount: Number,// 职位刷新卡点数 ,
+    refreshPositionCount: Number,// 刷新职位点数 ,
+    resumeCount: Number,// 未查看简历数量
+    sevenRefreshPositionCount: Number,// 7日内刷新职位数量
+    smsInvitationCount: Number,// 短信邀请人才点数
+    userId: Number,// 用户ID
+}
+const EnterpriseInfo: EnterpriseInfoType | any = ref([]);
+// 获取企业详细信息接口
+let getEnterpriseInfo = async () => {
+    let res = await use.getEnterprise({ userId: 10000 });
+    Object.assign(EnterpriseInfo.value, res.data)
+    console.log(EnterpriseInfo.value);
+}
+getEnterpriseInfo()
 </script>
 
 <style lang="scss" scoped>

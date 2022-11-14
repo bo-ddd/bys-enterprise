@@ -9,19 +9,22 @@
                     <h3>基本信息</h3>
                     <!-- 企业全称 -->
                     <el-form-item label="企业全称">
-                        <el-input class="el-input_560-40" v-model="form.companyFullName" />
+                        <el-input class="el-input_560-40" placeholder="需与营业执照一致" v-model="form.companyFullName" />
                     </el-form-item>
 
                     <!-- 品牌全称 -->
                     <el-form-item label="品牌名称">
-                        <el-input class="brand-name" v-model="form.companyName" />
+                        <el-input class="brand-name" placeholder="品牌名称或企业简称,一般不超过6个字" v-model="form.companyName" />
                     </el-form-item>
 
                     <!-- 企业logo -->
                     <el-form-item label="企业logo">
                         <el-upload action="#" list-type="picture-card" :auto-upload="false">
-                            <el-icon>
-                                <Plus />
+                            <el-icon class="uplpoad-icon flex-column-center">
+                                <div>
+                                    <Plus />
+                                </div>
+                                <div class="fs-13">上传图片</div>
                             </el-icon>
 
                             <template #file="{ file }">
@@ -54,19 +57,22 @@
 
                     <!-- 企业注册地区 -->
                     <el-form-item label="企业注册地区">
-                        <el-cascader class="el-input_240" :options="RegisteredArea" clearable />
+                        <el-cascader placeholder="请输入" class="el-input_240" :options="RegisteredArea" clearable>
+
+                        </el-cascader>
                     </el-form-item>
 
                     <!-- 详细注册地址 -->
                     <el-form-item label="详细注册地址">
-                        <el-input class="el-input_560-40" v-model="form.companyAddr" />
+                        <el-input placeholder="详细注册地址" class="el-input_560-40" v-model="form.companyAddr" />
                     </el-form-item>
 
                     <!-- 禁用状态的选择器 disabled -->
                     <el-form-item label="所属行业">
-                        <el-cascader v-model="forbidden" :options="options" @change="handleChange">
+                        <el-cascader placeholder="请选择" class="el-input_240" v-model="forbidden" :options="forbiddenData"
+                            @change="handleChange">
                             <template #value>
-                                <span>{{ options[0] }}</span>
+                                <span>{{ forbiddenData[0] }}</span>
                             </template>
                         </el-cascader>
                     </el-form-item>
@@ -74,21 +80,21 @@
 
                     <!-- 正常状态的选择器 -->
                     <el-form-item label="企业性质">
-                        <el-select v-model="enterpriseNatureVal" placeholder="Select" size="large">
+                        <el-select v-model="enterpriseNatureVal" placeholder="请选择" size="large">
                             <el-option v-for="item in enterpriseNature" :key="item.value" :label="item.label"
                                 :value="item.value" />
                         </el-select>
                     </el-form-item>
 
                     <el-form-item label="企业规模">
-                        <el-select v-model="enterpriseScaleVal" placeholder="Select" size="large">
+                        <el-select v-model="enterpriseScaleVal" placeholder="请选择" size="large">
                             <el-option v-for="item in enterpriseScale" :key="item.value" :label="item.label"
                                 :value="item.value" />
                         </el-select>
                     </el-form-item>
 
                     <el-form-item label="企业标签">
-                        <el-select v-model="enterpriseLabelVal" placeholder="Select" size="large">
+                        <el-select v-model="enterpriseLabelVal" placeholder="请选择" size="large">
                             <el-option v-for="item in enterpriseLabel" :key="item.value" :label="item.label"
                                 :value="item.value" />
                         </el-select>
@@ -99,7 +105,7 @@
                     <h3>认证信息</h3>
                     <!-- 社会信用代码 -->
                     <el-form-item label="社会信用代码">
-                        <el-input class="input_280-40" v-model="form.companySocialCreditCode" />
+                        <el-input placeholder="社会信用代码" class="input_280-40" v-model="form.companySocialCreditCode" />
                     </el-form-item>
 
                     <!-- 营业执照 -->
@@ -107,8 +113,11 @@
                         <el-form-item label="营业执照"></el-form-item>
                         <div>
                             <el-upload action="#" :on-success="abc" list-type="picture-card" :auto-upload="false">
-                                <el-icon>
-                                    <Plus />
+                                <el-icon class="uplpoad-icon flex-column-center">
+                                    <div>
+                                        <Plus />
+                                    </div>
+                                    <div class="fs-13">上传图片</div>
                                 </el-icon>
                                 <template #file="{ file }">
                                     <div @click="add(file)">
@@ -151,17 +160,17 @@
                         <h3>联系信息</h3>
                         <!-- 联系人 -->
                         <el-form-item label="联系人">
-                            <el-input class="input_280-40" v-model="form.companyContactName" />
+                            <el-input placeholder="填写联系人" class="input_280-40" v-model="form.companyContactName" />
                         </el-form-item>
 
                         <!-- 联系方式 -->
                         <el-form-item label="联系方式">
-                            <el-input class="input_280-40" v-model="form.companyContactPhone" />
+                            <el-input placeholder="填写联系方式" class="input_280-40" v-model="form.companyContactPhone" />
                         </el-form-item>
 
                         <!-- 接受简历邮箱 -->
                         <el-form-item label="接受简历邮箱">
-                            <el-input class="input_280-40" v-model="form.companyContactEmail" />
+                            <el-input placeholder="填写接受简历邮箱" class="input_280-40" v-model="form.companyContactEmail" />
                         </el-form-item>
                     </div>
                 </div>
@@ -177,7 +186,7 @@
 
                     <!-- 企业官网 -->
                     <el-form-item label="企业官网">
-                        <el-input class="input_280-40" v-model="form.companyWebUrl" />
+                        <el-input placeholder="非必填" class="input_280-40" v-model="form.companyWebUrl" />
                     </el-form-item>
 
                     <div class="horizontal-line"></div>
@@ -191,7 +200,7 @@
                         <div class="align-center">
                             <el-form-item label="学校">
                                 <el-select size="large" class="school-input" v-model="schoolListVal" multiple
-                                    placeholder="Select">
+                                    placeholder="请输入">
                                     <el-option v-for="item in schoolList" :key="item.sortId" :label="item.schoolName"
                                         :value="item.schoolId" />
                                 </el-select>
@@ -270,6 +279,7 @@ let getEnterpriseData = reactive<any[]>([]);
 let getEnterprise = async function () {
     let res = await use.getEnterprise({ userId: 10000 });
     Object.assign(getEnterpriseData, res.data);
+    console.log('获取企业详细信息接口', getEnterpriseData);
     Object.assign(form, res.data);
 }
 getEnterprise();
@@ -287,7 +297,7 @@ getEnterprise();
 
 // 所属行业
 const forbidden = ref('');
-const options = ref(<any>[]);
+const forbiddenData = ref(<any>[]);
 const handleChange = (value: any) => {
     console.log(value)
 }
@@ -295,9 +305,8 @@ const handleChange = (value: any) => {
 // 调用 获取所属行业下拉框接口 报错
 let getIndustryList = async function () {
     let res = await use.getIndustryList();
-    console.log('所属行业的数据', res.data)
-    Object.assign(options.value, res.data)
-    console.log(options)
+    Object.assign(forbiddenData.value, res.data)
+    console.log(forbiddenData.value)
 }
 getIndustryList();
 
@@ -387,8 +396,24 @@ getSchoolList();
 </script>
 
 <style lang="scss" scoped>
+.flex-column-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.uplpoad-icon {
+    width: 100%;
+    height: 100%;
+}
+
 .business-license_test {
     color: #808695;
+}
+
+.fs-13 {
+    font-size: 13px;
 }
 
 .ml-16 {

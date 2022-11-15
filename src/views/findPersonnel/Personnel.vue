@@ -11,11 +11,11 @@ interface Check {
 }
 let PersonStore = usePersonStore();//引入personStore这个状态管理
 let HomeStore = useHomeStore();//引入homeStore这个状态管理
+let industry = ref();
 let form = reactive({
     sex: null,//性别
     education: null,//学历
     professional: null,//专业
-    industry: null,//行业
     city: null,//城市
     wishMoneyLeft: null,//最低薪资
     wishMoneyRight: null,//最高薪资
@@ -145,6 +145,10 @@ let getTalentList = async () => {
             obj[key] = form[key];
         }
     }
+    if(industry.value){
+        obj['industryLeft'] = industry.value[0];
+        obj['industryRight'] = industry.value[1];
+    }
     obj['pageIndex'] = paging.pageIndex;
     obj['pageSize'] = paging.pageSize;
     console.log('-------这个是获取人才------');
@@ -265,7 +269,7 @@ getInviteDrop();
                         <el-option v-for="item in majorArr" :key="item.sortId" :label="item.professionalName"
                             :value="item.sortId" />
                     </el-select>
-                    <el-cascader v-model="form.industry" placeholder="意向职位" :props="{'children':'positionDownList','label':'positionTypeName','value':'positionTypeId'}"	 class="check-education mr-30" :options="positionCategoryList" clearable />
+                    <el-cascader v-model="industry" placeholder="意向职位" :props="{'children':'positionDownList','label':'positionTypeName','value':'positionTypeId'}"	 class="check-education mr-30" :options="positionCategoryList" clearable />
                 </div>
                 <div class="filter-wrap-btm">
                     <div class="check">

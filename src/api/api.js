@@ -266,5 +266,13 @@ export default {
         */
         getResumeUrl:(params)=>{
             return axios.post('/company/getResumeUrl',params,postConfig)
-        }
+        },
+        
+        /**
+         * @description 邀请人才下拉框
+         * @param
+         */
+        getInviteDrop:(params)=>{
+            return axios.post('/drop/getInvite',params,postConfig)
+       }
 }

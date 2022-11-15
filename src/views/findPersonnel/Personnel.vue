@@ -19,8 +19,12 @@ let form = reactive({
     city: null,//城市
     wishMoneyLeft: null,//最低薪资
     wishMoneyRight: null,//最高薪资
-});//这个是模糊查询
+});//这个是人才列表模糊查询
 
+let invitationForm = reactive({
+    status:null,
+    professional:null,
+});
 let inviationNumber = ref(0);//这个是当日邀请次数
 
 let invitationUserId = ref();//邀请的人才id；
@@ -78,13 +82,12 @@ let wishMoneyRightList = reactive<any[]>([]);//这个是期望薪资右边的列
 let talentList = reactive<any[]>([]);//这个是人才列表
 let positionCategoryList = reactive<any[]>([]);//这个是获取职位类别的数组
 let invitationList = reactive<any[]>([]);//这个是邀请人才的列表
+let statusList = reactive<any[]>([]);//邀请人才状态
 //这个是学历的列表
 let getEducationList = async () => {
     let res = await PersonStore.getEducation();
     if (res.code !== 200) return;
     let resData = (res.data).reverse();//获取学历数据
-    console.log('学历列表');
-    console.log(resData);
     educationArr.push(...resData);
 }
 getEducationList();//调用获取学历列表
@@ -136,6 +139,7 @@ getWishMoneyList();
 //获取到人才的列表
 let getTalentList = async () => {
     let obj = {};
+    console.log(form);
     for (const key in form) {
         if(form[key]){
             obj[key] = form[key];
@@ -217,6 +221,15 @@ let getMoney = (data:string)=>{
     let res = data.split(",").sort((a,b)=>{ return a - b});
     return `${res[0]}-${res[1]}k`
 }
+//邀请人才下拉框
+let getInviteDrop = async ()=>{
+    let res = await PersonStore.getInviteDrop();
+    console.log('-----------邀请人才下拉框-------------');
+    console.log(res);
+    statusList.push(...(res.data));
+    console.log('-----------邀请人才下拉框结束-------------');
+}
+getInviteDrop();
 </script>
 <template>
     <div class="personnel">
@@ -232,20 +245,6 @@ let getMoney = (data:string)=>{
                 </div>
             </div>
         </div>
-
-        <!-- 这个是疑问咨询的图片 -->
-        <!-- <div :class="['consulting-service', 'absolute-wrap', showGuid ? 'close-animate' : 'show-animate']">
-            <div class="top">
-                <img src="@/assets/images/company_fanjia_3.png" class="or-code">
-                <p class="tip fs-12">如有任何疑问请咨询</p>
-            </div>
-            <img src="@/assets/images/icon-close.png" @click="handleGuideChange(true)">
-        </div> -->
-
-        <!-- 这个是点击弹出咨询的容器 -->
-        <!-- <div class="seek-advice absolute-wrap box-shadow" v-show="showGuid" @click="handleGuideChange(false)">
-            <img src="@/assets/images/icon-kefu.png">
-        </div> -->
 
         <!-- 人才数据的页面 -->
         <div class="talent-pool-wrap" v-show="checkItem == 0">
@@ -384,10 +383,10 @@ let getMoney = (data:string)=>{
 
                 <!-- 邀请的选择容器 -->
                 <div class="filter-wrap">
-                    <el-select v-model="form.sex" class="m-2 check-sex mr-30" placeholder="状态选择" size="large">
-                        <el-option v-for="item in sexArr" :key="item.value" :label="item.label" :value="item.value" />
+                    <el-select v-model="invitationForm.status"  clearable class="m-2 check-sex mr-30" placeholder="状态选择" size="large">
+                        <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
-                    <el-select v-model="form.professional" class="m-2 check-position mr-30" placeholder="意向职位选择"
+                    <el-select v-model="invitationForm.professional" clearable class="m-2 check-position mr-30" placeholder="意向职位选择"
                         size="large">
                         <el-option v-for="item in positionArr" :key="item.value" :label="item.label"
                             :value="item.value" />

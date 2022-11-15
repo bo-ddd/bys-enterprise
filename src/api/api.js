@@ -259,5 +259,12 @@ export default {
         */
        setEnterpriseSchoolOfIntention:(params)=>{
          return axios.post('/company/modifyCompanyWishSchool',params,postConfig)
-       },
+        },
+        /**
+         * @description 邀请人才下拉框
+         * @param
+         */
+        getInviteDrop:(params)=>{
+            return axios.post('/drop/getInvite',params,postConfig)
+       }
 }

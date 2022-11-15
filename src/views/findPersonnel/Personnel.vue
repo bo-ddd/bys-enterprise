@@ -164,16 +164,17 @@ getTalentList();
 
 //邀请人才的方法;
 let inviteTalent = async () => {
-    console.log(invitationUserId);
     let res = await PersonStore.inviteTalent({
         inviteUserId: invitationUserId.value,
         userId: 10000,
+        positionId:checkPosition.value,
     });
     dialogFormVisible.value = false;
     if(res.code !==200){
         console.log('邀请人才接口报错');
     }else{
         console.log('邀请人才成功!!');
+        getInvationsNumber();
     }
 }
 
@@ -186,8 +187,6 @@ let inviteTalentList = async ()=>{
     invitationList.length = 0;
     invitationList.push(...(res.data.talentList));
     pagingInvite.total = res.data.totalCount;
-    console.log('邀请人才的列表');
-    console.log(res);
 }
 inviteTalentList();
 
@@ -204,8 +203,6 @@ let invitationPost =async (userId:number)=>{
 //获取职位类别
 let getPositionCategory = async ()=>{
     let res = await PersonStore.getPosition();
-    console.log('获取职位类别');
-    console.log(res);
     if(res.code !== 200) return;
     // positionDownList: (2) [{…}, {…}]
     // positionTypeId: "1"
@@ -228,10 +225,7 @@ let getMoney = (data:string)=>{
 //邀请人才下拉框
 let getInviteDrop = async ()=>{
     let res = await PersonStore.getInviteDrop();
-    console.log('-----------邀请人才下拉框-------------');
-    console.log(res);
     statusList.push(...(res.data));
-    console.log('-----------邀请人才下拉框结束-------------');
 }
 getInviteDrop();
 </script>

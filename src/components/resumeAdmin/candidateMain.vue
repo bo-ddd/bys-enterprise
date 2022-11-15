@@ -36,7 +36,7 @@
                     </card.cardHeader>
                 </template>
                 <template #main>
-                    <card.cardItem :userinfo="{
+                    <card.cardItem @click="getUserInfo()" :userinfo="{
                         sex: item.userSex,
                         name: item.userName,
                         deliveryStatus: item.deliveryStatus,
@@ -67,6 +67,13 @@ import { useEnterpriseStore } from "@/stores/enterprise"
 let enterprise = useEnterpriseStore();
 let userName = ref("");
 let invitationStatus = ref(false);
+
+/**
+ * getUserInfo
+ */
+let getUserInfo = async ()=>{
+    
+}
 
 /***
  * 批量不合适

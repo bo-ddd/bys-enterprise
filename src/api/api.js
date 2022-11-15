@@ -260,4 +260,11 @@ export default {
        setEnterpriseSchoolOfIntention:(params)=>{
          return axios.post('/company/modifyCompanyWishSchool',params,postConfig)
        },
+
+       /**
+        * 获取简历url
+        */
+        getResumeUrl:(params)=>{
+            return axios.post('/company/getResumeUrl',params,postConfig)
+        }
 }

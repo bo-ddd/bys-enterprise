@@ -13,7 +13,7 @@
         </div>
         <div></div>
         <div class="c-5151 fs-14">
-            <span>{{userinfo.deliveryStatus}}</span>
+            <span :class="userinfo.deliveryStatus == '通过初筛' ? 'active' : '' ">{{userinfo.deliveryStatus}}</span>
         </div>
         <div>
             <slot name="btn"></slot>
@@ -42,6 +42,9 @@ let { userinfo } = toRefs(props);
 }
 
 .card-item {
+    .active{
+        color: rgb(19, 156, 19);
+    }
     display: flex;
     justify-content: space-between;
     align-items: center;

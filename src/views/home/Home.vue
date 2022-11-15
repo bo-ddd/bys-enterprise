@@ -6,8 +6,7 @@
                     <div class="left major just-between-2">
                         <div class="flex">
                             <div class="img mr-16">
-                                <img class="icon-head-portrait" src="@/assets/images/icon-head_portrait.png"
-                                    :alt="EnterpriseInfo.companyLogoUrl">
+                                <img class="icon-head-portrait" :src="EnterpriseInfo.companyLogoUrl" alt="">
                             </div>
                             <div class="test">
                                 <h1>{{ EnterpriseInfo.companyName }}</h1>
@@ -102,7 +101,7 @@
             <div class="intention mt-16">
                 <div class="just-between">
                     <div class="top">
-                        <h3>意向学校 <span>0</span>/50</h3>
+                        <h3>意向学校 <span>{{ selectValue.length }}</span>/50</h3>
                         <div class="test">
                             <span class="mr-14 mt-17">请尽量选择更多的意向学校</span>
                             <span><img src="@/assets/images/icon-right.png" alt=""></span>

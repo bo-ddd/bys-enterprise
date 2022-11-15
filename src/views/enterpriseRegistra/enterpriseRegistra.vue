@@ -58,7 +58,6 @@
                     <!-- 企业注册地区 -->
                     <el-form-item label="企业注册地区">
                         <el-cascader placeholder="请输入" class="el-input_240" :options="RegisteredArea" clearable>
-
                         </el-cascader>
                     </el-form-item>
 
@@ -279,21 +278,23 @@ let getEnterpriseData = reactive<any[]>([]);
 let getEnterprise = async function () {
     let res = await use.getEnterprise({ userId: 10000 });
     Object.assign(getEnterpriseData, res.data);
-    console.log('获取企业详细信息接口', getEnterpriseData);
-    Object.assign(form, res.data);
+    console.log('获取企业详细信息接口', res.data);
+    // Object.assign(form, res.data);
 }
 getEnterprise();
 
 // 调用 修改企业详细信息接口 报错
-// let setModifyEnterpriseInfo = async function () {
-//     let res = await use.setModifyEnterpriseInfo({
-//         companyAddr: '山西',
-//         userId: 10000
-//     });
-//     console.log(res);
-// }
-// setModifyEnterpriseInfo();
-
+let setModifyEnterpriseInfo = async function () {
+    let res = await use.setModifyEnterpriseInfo({
+        companyAddr: '山西',
+        userId: 10000
+    });
+    if (res.code == 200) {
+        console.log('修改成功  可以重新获取数据了')
+    }
+    console.log('修改企业详细信息接口', res);
+}
+setModifyEnterpriseInfo();
 
 // 所属行业
 const forbidden = ref('');
@@ -306,7 +307,7 @@ const handleChange = (value: any) => {
 let getIndustryList = async function () {
     let res = await use.getIndustryList();
     Object.assign(forbiddenData.value, res.data)
-    console.log(forbiddenData.value)
+    console.log(1, forbiddenData.value)
 }
 getIndustryList();
 

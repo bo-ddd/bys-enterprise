@@ -539,6 +539,9 @@ function add(file: any) {
 const onSubmit = () => {
     console.log(form)
 };
+
+
+
 // 企业性质
 const enterpriseNatureVal = ref('请选择')
 // 企业规模
@@ -641,21 +644,26 @@ getSchoolList();
     height: 187px;
     border-radius: 10px;
 }
-:deep(.el-dialog_two .el-dialog__header){
+
+:deep(.el-dialog_two .el-dialog__header) {
     padding: 50px 0 0 0;
 }
-:deep(.el-dialog_two .el-dialog__body){
+
+:deep(.el-dialog_two .el-dialog__body) {
     height: auto;
     border: none;
     font-size: 12px;
-    div{
+
+    div {
         margin: 9px 0;
         color: #38393b;
     }
-    b{
+
+    b {
         color: #000;
     }
 }
+
 :deep(.el-dialog_two .el-dialog__footer) {
     padding: 24px 20px 24px 0;
     margin: 0;

@@ -283,7 +283,7 @@ let getEnterprise = async function () {
 }
 getEnterprise();
 
-// 调用 修改企业详细信息接口 报错
+// 调用 修改企业详细信息接口 
 let setModifyEnterpriseInfo = async function () {
     let res = await use.setModifyEnterpriseInfo({
         companyAddr: '山西',
